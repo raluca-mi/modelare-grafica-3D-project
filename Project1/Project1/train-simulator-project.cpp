@@ -1,7 +1,6 @@
 #include<GL/glew.h>
 #include<glfw3.h>
 
-
 #include<iostream>
 #include<fstream>
 #include<string>
@@ -15,10 +14,177 @@
 #include"VertexArray.h"
 #include"Shader.h"
 #include"Texture.h"
+#include "Camera.h"
 
 #include<glm.hpp>
 #include<gtc/matrix_transform.hpp>
 
+
+void drawStation(Renderer& renderer, Shader& shader)
+{
+	float positions[] = {
+		//front
+		 -10.5, -0.1,  0.0, 0.0f, 0.0f, //0 0
+		  10.5, -0.1,  0.0, 1.0f, 0.0f, //1 1
+		  10.5,  5.0,  0.0, 1.0f, 1.0f, //2 2
+		 -10.5,  5.0,  0.0, 0.0f, 1.0f, //3 3
+
+		 //back
+		 -10.5, -0.1, -7.0, 1.0f, 0.0f, //4 4
+		 -10.5,  5.0, -7.0, 1.0f, 1.0f, //5 5
+		  10.5,  5.0, -7.0, 0.0f, 1.0f, //6 6
+		  10.5, -0.1, -7.0, 0.0f, 0.0f, //7 7
+
+		  //left
+		 -10.5, -0.1, -7.0, 0.0f, 0.0f, //4 8
+		 -10.5,  5.0, -7.0, 0.0f, 1.0f, //5 9
+		 -10.5,  5.0,  0.0, 1.0f, 1.0f, //3 10
+		 -10.5, -0.1,  0.0, 1.0f, 0.0f, //0 11
+
+		 //right
+		  10.5, -0.1,  0.0, 0.0f, 0.0f, //1 12
+		  10.5, -0.1, -7.0, 1.0f, 0.0f, //7 13
+		  10.5,  5.0, -7.0, 1.0f, 1.0f, //6 14
+		  10.5,  5.0,  0.0, 0.0f, 1.0f, //2 15
+
+		  //top
+		  -10.5,  5.0,  0.0, 0.0f, 0.0f, //3 16
+		   10.5,  5.0,  0.0, 1.0f, 0.0f, //2 17
+		   10.5,  5.0, -7.0, 1.0f, 1.0f, //6 18
+		  -10.5,  5.0, -7.0, 0.0f, 1.0f, //5 19
+
+		  //bottom
+		  -10.5, -0.1, -7.0, 0.0f, 0.0f, //4 20
+		   10.5, -0.1, -7.0, 1.0f, 0.0f, //7 21
+		   10.5, -0.1,  0.0, 1.0f, 1.0f, //1 22
+		  -10.5, -0.1,  0.0, 0.0f, 1.0f  //0 23
+	};
+
+	unsigned int indices[] = {
+		//front
+		0,1,2, //down
+		2,3,0, //up
+
+		//left
+		11,8,9,
+		9,10,11,
+
+		//back
+		5,4,7,
+		7,6,5,
+
+		//right
+		12,13,14,
+		14,15,12,
+
+		//bottom
+		23,22,21,
+		21,20,23,
+
+		//top
+		16,17,18,
+		18,19,16
+	};
+
+	VertexArray va;
+	VertexBuffer vb(positions, sizeof(positions));
+
+	VertexBufferLayout layout;
+	layout.Push<float>(3);
+	layout.Push<float>(2);
+	va.AddBuffer(vb, layout);
+
+	IndexBuffer ib(indices, sizeof(indices) / sizeof(unsigned int));
+
+	va.Unbind();
+	vb.Unbind();
+	ib.Unbind();
+
+	renderer.Draw(va, ib, shader);
+}
+
+void drawRoof(Renderer& renderer, Shader& shader)
+{
+	float positions[] = {
+		//front
+		 -12.5, -0.1,  1.0, 0.0f, 0.0f, //0 0
+		  12.5, -0.1,  1.0, 1.0f, 0.0f, //1 1
+		  12.5,  2.0,  1.0, 1.0f, 1.0f, //2 2
+		 -12.5,  2.0,  1.0, 0.0f, 1.0f, //3 3
+
+		 //back
+		 -12.5, -0.1, -7.0, 1.0f, 0.0f, //4 4
+		 -12.5,  2.0, -7.0, 1.0f, 1.0f, //5 5
+		  12.5,  2.0, -7.0, 0.0f, 1.0f, //6 6
+		  12.5, -0.1, -7.0, 0.0f, 0.0f, //7 7
+
+		  //left
+		 -12.5, -0.1, -7.0, 0.0f, 0.0f, //4 8
+		 -12.5,  2.0, -7.0, 0.0f, 1.0f, //5 9
+		 -12.5,  2.0,  1.0, 1.0f, 1.0f, //3 10
+		 -12.5, -0.1,  1.0, 1.0f, 0.0f, //0 11
+
+		 //right
+		  12.5, -0.1,  1.0, 0.0f, 0.0f, //1 12
+		  12.5, -0.1, -7.0, 1.0f, 0.0f, //7 13
+		  12.5,  2.0, -7.0, 1.0f, 1.0f, //6 14
+		  12.5,  2.0,  1.0, 0.0f, 1.0f, //2 15
+
+		  //top
+		  -12.5,  2.0,  1.0, 0.0f, 0.0f, //3 16
+		   12.5,  2.0,  1.0, 1.0f, 0.0f, //2 17
+		   12.5,  2.0, -7.0, 1.0f, 1.0f, //6 18
+		  -12.5,  2.0, -7.0, 0.0f, 1.0f, //5 19
+
+		  //bottom
+		  -12.5, -0.1, -7.0, 0.0f, 0.0f, //4 20
+		   12.5, -0.1, -7.0, 1.0f, 0.0f, //7 21
+		   12.5, -0.1,  1.0, 1.0f, 1.0f, //1 22
+		  -12.5, -0.1,  1.0, 0.0f, 1.0f  //0 23
+	};
+
+	unsigned int indices[] = {
+		//front
+		0,1,2, //down
+		2,3,0, //up
+
+		//left
+		11,8,9,
+		9,10,11,
+
+		//back
+		5,4,7,
+		7,6,5,
+
+		//right
+		12,13,14,
+		14,15,12,
+
+		//bottom
+		23,22,21,
+		21,20,23,
+
+		//top
+		16,17,18,
+		18,19,16
+	};
+
+	VertexArray va;
+	VertexBuffer vb(positions, sizeof(positions));
+
+	VertexBufferLayout layout;
+	layout.Push<float>(3);
+	layout.Push<float>(2);
+	va.AddBuffer(vb, layout);
+
+	IndexBuffer ib(indices, sizeof(indices) / sizeof(unsigned int));
+
+	va.Unbind();
+	vb.Unbind();
+	ib.Unbind();
+
+	renderer.Draw(va, ib, shader);
+}
 
 int main(void)
 {
@@ -31,8 +197,12 @@ int main(void)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+
+	float witdth = 1600.0f;
+	float height = 800.0f;
+
 	//Create the window
-	window = glfwCreateWindow(960, 480, "simulator", NULL, NULL);
+	window = glfwCreateWindow((int)witdth, (int)height, "Train simulator", NULL, NULL);
 	if (!window)
 	{
 		glfwTerminate();
@@ -50,85 +220,65 @@ int main(void)
 	std::cout << glGetString(GL_VERSION) << std::endl;
 
 	{
-		float positions[] = {
-			 -50.0f,  -50.0f, 0.0f, 0.0f,  //0
-			  50.0f,  -50.0f, 1.0f, 0.0f,  //1
-			  50.0f,   50.0f, 1.0f, 1.0f,  //2
-			 -50.0f,   50.0f, 0.0f, 1.0f   //3
-		};
-
-		unsigned int indices[] = {
-			0,1,2,
-			2,3,0
-		};
-
-		VertexArray va;
-		VertexBuffer vb(positions, 4 * 4 * sizeof(float));
-
 		//Blending
 		GlCall(glEnable(GL_BLEND));
 		GlCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 
-		VertexBufferLayout layout;
-		layout.Push<float>(2);
-		layout.Push<float>(2);
-		va.AddBuffer(vb, layout);
-
-		IndexBuffer ib(indices, 6);
-
-		glm::mat4 proj = glm::ortho(0.0f, 960.0f, 0.0f, 480.0f, -1.0f, 1.0f);
+		glm::mat4 proj = glm::ortho(0.0f, witdth, 0.0f, height, -1.0f, 1.0f);
 		glm::mat4 view = glm::translate(glm::mat4(1.0), glm::vec3(0, 200, 0));
 
-		Shader shader("res/shaders/Basic.shader");
-		shader.Bind();
-		shader.SetUniform4f("u_Color", 0.8f, 0.3f, 0.8f, 1.0);
-
-		Texture texture("res/textures/Stones.jpg");
-		texture.Bind();
-		shader.SetUniform1i("u_Texture", 0);
-
-		va.Unbind();
-		vb.Unbind();
-		ib.Unbind();
-		shader.Unbind();
-
 		Renderer renderer;
+		Shader shader("res/shaders/Basic.shader");
+		Texture station_texture("res/textures/walls.jpg");
+		Texture station_roof_texture("res/textures/roof.jpg");
 
-		glm::vec3 translationA(200, 200, 0);
-		glm::vec3 translationB(400, 200, 0);
+		float delta_time = 1.0f;
+		float last_frame = 0.0f;
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+		glfwSetCursorPos(window, witdth / 2, height / 2);
 
-		float r = 0.0f;
-		float increment = 0.05f;
+		Camera cam(960,480,glm::vec3(0.0f, 0.0f, 1.0f));
+
+		glEnable(GL_DEPTH_TEST);
+
+		float movement = 0.0f;
 
 		while (!glfwWindowShouldClose(window))
 		{
 			//Render here
 			renderer.Clear();
 
+			//Set up camera
+			float current_frame = glfwGetTime();
+			delta_time = current_frame - last_frame;
+			last_frame = current_frame;
+			cam.ProcessInput(window,delta_time);
+
+			//Draw train station building
 			{
-				glm::mat4 model = glm::translate(glm::mat4(1.0f), translationA);
-				glm::mat4 mvp = proj * view * model;
+				glm::mat4 model = glm::mat4(1.0f);
+				glm::mat4 mvp = cam.GetProjectionMatrix() * cam.GetViewMatrix() * model;
+				station_texture.Bind();
 				shader.Bind();
+				shader.SetUniform1i("u_Texture", 0);
 				shader.SetUniformMat4f("u_MVP", mvp);
 
-				renderer.Draw(va, ib, shader);
+				drawStation(renderer, shader);			
 			}
 
+			//Draw train station building roof 
 			{
-				glm::mat4 model = glm::translate(glm::mat4(1.0f), translationB);
-				glm::mat4 mvp = proj * view * model;
+				glm::mat4 model = glm::mat4(1.0f);
+				model = glm::translate(model, glm::vec3(0.0f, 5.0f, -0.5f));
+				glm::mat4 mvp = cam.GetProjectionMatrix() * cam.GetViewMatrix() * model;
+				station_roof_texture.Bind();
 				shader.Bind();
+				shader.SetUniform1i("u_Texture", 0);
 				shader.SetUniformMat4f("u_MVP", mvp);
 
-				renderer.Draw(va, ib, shader);
+				drawRoof(renderer, shader);
 			}
 
-			if (r > 1.0f)
-				increment = -0.05f;
-			else if (r < 0.0f)
-				increment = 0.05f;
-
-			r += increment;
 
 			/* Swap front and back buffers */
 			glfwSwapBuffers(window);

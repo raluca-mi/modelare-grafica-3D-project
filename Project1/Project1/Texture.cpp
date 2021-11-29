@@ -28,8 +28,11 @@ Texture::Texture(const std::string& path)
 
 	if (m_LocalBuffer)
 		stbi_image_free(m_LocalBuffer);
-	else
-		std::cout << "ERROR with the LocalBuffer!"<<std::endl;
+	
+
+	if (stbi_failure_reason())
+		std::cout <<"Cannot load file image\nSTB Reason: "<< stbi_failure_reason();
+
 }
 
 Texture::~Texture()
