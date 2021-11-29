@@ -186,6 +186,100 @@ void drawRoof(Renderer& renderer, Shader& shader)
 	renderer.Draw(va, ib, shader);
 }
 
+void drawDoor(Renderer& renderer, Shader& shader)
+{
+	float positions[] = {
+			 -3.0f,  -1.5f, 0.0f, 0.0f,  //0
+			  3.0f,  -1.5f, 1.0f, 0.0f,  //1
+			  3.0f,   1.5f, 1.0f, 1.0f,  //2
+			 -3.0f,   1.5f, 0.0f, 1.0f   //3
+	};
+
+	unsigned int indices[] = {
+		0,1,2,
+		2,3,0
+	};
+
+	VertexArray va;
+	VertexBuffer vb(positions, sizeof(positions));
+
+	VertexBufferLayout layout;
+	layout.Push<float>(2);
+	layout.Push<float>(2);
+	va.AddBuffer(vb, layout);
+
+	IndexBuffer ib(indices, sizeof(indices) / sizeof(unsigned int));
+
+	va.Unbind();
+	vb.Unbind();
+	ib.Unbind();
+
+	renderer.Draw(va, ib, shader);
+}
+
+void drawWindow(Renderer& renderer, Shader& shader)
+{
+	float positions[] = {
+			 -3.0f,  -1.0f, 0.0f, 0.0f,  //0
+			  3.0f,  -1.0f, 1.0f, 0.0f,  //1
+			  3.0f,   1.0f, 1.0f, 1.0f,  //2
+			 -3.0f,   1.0f, 0.0f, 1.0f   //3
+	};
+
+	unsigned int indices[] = {
+		0,1,2,
+		2,3,0
+	};
+
+	VertexArray va;
+	VertexBuffer vb(positions, sizeof(positions));
+
+	VertexBufferLayout layout;
+	layout.Push<float>(2);
+	layout.Push<float>(2);
+	va.AddBuffer(vb, layout);
+
+	IndexBuffer ib(indices, sizeof(indices) / sizeof(unsigned int));
+
+	va.Unbind();
+	vb.Unbind();
+	ib.Unbind();
+
+	renderer.Draw(va, ib, shader);
+}
+
+void drawSign(Renderer& renderer, Shader& shader)
+{
+	float positions[] = {
+			 -2.0f,  -0.5f, 0.0f, 0.0f,  //0
+			  2.0f,  -0.5f, 1.0f, 0.0f,  //1
+			  2.0f,   0.5f, 1.0f, 1.0f,  //2
+			 -2.0f,   0.5f, 0.0f, 1.0f   //3
+	};
+
+	unsigned int indices[] = {
+		0,1,2,
+		2,3,0
+	};
+
+	VertexArray va;
+	VertexBuffer vb(positions, sizeof(positions));
+
+	VertexBufferLayout layout;
+	layout.Push<float>(2);
+	layout.Push<float>(2);
+	va.AddBuffer(vb, layout);
+
+	IndexBuffer ib(indices, sizeof(indices) / sizeof(unsigned int));
+
+	va.Unbind();
+	vb.Unbind();
+	ib.Unbind();
+
+	renderer.Draw(va, ib, shader);
+}
+
+
 int main(void)
 {
 	GLFWwindow* window;
@@ -219,6 +313,9 @@ int main(void)
 		std::cout << "Error!";
 	std::cout << glGetString(GL_VERSION) << std::endl;
 
+	//Set background color
+	glClearColor(0.5f, 0.7f, 0.8f, 1.0f);
+
 	{
 		//Blending
 		GlCall(glEnable(GL_BLEND));
@@ -231,6 +328,10 @@ int main(void)
 		Shader shader("res/shaders/Basic.shader");
 		Texture station_texture("res/textures/walls.jpg");
 		Texture station_roof_texture("res/textures/roof.jpg");
+		Texture station_door_texture("res/textures/door.jpg");
+		Texture station_windows_texture("res/textures/windows.jpg");
+		Texture station_sign_texture("res/textures/sign.jpg");
+
 
 		float delta_time = 1.0f;
 		float last_frame = 0.0f;
@@ -279,6 +380,57 @@ int main(void)
 				drawRoof(renderer, shader);
 			}
 
+			//Draw train station door
+			{
+				glm::mat4 model = glm::mat4(1.0f);
+				model = glm::translate(model, glm::vec3(0.0f, 1.43f, 0.05f));
+				glm::mat4 mvp = cam.GetProjectionMatrix() * cam.GetViewMatrix() * model;
+				station_door_texture.Bind();
+				shader.Bind();
+				shader.SetUniform1i("u_Texture", 0);
+				shader.SetUniformMat4f("u_MVP", mvp);
+
+				drawDoor(renderer, shader);
+			}
+
+			//Draw train station window_1
+			{
+				glm::mat4 model = glm::mat4(1.0f);
+				model = glm::translate(model, glm::vec3(-7.0f, 2.43f, 0.05f));
+				glm::mat4 mvp = cam.GetProjectionMatrix() * cam.GetViewMatrix() * model;
+				station_windows_texture.Bind();
+				shader.Bind();
+				shader.SetUniform1i("u_Texture", 0);
+				shader.SetUniformMat4f("u_MVP", mvp);
+
+				drawWindow(renderer, shader);
+			}
+
+			//Draw train station window_2
+			{
+				glm::mat4 model = glm::mat4(1.0f);
+				model = glm::translate(model, glm::vec3(7.0f, 2.43f, 0.05f));
+				glm::mat4 mvp = cam.GetProjectionMatrix() * cam.GetViewMatrix() * model;
+				station_windows_texture.Bind();
+				shader.Bind();
+				shader.SetUniform1i("u_Texture", 0);
+				shader.SetUniformMat4f("u_MVP", mvp);
+
+				drawWindow(renderer, shader);
+			}
+
+			//Draw train station sign
+			{
+				glm::mat4 model = glm::mat4(1.0f);
+				model = glm::translate(model, glm::vec3(0.0f, 4.0f, 0.05f));
+				glm::mat4 mvp = cam.GetProjectionMatrix() * cam.GetViewMatrix() * model;
+				station_sign_texture.Bind();
+				shader.Bind();
+				shader.SetUniform1i("u_Texture", 0);
+				shader.SetUniformMat4f("u_MVP", mvp);
+
+				drawSign(renderer, shader);
+			}
 
 			/* Swap front and back buffers */
 			glfwSwapBuffers(window);
