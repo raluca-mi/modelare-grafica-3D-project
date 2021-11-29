@@ -31,7 +31,7 @@ Texture::Texture(const std::string& path)
 	
 
 	if (stbi_failure_reason())
-		std::cout <<"Cannot load file image\nSTB Reason: "<< stbi_failure_reason();
+		std::cout <<"Cannot load file image\nSTB Reason: "<< stbi_failure_reason()<<std::endl;
 
 }
 
