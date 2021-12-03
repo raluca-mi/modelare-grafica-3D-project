@@ -5,16 +5,19 @@
 
 #pragma once
 
+//Constructor
 VertexArray::VertexArray()
 {
 	GlCall(glGenVertexArrays(1, &m_RendererID));
 }
 
+//Destructor
 VertexArray::~VertexArray()
 {
 	GlCall(glDeleteVertexArrays(1, &m_RendererID));
 }
 
+//Methods
 void VertexArray::AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout)
 {
 	Bind();

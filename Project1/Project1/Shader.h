@@ -17,9 +17,14 @@ private:
 	unsigned int m_RendererID;
 	std::unordered_map<std::string, int>m_UniformLocationCache;
 public:
+
+	//Constructor
 	Shader(const std::string& filepath);
+
+	//Destructor
 	~Shader();
 	
+	//Methods
 	void Bind()const;
 	void Unbind()const;
 

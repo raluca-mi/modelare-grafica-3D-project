@@ -4,6 +4,7 @@
 
 #pragma once
 
+//Constructor
 IndexBuffer::IndexBuffer(const unsigned int* data, unsigned int count)
 	:m_Count{count}
 {
@@ -14,11 +15,13 @@ IndexBuffer::IndexBuffer(const unsigned int* data, unsigned int count)
 	GlCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(unsigned int), data, GL_STATIC_DRAW));
 }
 
+//Destructor
 IndexBuffer::~IndexBuffer()
 {
 	GlCall(glDeleteBuffers(1, &m_RendererID));
 }
 
+//Methods
 void IndexBuffer::Bind()const
 {
 	GlCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RendererID));
