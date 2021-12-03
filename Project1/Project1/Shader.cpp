@@ -8,6 +8,7 @@
 
 #include"Renderer.h"
 
+//Constructor
 Shader::Shader(const std::string& filepath)
 	:m_FilePath(filepath), m_RendererID(0)
 {
@@ -15,11 +16,14 @@ Shader::Shader(const std::string& filepath)
 	m_RendererID = CreateShader(source.vertex_source, source.fragment_source);
 }
 
+//Destructor
 Shader::~Shader()
 {
 	GlCall(glDeleteProgram(m_RendererID));
 }
 
+
+//
 shaderProgramSource Shader::ParseShader(const std::string& filepath)
 {
 	std::ifstream fin(filepath);
@@ -97,6 +101,8 @@ unsigned int Shader::CreateShader(const std::string& vertexShader, const std::st
 	 return program;
 }
 
+
+//Methods
 void Shader::Bind() const
 {
 	GlCall(glUseProgram(m_RendererID));
@@ -107,6 +113,8 @@ void Shader::Unbind()const
 	GlCall(glUseProgram(0));
 }
 
+
+//Set uniforms
 void Shader::SetUniform1i(const std::string& name, int value)
 {
 	GlCall(glUniform1i(GetUniformLocation(name), value));

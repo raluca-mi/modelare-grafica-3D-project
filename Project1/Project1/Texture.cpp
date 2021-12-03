@@ -4,6 +4,7 @@
 #include<../STB/stb_image.h>
 #include <iostream>
 
+//Constructor
 Texture::Texture(const std::string& path)
 	:m_RendererId(0),
 	m_FilePath{ path },
@@ -35,11 +36,13 @@ Texture::Texture(const std::string& path)
 
 }
 
+//Destructor
 Texture::~Texture()
 {
 	GlCall(glDeleteTextures(1, &m_RendererId));
 }
 
+//Methods
 void Texture::Bind(unsigned int slot) const
 {
 	GlCall(glActiveTexture(GL_TEXTURE0 + slot));
