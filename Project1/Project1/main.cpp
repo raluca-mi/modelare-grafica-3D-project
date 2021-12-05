@@ -650,7 +650,7 @@ int main(void)
 			//Draw left window_1
 			{
 				glm::mat4 model = glm::mat4(1.0f);
-				model = glm::translate(model, glm::vec3(-11.6f, 3.0f, -5.0f));
+				model = glm::translate(model, glm::vec3(-11.52f, 3.0f, -5.0f));
 				model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 				glm::mat4 mvp = cam.GetProjectionMatrix() * cam.GetViewMatrix() * model;
 				station_left_window_texture.Bind();
@@ -664,7 +664,7 @@ int main(void)
 			//Draw left window_2
 			{
 				glm::mat4 model = glm::mat4(1.0f);
-				model = glm::translate(model, glm::vec3(-11.6f, 3.0f, -2.0f));
+				model = glm::translate(model, glm::vec3(-11.52f, 3.0f, -2.0f));
 				model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 				glm::mat4 mvp = cam.GetProjectionMatrix() * cam.GetViewMatrix() * model;
 				station_left_window_texture.Bind();
