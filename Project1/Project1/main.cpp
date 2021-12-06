@@ -279,6 +279,37 @@ void drawLeftWindow(Renderer& renderer, Shader& shader)
 	renderer.Draw(va, ib, shader);
 }
 
+void drawRightWindow(Renderer& renderer, Shader& shader)
+{
+	float positions[] = {
+			 -1.0f,  -0.9f, 0.0f, 0.0f,  //0
+			  1.0f,  -0.9f, 1.0f, 0.0f,  //1
+			  1.0f,   0.9f, 1.0f, 1.0f,  //2
+			 -1.0f,   0.9f, 0.0f, 1.0f   //3
+	};
+
+	unsigned int indices[] = {
+		0,1,2,
+		2,3,0
+	};
+
+	VertexArray va;
+	VertexBuffer vb(positions, sizeof(positions));
+
+	VertexBufferLayout layout;
+	layout.Push<float>(2);
+	layout.Push<float>(2);
+	va.AddBuffer(vb, layout);
+
+	IndexBuffer ib(indices, sizeof(indices) / sizeof(unsigned int));
+
+	va.Unbind();
+	vb.Unbind();
+	ib.Unbind();
+
+	renderer.Draw(va, ib, shader);
+}
+
 void drawSign(Renderer& renderer, Shader& shader)
 {
 	float positions[] = {
@@ -559,6 +590,7 @@ int main(void)
 		Texture station_door_texture("res/textures/door.jpg");
 		Texture station_windows_texture("res/textures/windows.jpg");
 		Texture station_left_window_texture("res/textures/left_windows.jpg");
+		Texture station_right_window_texture("res/textures/right_window.jpg");
 		Texture station_sign_texture("res/textures/sign.jpg");
 		Texture station_platform("res/textures/platform.jpg");
 		Texture railway("res/textures/railway.jpg");
@@ -673,6 +705,20 @@ int main(void)
 				shader.SetUniformMat4f("u_MVP", mvp);
 
 				drawLeftWindow(renderer, shader);
+			}
+
+			//Draw right window
+			{
+				glm::mat4 model = glm::mat4(1.0f);
+				model = glm::translate(model, glm::vec3(11.52f, 2.6f, -3.5f));
+				model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+				glm::mat4 mvp = cam.GetProjectionMatrix() * cam.GetViewMatrix() * model;
+				station_right_window_texture.Bind();
+				shader.Bind();
+				shader.SetUniform1i("u_Texture", 0);
+				shader.SetUniformMat4f("u_MVP", mvp);
+
+				drawRightWindow(renderer, shader);
 			}
 
 			//Draw train station sign
