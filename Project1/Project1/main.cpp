@@ -6,23 +6,198 @@
 #include<string>
 #include<sstream>
 
-#include"Renderer.h"
-
-#include"VertexBufferLayout.h"
-#include"VertexBuffer.h"
-#include"IndexBuffer.h"
-#include"VertexArray.h"
-#include"Shader.h"
-#include"Texture.h"
-#include "Camera.h"
+#include "Mesh.h"
 
 #include<glm.hpp>
 #include<gtc/matrix_transform.hpp>
 
-
-void drawStation(Renderer& renderer, Shader& shader)
+void drawDoor(Renderer& renderer, Shader& shader)
 {
 	float positions[] = {
+			 -3.0f,  -1.5f, 0.0f, 0.0f,  //0
+			  3.0f,  -1.5f, 1.0f, 0.0f,  //1
+			  3.0f,   1.5f, 1.0f, 1.0f,  //2
+			 -3.0f,   1.5f, 0.0f, 1.0f   //3
+	};
+
+	unsigned int indices[] = {
+		0,1,2,
+		2,3,0
+	};
+
+	VertexArray va;
+	VertexBuffer vb(positions, sizeof(positions));
+
+	VertexBufferLayout layout;
+	layout.Push<float>(2);
+	layout.Push<float>(2);
+	va.AddBuffer(vb, layout);
+
+	IndexBuffer ib(indices, sizeof(indices) / sizeof(unsigned int));
+
+	va.Unbind();
+	vb.Unbind();
+	ib.Unbind();
+
+	renderer.Draw(va, ib, shader);
+}
+void drawMainWindow(Renderer& renderer, Shader& shader)
+{
+	float positions[] = {
+			 -3.0f,  -1.0f, 0.0f, 0.0f,  //0
+			  3.0f,  -1.0f, 1.0f, 0.0f,  //1
+			  3.0f,   1.0f, 1.0f, 1.0f,  //2
+			 -3.0f,   1.0f, 0.0f, 1.0f   //3
+	};
+
+	unsigned int indices[] = {
+		0,1,2,
+		2,3,0
+	};
+
+	VertexArray va;
+	VertexBuffer vb(positions, sizeof(positions));
+
+	VertexBufferLayout layout;
+	layout.Push<float>(2);
+	layout.Push<float>(2);
+	va.AddBuffer(vb, layout);
+
+	IndexBuffer ib(indices, sizeof(indices) / sizeof(unsigned int));
+
+	va.Unbind();
+	vb.Unbind();
+	ib.Unbind();
+
+	renderer.Draw(va, ib, shader);
+}
+void drawLeftWindow(Renderer& renderer, Shader& shader)
+{
+	float positions[] = {
+			 -0.7f,  -0.4f, 0.0f, 0.0f,  //0
+			  0.7f,  -0.4f, 1.0f, 0.0f,  //1
+			  0.7f,   0.4f, 1.0f, 1.0f,  //2
+			 -0.7f,   0.4f, 0.0f, 1.0f   //3
+	};
+
+	unsigned int indices[] = {
+		0,1,2,
+		2,3,0
+	};
+
+	VertexArray va;
+	VertexBuffer vb(positions, sizeof(positions));
+
+	VertexBufferLayout layout;
+	layout.Push<float>(2);
+	layout.Push<float>(2);
+	va.AddBuffer(vb, layout);
+
+	IndexBuffer ib(indices, sizeof(indices) / sizeof(unsigned int));
+
+	va.Unbind();
+	vb.Unbind();
+	ib.Unbind();
+
+	renderer.Draw(va, ib, shader);
+}
+void drawRightWindow(Renderer& renderer, Shader& shader)
+{
+	float positions[] = {
+			 -1.0f,  -0.9f, 0.0f, 0.0f,  //0
+			  1.0f,  -0.9f, 1.0f, 0.0f,  //1
+			  1.0f,   0.9f, 1.0f, 1.0f,  //2
+			 -1.0f,   0.9f, 0.0f, 1.0f   //3
+	};
+
+	unsigned int indices[] = {
+		0,1,2,
+		2,3,0
+	};
+
+	VertexArray va;
+	VertexBuffer vb(positions, sizeof(positions));
+
+	VertexBufferLayout layout;
+	layout.Push<float>(2);
+	layout.Push<float>(2);
+	va.AddBuffer(vb, layout);
+
+	IndexBuffer ib(indices, sizeof(indices) / sizeof(unsigned int));
+
+	va.Unbind();
+	vb.Unbind();
+	ib.Unbind();
+
+	renderer.Draw(va, ib, shader);
+}
+void drawSign(Renderer& renderer, Shader& shader)
+{
+	float positions[] = {
+			 -2.0f,  -0.5f, 0.0f, 0.0f,  //0
+			  2.0f,  -0.5f, 1.0f, 0.0f,  //1
+			  2.0f,   0.5f, 1.0f, 1.0f,  //2
+			 -2.0f,   0.5f, 0.0f, 1.0f   //3
+	};
+
+	unsigned int indices[] = {
+		0,1,2,
+		2,3,0
+	};
+
+	VertexArray va;
+	VertexBuffer vb(positions, sizeof(positions));
+
+	VertexBufferLayout layout;
+	layout.Push<float>(2);
+	layout.Push<float>(2);
+	va.AddBuffer(vb, layout);
+
+	IndexBuffer ib(indices, sizeof(indices) / sizeof(unsigned int));
+
+	va.Unbind();
+	vb.Unbind();
+	ib.Unbind();
+
+	renderer.Draw(va, ib, shader);
+}
+void drawRailway(Renderer& renderer, Shader& shader)
+{
+	float positions[] = {
+			 -18.0f,  -1.1f, 0.0f, 0.0f,  //0
+			  18.0f,  -1.1f, 1.0f, 0.0f,  //1
+			  18.0f,   1.1f, 1.0f, 1.0f,  //2
+			 -18.0f,   1.1f, 0.0f, 1.0f   //3
+	};
+
+	unsigned int indices[] = {
+		0,1,2,
+		2,3,0
+	};
+
+	VertexArray va;
+	VertexBuffer vb(positions, sizeof(positions));
+
+	VertexBufferLayout layout;
+	layout.Push<float>(2);
+	layout.Push<float>(2);
+	va.AddBuffer(vb, layout);
+
+	IndexBuffer ib(indices, sizeof(indices) / sizeof(unsigned int));
+
+	va.Unbind();
+	vb.Unbind();
+	ib.Unbind();
+
+	renderer.Draw(va, ib, shader);
+}
+
+Mesh InitStationMesh(const Texture& texture)
+{
+	std::vector<float> vertices = {
+
+		// Vertex coords    //tex coords   
+
 		//front
 		 -11.5, -0.0,  0.0, 0.0f, 0.0f, //0 0
 		  11.5, -0.0,  0.0, 1.0f, 0.0f, //1 1
@@ -60,7 +235,7 @@ void drawStation(Renderer& renderer, Shader& shader)
 		  -11.5, -0.0,  0.0, 0.0f, 1.0f  //0 23
 	};
 
-	unsigned int indices[] = {
+	std::vector<unsigned int> indices = {
 		//front
 		0,1,2, //down
 		2,3,0, //up
@@ -86,26 +261,14 @@ void drawStation(Renderer& renderer, Shader& shader)
 		18,19,16
 	};
 
-	VertexArray va;
-	VertexBuffer vb(positions, sizeof(positions));
-
-	VertexBufferLayout layout;
-	layout.Push<float>(3);
-	layout.Push<float>(2);
-	va.AddBuffer(vb, layout);
-
-	IndexBuffer ib(indices, sizeof(indices) / sizeof(unsigned int));
-
-	va.Unbind();
-	vb.Unbind();
-	ib.Unbind();
-
-	renderer.Draw(va, ib, shader);
+	return Mesh(vertices, indices, texture);
 }
-
-void drawRoof(Renderer& renderer, Shader& shader)
+Mesh InitStationRoofMesh(const Texture& texture)
 {
-	float positions[] = {
+	std::vector<float> vertices = {
+
+		// Vertex coords    //tex coords   
+
 		//front
 		 -12.5, -0.1,  1.0,  0.0f, 0.0f, //0 0
 		  12.5, -0.1,  1.0,  1.0f, 0.0f, //1 1
@@ -143,7 +306,7 @@ void drawRoof(Renderer& renderer, Shader& shader)
 		  -12.5, -0.1,  1.0, 0.0f, 1.0f  //0 23
 	};
 
-	unsigned int indices[] = {
+	std::vector<unsigned int> indices = {
 		//front
 		0,1,2, //down
 		2,3,0, //up
@@ -169,181 +332,14 @@ void drawRoof(Renderer& renderer, Shader& shader)
 		18,19,16
 	};
 
-	VertexArray va;
-	VertexBuffer vb(positions, sizeof(positions));
-
-	VertexBufferLayout layout;
-	layout.Push<float>(3);
-	layout.Push<float>(2);
-	va.AddBuffer(vb, layout);
-
-	IndexBuffer ib(indices, sizeof(indices) / sizeof(unsigned int));
-
-	va.Unbind();
-	vb.Unbind();
-	ib.Unbind();
-
-	renderer.Draw(va, ib, shader);
+	return Mesh(vertices, indices, texture);	
 }
-
-void drawDoor(Renderer& renderer, Shader& shader)
+Mesh InitMainPlatform(const Texture& texture)
 {
-	float positions[] = {
-			 -3.0f,  -1.5f, 0.0f, 0.0f,  //0
-			  3.0f,  -1.5f, 1.0f, 0.0f,  //1
-			  3.0f,   1.5f, 1.0f, 1.0f,  //2
-			 -3.0f,   1.5f, 0.0f, 1.0f   //3
-	};
+	std::vector<float> vertices={
 
-	unsigned int indices[] = {
-		0,1,2,
-		2,3,0
-	};
+		// Vertex coords    //tex coords   
 
-	VertexArray va;
-	VertexBuffer vb(positions, sizeof(positions));
-
-	VertexBufferLayout layout;
-	layout.Push<float>(2);
-	layout.Push<float>(2);
-	va.AddBuffer(vb, layout);
-
-	IndexBuffer ib(indices, sizeof(indices) / sizeof(unsigned int));
-
-	va.Unbind();
-	vb.Unbind();
-	ib.Unbind();
-
-	renderer.Draw(va, ib, shader);
-}
-
-void drawMainWindow(Renderer& renderer, Shader& shader)
-{
-	float positions[] = {
-			 -3.0f,  -1.0f, 0.0f, 0.0f,  //0
-			  3.0f,  -1.0f, 1.0f, 0.0f,  //1
-			  3.0f,   1.0f, 1.0f, 1.0f,  //2
-			 -3.0f,   1.0f, 0.0f, 1.0f   //3
-	};
-
-	unsigned int indices[] = {
-		0,1,2,
-		2,3,0
-	};
-
-	VertexArray va;
-	VertexBuffer vb(positions, sizeof(positions));
-
-	VertexBufferLayout layout;
-	layout.Push<float>(2);
-	layout.Push<float>(2);
-	va.AddBuffer(vb, layout);
-
-	IndexBuffer ib(indices, sizeof(indices) / sizeof(unsigned int));
-
-	va.Unbind();
-	vb.Unbind();
-	ib.Unbind();
-
-	renderer.Draw(va, ib, shader);
-}
-
-void drawLeftWindow(Renderer& renderer, Shader& shader)
-{
-	float positions[] = {
-			 -0.7f,  -0.4f, 0.0f, 0.0f,  //0
-			  0.7f,  -0.4f, 1.0f, 0.0f,  //1
-			  0.7f,   0.4f, 1.0f, 1.0f,  //2
-			 -0.7f,   0.4f, 0.0f, 1.0f   //3
-	};
-
-	unsigned int indices[] = {
-		0,1,2,
-		2,3,0
-	};
-
-	VertexArray va;
-	VertexBuffer vb(positions, sizeof(positions));
-
-	VertexBufferLayout layout;
-	layout.Push<float>(2);
-	layout.Push<float>(2);
-	va.AddBuffer(vb, layout);
-
-	IndexBuffer ib(indices, sizeof(indices) / sizeof(unsigned int));
-
-	va.Unbind();
-	vb.Unbind();
-	ib.Unbind();
-
-	renderer.Draw(va, ib, shader);
-}
-
-void drawRightWindow(Renderer& renderer, Shader& shader)
-{
-	float positions[] = {
-			 -1.0f,  -0.9f, 0.0f, 0.0f,  //0
-			  1.0f,  -0.9f, 1.0f, 0.0f,  //1
-			  1.0f,   0.9f, 1.0f, 1.0f,  //2
-			 -1.0f,   0.9f, 0.0f, 1.0f   //3
-	};
-
-	unsigned int indices[] = {
-		0,1,2,
-		2,3,0
-	};
-
-	VertexArray va;
-	VertexBuffer vb(positions, sizeof(positions));
-
-	VertexBufferLayout layout;
-	layout.Push<float>(2);
-	layout.Push<float>(2);
-	va.AddBuffer(vb, layout);
-
-	IndexBuffer ib(indices, sizeof(indices) / sizeof(unsigned int));
-
-	va.Unbind();
-	vb.Unbind();
-	ib.Unbind();
-
-	renderer.Draw(va, ib, shader);
-}
-
-void drawSign(Renderer& renderer, Shader& shader)
-{
-	float positions[] = {
-			 -2.0f,  -0.5f, 0.0f, 0.0f,  //0
-			  2.0f,  -0.5f, 1.0f, 0.0f,  //1
-			  2.0f,   0.5f, 1.0f, 1.0f,  //2
-			 -2.0f,   0.5f, 0.0f, 1.0f   //3
-	};
-
-	unsigned int indices[] = {
-		0,1,2,
-		2,3,0
-	};
-
-	VertexArray va;
-	VertexBuffer vb(positions, sizeof(positions));
-
-	VertexBufferLayout layout;
-	layout.Push<float>(2);
-	layout.Push<float>(2);
-	va.AddBuffer(vb, layout);
-
-	IndexBuffer ib(indices, sizeof(indices) / sizeof(unsigned int));
-
-	va.Unbind();
-	vb.Unbind();
-	ib.Unbind();
-
-	renderer.Draw(va, ib, shader);
-}
-
-void drawPlatform_1(Renderer& renderer, Shader& shader)
-{
-	float positions[] = {
 		//front
 		 -18.0, -6.0,  0.0, 0.0f, 0.0f, //0 0
 		  18.0, -6.0,  0.0, 1.0f, 0.0f, //1 1
@@ -381,7 +377,7 @@ void drawPlatform_1(Renderer& renderer, Shader& shader)
 		  -18.0, -6.0,  0.0, 0.0f, 1.0f  //0 23
 	};
 
-	unsigned int indices[] = {
+	std::vector<unsigned int> indices = {
 		//front
 		0,1,2, //down
 		2,3,0, //up
@@ -407,57 +403,14 @@ void drawPlatform_1(Renderer& renderer, Shader& shader)
 		18,19,16
 	};
 
-	VertexArray va;
-	VertexBuffer vb(positions, sizeof(positions));
-
-	VertexBufferLayout layout;
-	layout.Push<float>(3);
-	layout.Push<float>(2);
-	va.AddBuffer(vb, layout);
-
-	IndexBuffer ib(indices, sizeof(indices) / sizeof(unsigned int));
-
-	va.Unbind();
-	vb.Unbind();
-	ib.Unbind();
-
-	renderer.Draw(va, ib, shader);
+	return Mesh(vertices, indices, texture);
 }
-
-void drawRailway(Renderer& renderer, Shader& shader)
+Mesh InitSecondPlatform(const Texture& texture)
 {
-	float positions[] = {
-			 -18.0f,  -1.1f, 0.0f, 0.0f,  //0
-			  18.0f,  -1.1f, 1.0f, 0.0f,  //1
-			  18.0f,   1.1f, 1.0f, 1.0f,  //2
-			 -18.0f,   1.1f, 0.0f, 1.0f   //3
-	};
+	std::vector<float> vertices = {
 
-	unsigned int indices[] = {
-		0,1,2,
-		2,3,0
-	};
+		// Vertex coords    //tex coords   
 
-	VertexArray va;
-	VertexBuffer vb(positions, sizeof(positions));
-
-	VertexBufferLayout layout;
-	layout.Push<float>(2);
-	layout.Push<float>(2);
-	va.AddBuffer(vb, layout);
-
-	IndexBuffer ib(indices, sizeof(indices) / sizeof(unsigned int));
-
-	va.Unbind();
-	vb.Unbind();
-	ib.Unbind();
-
-	renderer.Draw(va, ib, shader);
-}
-
-void drawPlatform_2(Renderer& renderer, Shader& shader)
-{
-	float positions[] = {
 		//front
 		 -18.0, -0.8,  0.0, 0.0f, 0.0f, //0 0
 		  18.0, -0.8,  0.0, 1.0f, 0.0f, //1 1
@@ -495,7 +448,7 @@ void drawPlatform_2(Renderer& renderer, Shader& shader)
 		  -18.0, -0.8,  0.0, 0.0f, 1.0f  //0 23
 	};
 
-	unsigned int indices[] = {
+	std::vector<unsigned int> indices = {
 		//front
 		0,1,2, //down
 		2,3,0, //up
@@ -521,28 +474,12 @@ void drawPlatform_2(Renderer& renderer, Shader& shader)
 		18,19,16
 	};
 
-	VertexArray va;
-	VertexBuffer vb(positions, sizeof(positions));
-
-	VertexBufferLayout layout;
-	layout.Push<float>(3);
-	layout.Push<float>(2);
-	va.AddBuffer(vb, layout);
-
-	IndexBuffer ib(indices, sizeof(indices) / sizeof(unsigned int));
-
-	va.Unbind();
-	vb.Unbind();
-	ib.Unbind();
-
-	renderer.Draw(va, ib, shader);
+	return Mesh(vertices, indices, texture);
 }
-
 
 int main(void)
 {
-	GLFWwindow* window;
-
+	/* Initializing the library */
 	if (!glfwInit())
 		return -1;
 
@@ -550,101 +487,106 @@ int main(void)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-
-	float witdth = 1600.0f;
-	float height = 800.0f;
-
-	//Create the window
-	window = glfwCreateWindow((int)witdth, (int)height, "Train simulator", NULL, NULL);
+	/* Creating a window */
+	float window_height = 800.0f, window_width = 1850.0f;
+	GLFWwindow* window = glfwCreateWindow(window_width, window_height, "Train simulator", NULL, NULL);
 	if (!window)
 	{
+		std::cout << "Failed to create window!\n";
 		glfwTerminate();
 		return -1;
 	}
-
-	// Make the window's context current
 	glfwMakeContextCurrent(window);
 
-	glfwSwapInterval(1);
-
-	//Init glew
-	if (glewInit() != GLEW_OK)
-		std::cout << "Error starting glew!";
+	//Initiaziting glew
+	glewInit();
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	//Set background color
 	glClearColor(0.5f, 0.7f, 0.8f, 1.0f);
 
+	//Set up the projection and view matrix
+	glm::mat4 proj = glm::ortho(0.0f, window_width, 0.0f, window_height, -1.0f, 1.0f);
+	glm::mat4 view = glm::translate(glm::mat4(1.0), glm::vec3(0, 200, 0));
+
+	//Loading shader
+	Shader shader("res/shaders/object.shader");
+	shader.Bind();
+
+	//Loading textures
+	Texture station_texture("res/textures/brickss.jpg");
+	Texture station_roof_texture("res/textures/roof.jpg");
+	Texture station_platform("res/textures/platform.jpg");
+
+	Texture station_door_texture("res/textures/door.jpg");
+	Texture station_windows_texture("res/textures/windows.jpg");
+	Texture station_left_window_texture("res/textures/left_windows.jpg");
+	Texture station_right_window_texture("res/textures/right_window.jpg");
+	Texture station_sign_texture("res/textures/sign.jpg");
+	Texture railway("res/textures/railway.jpg");
+
+	// Initialize camera
+	Camera camera(window_width, window_height, glm::vec3(0.0f, 5.0f, 10.0f));
+	camera.SetPitch(-10.0f);
+	float last_frame = 0.0f, delta_time;
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+	glfwSetCursorPos(window, (window_width / 2), (window_height / 2));
+
 	{
-		//Blending
-		GlCall(glEnable(GL_BLEND));
-		GlCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
-
-		//Set up the projection and view matrix
-		glm::mat4 proj = glm::ortho(0.0f, witdth, 0.0f, height, -1.0f, 1.0f);
-		glm::mat4 view = glm::translate(glm::mat4(1.0), glm::vec3(0, 200, 0));
-
 		Renderer renderer;
-		Shader shader("res/shaders/Basic.shader");
-		Texture station_texture("res/textures/brickss.jpg");
-		Texture station_roof_texture("res/textures/roof.jpg");
-		Texture station_door_texture("res/textures/door.jpg");
-		Texture station_windows_texture("res/textures/windows.jpg");
-		Texture station_left_window_texture("res/textures/left_windows.jpg");
-		Texture station_right_window_texture("res/textures/right_window.jpg");
-		Texture station_sign_texture("res/textures/sign.jpg");
-		Texture station_platform("res/textures/platform.jpg");
-		Texture railway("res/textures/railway.jpg");
-
-		float delta_time = 1.0f;
-		float last_frame = 0.0f;
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-		glfwSetCursorPos(window, witdth / 2, height / 2);
-
-		Camera cam(960, 480, glm::vec3(0.0f, 0.0f, 1.0f));
 
 		glEnable(GL_DEPTH_TEST);
+
+		//Loading meshes
+		Mesh trainStation = InitStationMesh(station_texture);
+		Mesh trainStationRoof = InitStationRoofMesh(station_roof_texture);
+		Mesh mainPlatform = InitMainPlatform(station_platform);
+		Mesh secondPlatform = InitSecondPlatform(station_platform);
+
+		float rot_angle = 0.0f;
 
 		while (!glfwWindowShouldClose(window))
 		{
 			//Render here
 			renderer.Clear();
+			rot_angle += 0.02f;
 
-			//Set up camera
-			float current_frame = glfwGetTime();
+			//Getting delta time
+			float current_frame = static_cast<float>(glfwGetTime());
 			delta_time = current_frame - last_frame;
 			last_frame = current_frame;
-			cam.ProcessInput(window, delta_time);
+
+			//processing user input
+			camera.ProcessInput(window, delta_time);
 
 			//Draw train station building
 			{
 				glm::mat4 model = glm::mat4(1.0f);
-				glm::mat4 mvp = cam.GetProjectionMatrix() * cam.GetViewMatrix() * model;
-				station_texture.Bind();
+				glm::mat4 mvp = camera.GetProjectionMatrix() * camera.GetViewMatrix() * model;
 				shader.Bind();
-				shader.SetUniform1i("u_Texture", 0);
 				shader.SetUniformMat4f("u_MVP", mvp);
 
-				drawStation(renderer, shader);
+				trainStation.Draw(camera, shader, renderer);
 			}
 
 			//Draw train station building roof 
 			{
 				glm::mat4 model = glm::mat4(1.0f);
 				model = glm::translate(model, glm::vec3(0.0f, 5.0f, -0.5f));
-				glm::mat4 mvp = cam.GetProjectionMatrix() * cam.GetViewMatrix() * model;
-				station_roof_texture.Bind();
+				glm::mat4 mvp = camera.GetProjectionMatrix() * camera.GetViewMatrix() * model;
+				
 				shader.Bind();
-				shader.SetUniform1i("u_Texture", 0);
 				shader.SetUniformMat4f("u_MVP", mvp);
 
-				drawRoof(renderer, shader);
+				trainStationRoof.Draw(camera, shader, renderer);
 			}
 
 			//Draw train station door
 			{
 				glm::mat4 model = glm::mat4(1.0f);
 				model = glm::translate(model, glm::vec3(0.0f, 1.5f, 0.05f));
-				glm::mat4 mvp = cam.GetProjectionMatrix() * cam.GetViewMatrix() * model;
+				glm::mat4 mvp = camera.GetProjectionMatrix() * camera.GetViewMatrix() * model;
 				station_door_texture.Bind();
 				shader.Bind();
 				shader.SetUniform1i("u_Texture", 0);
@@ -657,7 +599,7 @@ int main(void)
 			{
 				glm::mat4 model = glm::mat4(1.0f);
 				model = glm::translate(model, glm::vec3(-7.0f, 2.43f, 0.05f));
-				glm::mat4 mvp = cam.GetProjectionMatrix() * cam.GetViewMatrix() * model;
+				glm::mat4 mvp = camera.GetProjectionMatrix() * camera.GetViewMatrix() * model;
 				station_windows_texture.Bind();
 				shader.Bind();
 				shader.SetUniform1i("u_Texture", 0);
@@ -670,7 +612,7 @@ int main(void)
 			{
 				glm::mat4 model = glm::mat4(1.0f);
 				model = glm::translate(model, glm::vec3(7.0f, 2.43f, 0.05f));
-				glm::mat4 mvp = cam.GetProjectionMatrix() * cam.GetViewMatrix() * model;
+				glm::mat4 mvp = camera.GetProjectionMatrix() * camera.GetViewMatrix() * model;
 				station_windows_texture.Bind();
 				shader.Bind();
 				shader.SetUniform1i("u_Texture", 0);
@@ -684,7 +626,7 @@ int main(void)
 				glm::mat4 model = glm::mat4(1.0f);
 				model = glm::translate(model, glm::vec3(-11.52f, 3.0f, -5.0f));
 				model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-				glm::mat4 mvp = cam.GetProjectionMatrix() * cam.GetViewMatrix() * model;
+				glm::mat4 mvp = camera.GetProjectionMatrix() * camera.GetViewMatrix() * model;
 				station_left_window_texture.Bind();
 				shader.Bind();
 				shader.SetUniform1i("u_Texture", 0);
@@ -698,7 +640,7 @@ int main(void)
 				glm::mat4 model = glm::mat4(1.0f);
 				model = glm::translate(model, glm::vec3(-11.52f, 3.0f, -2.0f));
 				model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-				glm::mat4 mvp = cam.GetProjectionMatrix() * cam.GetViewMatrix() * model;
+				glm::mat4 mvp = camera.GetProjectionMatrix() * camera.GetViewMatrix() * model;
 				station_left_window_texture.Bind();
 				shader.Bind();
 				shader.SetUniform1i("u_Texture", 0);
@@ -712,7 +654,7 @@ int main(void)
 				glm::mat4 model = glm::mat4(1.0f);
 				model = glm::translate(model, glm::vec3(11.52f, 2.6f, -3.5f));
 				model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-				glm::mat4 mvp = cam.GetProjectionMatrix() * cam.GetViewMatrix() * model;
+				glm::mat4 mvp = camera.GetProjectionMatrix() * camera.GetViewMatrix() * model;
 				station_right_window_texture.Bind();
 				shader.Bind();
 				shader.SetUniform1i("u_Texture", 0);
@@ -725,7 +667,7 @@ int main(void)
 			{
 				glm::mat4 model = glm::mat4(1.0f);
 				model = glm::translate(model, glm::vec3(0.0f, 4.0f, 0.05f));
-				glm::mat4 mvp = cam.GetProjectionMatrix() * cam.GetViewMatrix() * model;
+				glm::mat4 mvp = camera.GetProjectionMatrix() * camera.GetViewMatrix() * model;
 				station_sign_texture.Bind();
 				shader.Bind();
 				shader.SetUniform1i("u_Texture", 0);
@@ -739,13 +681,12 @@ int main(void)
 				glm::mat4 model = glm::mat4(1.0f);
 				model = glm::translate(model, glm::vec3(0.0f, -0.01f, -2.0f));
 				model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-				glm::mat4 mvp = cam.GetProjectionMatrix() * cam.GetViewMatrix() * model;
-				station_platform.Bind();
+				glm::mat4 mvp = camera.GetProjectionMatrix() * camera.GetViewMatrix() * model;
+
 				shader.Bind();
-				shader.SetUniform1i("u_Texture", 0);
 				shader.SetUniformMat4f("u_MVP", mvp);
 
-				drawPlatform_1(renderer, shader);
+				mainPlatform.Draw(camera, shader, renderer);
 			}
 
 
@@ -754,7 +695,7 @@ int main(void)
 				glm::mat4 model = glm::mat4(1.0f);
 				model = glm::translate(model, glm::vec3(0.0f, -0.01f, 5.1f));
 				model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-				glm::mat4 mvp = cam.GetProjectionMatrix() * cam.GetViewMatrix() * model;
+				glm::mat4 mvp = camera.GetProjectionMatrix() * camera.GetViewMatrix() * model;
 				railway.Bind();
 				shader.Bind();
 				shader.SetUniform1i("u_Texture", 0);
@@ -763,18 +704,17 @@ int main(void)
 				drawRailway(renderer, shader);
 			}
 
-			//Draw platform_2
+			//Draw second platform
 			{
 				glm::mat4 model = glm::mat4(1.0f);
 				model = glm::translate(model, glm::vec3(0.0f, -0.01f, 7.0f));
 				model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-				glm::mat4 mvp = cam.GetProjectionMatrix() * cam.GetViewMatrix() * model;
-				station_platform.Bind();
+				glm::mat4 mvp = camera.GetProjectionMatrix() * camera.GetViewMatrix() * model;
+
 				shader.Bind();
-				shader.SetUniform1i("u_Texture", 0);
 				shader.SetUniformMat4f("u_MVP", mvp);
 
-				drawPlatform_2(renderer, shader);
+				secondPlatform.Draw(camera, shader, renderer);
 			}
 
 			/* Swap front and back buffers */
