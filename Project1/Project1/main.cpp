@@ -11,6 +11,8 @@
 #include<glm.hpp>
 #include<gtc/matrix_transform.hpp>
 
+#include"OBJLoader.h";
+
 void drawDoor(Renderer& renderer, Shader& shader)
 {
 	float positions[] = {
@@ -526,6 +528,8 @@ int main(void)
 	Texture station_sign_texture("res/textures/sign.jpg");
 	Texture railway("res/textures/railway.jpg");
 
+	Texture trainTexture("res/textures/train.png");
+
 	// Initialize camera
 	Camera camera(window_width, window_height, glm::vec3(0.0f, 5.0f, 10.0f));
 	camera.SetPitch(-10.0f);
@@ -538,12 +542,18 @@ int main(void)
 
 		glEnable(GL_DEPTH_TEST);
 
+		//loading train model from .obj
+		std::vector<float> vbo;
+		std::vector<unsigned int> ebo;
+		bool res = loadOBJ("res/models/train.obj", vbo, ebo);
+		
+
 		//Loading meshes
 		Mesh trainStation = InitStationMesh(station_texture);
 		Mesh trainStationRoof = InitStationRoofMesh(station_roof_texture);
 		Mesh mainPlatform = InitMainPlatform(station_platform);
 		Mesh secondPlatform = InitSecondPlatform(station_platform);
-
+		Mesh train(vbo, ebo,trainTexture);
 		float rot_angle = 0.0f;
 
 		while (!glfwWindowShouldClose(window))
@@ -560,6 +570,19 @@ int main(void)
 			//processing user input
 			camera.ProcessInput(window, delta_time);
 
+			//Draw train model
+			{
+				glm::mat4 model = glm::mat4(0.7f);
+				model = glm::translate(model, glm::vec3(0.0f, -0.01f, 5.1f ));
+				model = glm::rotate(model, glm::radians(360.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+				model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+				model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
+				glm::mat4 mvp = camera.GetProjectionMatrix() * camera.GetViewMatrix() * model;
+
+				shader.Bind();
+				shader.SetUniformMat4f("u_MVP", mvp);
+				train.Draw(camera, shader, renderer);
+			}
 			//Draw train station building
 			{
 				glm::mat4 model = glm::mat4(1.0f);
