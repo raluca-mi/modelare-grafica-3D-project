@@ -543,9 +543,9 @@ int main(void)
 		glEnable(GL_DEPTH_TEST);
 
 		//loading train model from .obj
-		std::vector<float> vbo;
-		std::vector<unsigned int> ebo;
-		bool res = loadOBJ("res/models/train.obj", vbo, ebo);
+		std::vector<float> vertices;
+		std::vector<unsigned int> indices;
+		bool res = loadOBJ("res/models/train.obj", vertices, indices);
 		
 
 		//Loading meshes
@@ -553,7 +553,7 @@ int main(void)
 		Mesh trainStationRoof = InitStationRoofMesh(station_roof_texture);
 		Mesh mainPlatform = InitMainPlatform(station_platform);
 		Mesh secondPlatform = InitSecondPlatform(station_platform);
-		Mesh train(vbo, ebo,trainTexture);
+		Mesh train(vertices,indices,trainTexture);
 		float rot_angle = 0.0f;
 
 		while (!glfwWindowShouldClose(window))

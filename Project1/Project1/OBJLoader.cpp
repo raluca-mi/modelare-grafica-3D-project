@@ -1,19 +1,18 @@
 #include"OBJLoader.h";
 #include <unordered_set>
 
-bool loadOBJ(std::string path, std::vector<float>& vbo, std::vector< unsigned int >& vertexIndices)
+bool loadOBJ(std::string path, std::vector<float>& vertices, std::vector< unsigned int >& vertexIndices)
 {
 	
 	std::vector< glm::vec3 > temp_vertices;
 	std::vector< glm::vec2 > temp_uvs;
 	std::vector< glm::vec3 > temp_normals;
-	std::vector<float> vertexBuffer;
 
 	//to improve performance,not used yet
 	std::unordered_set<size_t> processedVertices;
 
-	std::size_t verticesCount = 0;
-
+	std::size_t count = 0;
+	
 	std::ifstream read(path);
 	if (!read.is_open())
 	{
@@ -34,7 +33,7 @@ bool loadOBJ(std::string path, std::vector<float>& vbo, std::vector< unsigned in
 			glm::vec3 vertex;
 			read >> vertex.x >> vertex.y >> vertex.z;
 			temp_vertices.push_back(vertex);
-			++verticesCount;
+			
 		}
 		else if (line == "vt")
 		{
@@ -55,22 +54,19 @@ bool loadOBJ(std::string path, std::vector<float>& vbo, std::vector< unsigned in
 			
 			read >> vertexIndex[0]>> slash>> uvIndex[0] >> slash >> normalIndex[0]  >> vertexIndex[1] >> slash >> uvIndex[1] >> slash >> normalIndex[1]  >> vertexIndex[2] >> slash >> uvIndex[2] >> slash >> normalIndex[2];
 
-			vertexIndices.push_back(vertexIndex[0]-1);
-			vertexIndices.push_back(vertexIndex[1]-1);
-			vertexIndices.push_back(vertexIndex[2]-1);
+			auto insert = [&](int index) {
+				vertices.push_back(temp_vertices[vertexIndex[index]-1].x);
+				vertices.push_back(temp_vertices[vertexIndex[index]-1].y);
+				vertices.push_back(temp_vertices[vertexIndex[index]-1].z);
+				vertices.push_back(temp_uvs[uvIndex[index]-1].x);
+				vertices.push_back(temp_uvs[uvIndex[index]-1].y);
+				vertexIndices.push_back(count);
+				count++;
+			};
 
-			
+			insert(0);
+			insert(1);
+			insert(2);
 		}
 	}
-
-	for (size_t i = 0; i < verticesCount; i++)
-	{
-		vbo.push_back(temp_vertices[i].x);
-		vbo.push_back(temp_vertices[i].y);
-		vbo.push_back(temp_vertices[i].z);
-		vbo.push_back(temp_uvs[i].x);
-		vbo.push_back(temp_uvs[i].y);
-	}
-	
-
 }
