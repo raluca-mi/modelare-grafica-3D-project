@@ -8,6 +8,7 @@ Mesh::Mesh(const std::vector<float>& vertices, const std::vector<unsigned int>& 
 	VertexBufferLayout layout;
 	layout.Push<float>(3);
 	layout.Push<float>(2);
+	layout.Push<float>(3);
 
 	m_vertex_array.AddBuffer(m_vertex_buffer, layout);
 }
