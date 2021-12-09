@@ -60,6 +60,9 @@ bool loadOBJ(std::string path, std::vector<float>& vertices, std::vector< unsign
 				vertices.push_back(temp_vertices[vertexIndex[index]-1].z);
 				vertices.push_back(temp_uvs[uvIndex[index]-1].x);
 				vertices.push_back(temp_uvs[uvIndex[index]-1].y);
+				vertices.push_back(temp_normals[normalIndex[index] - 1].x);
+				vertices.push_back(temp_normals[normalIndex[index] - 1].y);
+				vertices.push_back(temp_normals[normalIndex[index] - 1].z);
 				vertexIndices.push_back(count);
 				count++;
 			};

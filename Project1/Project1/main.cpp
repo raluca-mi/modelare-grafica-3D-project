@@ -508,7 +508,7 @@ int main(void)
 			camera.ProcessInput(window, delta_time);
 
 			//Draw train model
-			/*{
+			{
 				glm::mat4 model = glm::mat4(0.7f);
 				model = glm::translate(model, glm::vec3(0.0f, -0.01f, 5.1f));
 				model = glm::rotate(model, glm::radians(360.0f), glm::vec3(1.0f, 0.0f, 0.0f));
@@ -520,7 +520,7 @@ int main(void)
 				object_shader.SetUniformMat4f("u_MVP", mvp);
 
 				train.Draw(camera, object_shader, renderer);
-			}*/
+			}
 
 			//Draw train station building
 			{
