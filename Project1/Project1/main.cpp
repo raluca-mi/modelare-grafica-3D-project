@@ -593,7 +593,7 @@ int main(void)
 	Texture station_right_window_tex("res/textures/right_window.jpg");
 	Texture station_sign_tex("res/textures/sign.jpg");
 	Texture railway_tex("res/textures/railway.jpg");
-
+	Texture bench_1("res/textures/bench_1.jpg");
 	Texture train_texture("res/textures/train.png");
 
 	// Initialize camera
@@ -613,6 +613,11 @@ int main(void)
 		std::vector<unsigned int> indices;
 		bool res = loadOBJ("res/models/train.obj", vertices, indices);
 
+		//Loading bench model from .obj
+		std::vector<float> verticesBench;
+		std::vector<unsigned int> indicesBench;
+		bool res2 = loadOBJ("res/models/bench_1.obj", verticesBench, indicesBench);
+
 		//Loading meshes
 		Mesh train_station = InitStationMesh(station_tex);
 		Mesh train_station_roof = InitStationRoofMesh(station_roof_tex);
@@ -624,7 +629,7 @@ int main(void)
 		Mesh station_right_window = InitRightWindowMesh(station_right_window_tex);
 		Mesh station_sign = InitStationSignMesh(station_sign_tex);
 		Mesh railway = InitRailwayMesh(railway_tex);
-		
+		Mesh bench(verticesBench, indicesBench, bench_1);
 		Mesh train(vertices, indices, train_texture);
 
 		float rot_angle = 0.0f;
@@ -644,6 +649,17 @@ int main(void)
 			camera.ProcessInput(window, delta_time);
 
 			
+			//Draw bench model
+			{
+				glm::mat4 model = glm::mat4(1.0f);
+				model = glm::translate(model, glm::vec3(20.f, 0.0f, 0.0f));
+				glm::mat4 mvp = camera.GetProjectionMatrix() * camera.GetViewMatrix() * model;
+
+				object_shader.Bind();
+				object_shader.SetUniformMat4f("u_MVP", mvp);
+
+				bench.Draw(camera, object_shader, renderer);
+			}
 			//Draw train model
 			{
 				glm::mat4 model = glm::mat4(0.7f);
