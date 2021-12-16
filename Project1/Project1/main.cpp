@@ -1,5 +1,6 @@
 #include<GL/glew.h>
 #include<glfw3.h>
+#include<GL/glut.h>
 
 #include<iostream>
 #include<fstream>
@@ -557,8 +558,8 @@ int main(void)
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	/* Creating a window */
-	float window_height = 800.0f, window_width = 1850.0f;
-	GLFWwindow* window = glfwCreateWindow(window_width, window_height, "Train simulator", NULL, NULL);
+	float window_height = 850.0f, window_width = 1850.0f;
+	GLFWwindow* window = glfwCreateWindow(window_width, window_height, "Train simulator",NULL, NULL);
 	if (!window)
 	{
 		std::cout << "Failed to create window!\n";
@@ -593,7 +594,7 @@ int main(void)
 	Texture station_right_window_tex("res/textures/right_window.jpg");
 	Texture station_sign_tex("res/textures/sign.jpg");
 	Texture railway_tex("res/textures/railway.jpg");
-	Texture bench_1("res/textures/bench_1.jpg");
+	Texture bench_texture("res/textures/bench_1.jpg");
 	Texture train_texture("res/textures/train.png");
 
 	// Initialize camera
@@ -609,14 +610,14 @@ int main(void)
 		glEnable(GL_DEPTH_TEST);
 
 		//Loading train model from .obj
-		std::vector<float> vertices;
-		std::vector<unsigned int> indices;
-		bool res = loadOBJ("res/models/train.obj", vertices, indices);
+		std::vector<float> train_vertices;
+		std::vector<unsigned int> train_indices;
+		bool res = loadOBJ("res/models/train.obj", train_vertices, train_indices);
 
 		//Loading bench model from .obj
-		std::vector<float> verticesBench;
-		std::vector<unsigned int> indicesBench;
-		bool res2 = loadOBJ("res/models/bench_1.obj", verticesBench, indicesBench);
+		std::vector<float> bench_vertices;
+		std::vector<unsigned int> bench_indices;
+		bool res2 = loadOBJ("res/models/bench_1.obj", bench_vertices, bench_indices);
 
 		//Loading meshes
 		Mesh train_station = InitStationMesh(station_tex);
@@ -629,8 +630,8 @@ int main(void)
 		Mesh station_right_window = InitRightWindowMesh(station_right_window_tex);
 		Mesh station_sign = InitStationSignMesh(station_sign_tex);
 		Mesh railway = InitRailwayMesh(railway_tex);
-		Mesh bench(verticesBench, indicesBench, bench_1);
-		Mesh train(vertices, indices, train_texture);
+		Mesh bench(bench_vertices, bench_indices, bench_texture);
+		Mesh train(train_vertices, train_indices, train_texture);
 
 		float rot_angle = 0.0f;
 
@@ -649,10 +650,12 @@ int main(void)
 			camera.ProcessInput(window, delta_time);
 
 			
-			//Draw bench model
+			//Draw right bench model
 			{
 				glm::mat4 model = glm::mat4(1.0f);
-				model = glm::translate(model, glm::vec3(20.f, 0.0f, 0.0f));
+				model = glm::translate(model, glm::vec3(8.5f, 0.5f, 1.3f));
+				model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+				model = glm::scale(model, glm::vec3(0.38f, 0.38f, 0.38f));
 				glm::mat4 mvp = camera.GetProjectionMatrix() * camera.GetViewMatrix() * model;
 
 				object_shader.Bind();
@@ -660,8 +663,36 @@ int main(void)
 
 				bench.Draw(camera, object_shader, renderer);
 			}
-			//Draw train model
+
+			//Draw left bench model
 			{
+				glm::mat4 model = glm::mat4(1.0f);
+				model = glm::translate(model, glm::vec3(-5.5f, 0.5f, 1.3f));
+				model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+				model = glm::scale(model, glm::vec3(0.38f, 0.38f, 0.38f));
+				glm::mat4 mvp = camera.GetProjectionMatrix() * camera.GetViewMatrix() * model;
+
+				object_shader.Bind();
+				object_shader.SetUniformMat4f("u_MVP", mvp);
+
+				bench.Draw(camera, object_shader, renderer);
+			}
+
+			//Draw right side bench model
+			{
+				glm::mat4 model = glm::mat4(1.0f);
+				model = glm::translate(model, glm::vec3(12.5f, 0.5f, -1.8f));
+				model = glm::scale(model, glm::vec3(0.38f, 0.38f, 0.38f));
+				glm::mat4 mvp = camera.GetProjectionMatrix() * camera.GetViewMatrix() * model;
+
+				object_shader.Bind();
+				object_shader.SetUniformMat4f("u_MVP", mvp);
+
+				bench.Draw(camera, object_shader, renderer);
+			}
+
+			//Draw train model
+			/*{
 				glm::mat4 model = glm::mat4(0.7f);
 				model = glm::translate(model, glm::vec3(0.0f, -0.09f, 5.1f));
 				model = glm::rotate(model, glm::radians(360.0f), glm::vec3(1.0f, 0.0f, 0.0f));
@@ -673,7 +704,7 @@ int main(void)
 				object_shader.SetUniformMat4f("u_MVP", mvp);
 
 				train.Draw(camera, object_shader, renderer);
-			}
+			}*/
 
 			//Draw train station building
 			{
