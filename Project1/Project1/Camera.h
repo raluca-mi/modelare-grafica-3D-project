@@ -8,7 +8,7 @@ class Camera
 {
 private:
     // Perspective properties
-    float m_z_near, m_z_far, m_FOV;
+    float m_z_near, m_z_far, m_FOV, m_zoom;
     int m_width, m_height;
 
     // Euler angles
@@ -33,6 +33,11 @@ public:
     // Getters
     const glm::mat4 GetViewMatrix() const;
     const glm::mat4 GetProjectionMatrix() const;
+
+    GLfloat GetZoom()
+    {
+        return this->m_zoom;
+    }
 
     // Setters
     void SetPitch(float new_pitch);

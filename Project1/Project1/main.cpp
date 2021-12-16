@@ -11,8 +11,10 @@
 
 #include<glm.hpp>
 #include<gtc/matrix_transform.hpp>
+#include<gtc/type_ptr.hpp>
 
 #include"OBJLoader.h";
+#include "TextureSkybox.h"
 
 Mesh InitStationMesh(const Texture& texture)
 {
@@ -546,7 +548,6 @@ Mesh InitRailwayMesh(const Texture& texture)
 	return Mesh(vertices, indices, texture);
 }
 
-
 int main(void)
 {
 	/* Initializing the library */
@@ -580,9 +581,17 @@ int main(void)
 	glm::mat4 proj = glm::ortho(0.0f, window_width, 0.0f, window_height, -1.0f, 1.0f);
 	glm::mat4 view = glm::translate(glm::mat4(1.0), glm::vec3(0, 200, 0));
 
-	//Loading shader
+	//Loading shader (used for all objects)
 	Shader object_shader("res/shaders/object.shader");
 	object_shader.Bind();
+
+	//Loading shader for cubemap
+	Shader cubemap_shader("res/shaders/cubemap.shader");
+	cubemap_shader.Bind();
+
+	////Loading shader (used for light sources
+	//object_shader.SetUniform4f("u_LightColor", 1.0f, 1.0f, 1.0f, 1.0f);
+	//Shader light_shader("res\\shaders\\light.shader");
 
 	//Loading textures
 	Texture station_tex("res/textures/brickss.jpg");
@@ -635,6 +644,73 @@ int main(void)
 
 		float rot_angle = 0.0f;
 
+		float skyboxVertices[] = {
+			// positions          
+			-200.0f,  200.0f, -200.0f,
+			-200.0f, -200.0f, -200.0f,
+			 200.0f, -200.0f, -200.0f,
+			 200.0f, -200.0f, -200.0f,
+			 200.0f,  200.0f, -200.0f,
+			-200.0f,  200.0f, -200.0f,
+			 		  		  
+			-200.0f, -200.0f,  200.0f,
+			-200.0f, -200.0f, -200.0f,
+			-200.0f,  200.0f, -200.0f,
+			-200.0f,  200.0f, -200.0f,
+			-200.0f,  200.0f,  200.0f,
+			-200.0f, -200.0f,  200.0f,
+			 		  		   
+			 200.0f, -200.0f, -200.0f,
+			 200.0f, -200.0f,  200.0f,
+			 200.0f,  200.0f,  200.0f,
+			 200.0f,  200.0f,  200.0f,
+			 200.0f,  200.0f, -200.0f,
+			 200.0f, -200.0f, -200.0f,
+			 	  		  
+			-200.0f, -200.0f,  200.0f,
+			-200.0f,  200.0f,  200.0f,
+			 200.0f,  200.0f,  200.0f,
+			 200.0f,  200.0f,  200.0f,
+			 200.0f, -200.0f,  200.0f,
+			-200.0f, -200.0f,  200.0f,
+					 		   
+			-200.0f,  200.0f, -200.0f,
+			 200.0f,  200.0f, -200.0f,
+			 200.0f,  200.0f,  200.0f,
+			 200.0f,  200.0f,  200.0f,
+			-200.0f,  200.0f,  200.0f,
+			-200.0f,  200.0f, -200.0f,
+							   
+			-200.0f, -200.0f, -200.0f,
+			-200.0f, -200.0f,  200.0f,
+			 200.0f, -200.0f, -200.0f,
+			 200.0f, -200.0f, -200.0f,
+			-200.0f, -200.0f,  200.0f,
+			 200.0f, -200.0f,  200.0f
+		};
+
+		// Cubemap (Skybox)
+		std::vector<std::string>faces;
+		faces.push_back("res/skybox_1/right.jpg");
+		faces.push_back("res/skybox_1/left.jpg");
+		faces.push_back("res/skybox_1/top.jpg");
+		faces.push_back("res/skybox_1/bottom.jpg");
+		faces.push_back("res/skybox_1/back.jpg");
+		faces.push_back("res/skybox_1/front.jpg");		
+
+		unsigned int cubemapTexture = TextureSkybox::loadCubemap(faces);
+
+		// Setup skybox VAO
+		unsigned int skyboxVAO, skyboxVBO;
+		glGenVertexArrays(1, &skyboxVAO);
+		glGenBuffers(1, &skyboxVBO);
+		glBindVertexArray(skyboxVAO);
+		glBindBuffer(GL_ARRAY_BUFFER, skyboxVBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (GLvoid*)0);
+		glBindVertexArray(0);
+
 		while (!glfwWindowShouldClose(window))
 		{
 			//Render here
@@ -656,10 +732,11 @@ int main(void)
 				model = glm::translate(model, glm::vec3(8.5f, 0.5f, 1.3f));
 				model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 				model = glm::scale(model, glm::vec3(0.38f, 0.38f, 0.38f));
-				glm::mat4 mvp = camera.GetProjectionMatrix() * camera.GetViewMatrix() * model;
 
 				object_shader.Bind();
-				object_shader.SetUniformMat4f("u_MVP", mvp);
+				glm::mat4 vp = camera.GetProjectionMatrix() * camera.GetViewMatrix();
+				object_shader.SetUniformMat4f("u_VP", vp);
+				object_shader.SetUniformMat4f("u_ModelMatrix", model);
 
 				bench.Draw(camera, object_shader, renderer);
 			}
@@ -670,10 +747,11 @@ int main(void)
 				model = glm::translate(model, glm::vec3(-5.5f, 0.5f, 1.3f));
 				model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 				model = glm::scale(model, glm::vec3(0.38f, 0.38f, 0.38f));
-				glm::mat4 mvp = camera.GetProjectionMatrix() * camera.GetViewMatrix() * model;
 
 				object_shader.Bind();
-				object_shader.SetUniformMat4f("u_MVP", mvp);
+				glm::mat4 vp = camera.GetProjectionMatrix() * camera.GetViewMatrix();
+				object_shader.SetUniformMat4f("u_VP", vp);
+				object_shader.SetUniformMat4f("u_ModelMatrix", model);
 
 				bench.Draw(camera, object_shader, renderer);
 			}
@@ -683,36 +761,39 @@ int main(void)
 				glm::mat4 model = glm::mat4(1.0f);
 				model = glm::translate(model, glm::vec3(12.5f, 0.5f, -1.8f));
 				model = glm::scale(model, glm::vec3(0.38f, 0.38f, 0.38f));
-				glm::mat4 mvp = camera.GetProjectionMatrix() * camera.GetViewMatrix() * model;
 
 				object_shader.Bind();
-				object_shader.SetUniformMat4f("u_MVP", mvp);
+				glm::mat4 vp = camera.GetProjectionMatrix() * camera.GetViewMatrix();
+				object_shader.SetUniformMat4f("u_VP", vp);
+				object_shader.SetUniformMat4f("u_ModelMatrix", model);
 
 				bench.Draw(camera, object_shader, renderer);
 			}
 
 			//Draw train model
-			/*{
+			{
 				glm::mat4 model = glm::mat4(0.7f);
 				model = glm::translate(model, glm::vec3(0.0f, -0.09f, 5.1f));
 				model = glm::rotate(model, glm::radians(360.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 				model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 				model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
-				glm::mat4 mvp = camera.GetProjectionMatrix() * camera.GetViewMatrix() * model;
 
 				object_shader.Bind();
-				object_shader.SetUniformMat4f("u_MVP", mvp);
+				glm::mat4 vp = camera.GetProjectionMatrix() * camera.GetViewMatrix();
+				object_shader.SetUniformMat4f("u_VP", vp);
+				object_shader.SetUniformMat4f("u_ModelMatrix", model);
 
 				train.Draw(camera, object_shader, renderer);
-			}*/
+			}
 
 			//Draw train station building
 			{
 				glm::mat4 model = glm::mat4(1.0f);
-				glm::mat4 mvp = camera.GetProjectionMatrix() * camera.GetViewMatrix() * model;
 
 				object_shader.Bind();
-				object_shader.SetUniformMat4f("u_MVP", mvp);
+				glm::mat4 vp = camera.GetProjectionMatrix() * camera.GetViewMatrix();
+				object_shader.SetUniformMat4f("u_VP", vp);
+				object_shader.SetUniformMat4f("u_ModelMatrix", model);
 
 				train_station.Draw(camera, object_shader, renderer);
 			}
@@ -721,10 +802,11 @@ int main(void)
 			{
 				glm::mat4 model = glm::mat4(1.0f);
 				model = glm::translate(model, glm::vec3(0.0f, 5.0f, -0.5f));
-				glm::mat4 mvp = camera.GetProjectionMatrix() * camera.GetViewMatrix() * model;
 
 				object_shader.Bind();
-				object_shader.SetUniformMat4f("u_MVP", mvp);
+				glm::mat4 vp = camera.GetProjectionMatrix() * camera.GetViewMatrix();
+				object_shader.SetUniformMat4f("u_VP", vp);
+				object_shader.SetUniformMat4f("u_ModelMatrix", model);
 
 				train_station_roof.Draw(camera, object_shader, renderer);
 			}
@@ -733,10 +815,11 @@ int main(void)
 			{
 				glm::mat4 model = glm::mat4(1.0f);
 				model = glm::translate(model, glm::vec3(0.0f, 1.5f, 0.05f));
-				glm::mat4 mvp = camera.GetProjectionMatrix() * camera.GetViewMatrix() * model;
 
 				object_shader.Bind();
-				object_shader.SetUniformMat4f("u_MVP", mvp);
+				glm::mat4 vp = camera.GetProjectionMatrix() * camera.GetViewMatrix();
+				object_shader.SetUniformMat4f("u_VP", vp);
+				object_shader.SetUniformMat4f("u_ModelMatrix", model);
 
 				train_station_door.Draw(camera, object_shader, renderer);
 			}
@@ -745,10 +828,11 @@ int main(void)
 			{
 				glm::mat4 model = glm::mat4(1.0f);
 				model = glm::translate(model, glm::vec3(-7.0f, 2.43f, 0.05f));
-				glm::mat4 mvp = camera.GetProjectionMatrix() * camera.GetViewMatrix() * model;
 
 				object_shader.Bind();
-				object_shader.SetUniformMat4f("u_MVP", mvp);
+				glm::mat4 vp = camera.GetProjectionMatrix() * camera.GetViewMatrix();
+				object_shader.SetUniformMat4f("u_VP", vp);
+				object_shader.SetUniformMat4f("u_ModelMatrix", model);
 
 				station_main_windows.Draw(camera, object_shader, renderer);
 			}
@@ -757,10 +841,11 @@ int main(void)
 			{
 				glm::mat4 model = glm::mat4(1.0f);
 				model = glm::translate(model, glm::vec3(7.0f, 2.43f, 0.05f));
-				glm::mat4 mvp = camera.GetProjectionMatrix() * camera.GetViewMatrix() * model;
 
 				object_shader.Bind();
-				object_shader.SetUniformMat4f("u_MVP", mvp);
+				glm::mat4 vp = camera.GetProjectionMatrix() * camera.GetViewMatrix();
+				object_shader.SetUniformMat4f("u_VP", vp);
+				object_shader.SetUniformMat4f("u_ModelMatrix", model);
 
 				station_main_windows.Draw(camera, object_shader, renderer);
 			}
@@ -770,10 +855,11 @@ int main(void)
 				glm::mat4 model = glm::mat4(1.0f);
 				model = glm::translate(model, glm::vec3(-11.52f, 3.0f, -5.0f));
 				model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-				glm::mat4 mvp = camera.GetProjectionMatrix() * camera.GetViewMatrix() * model;
 
 				object_shader.Bind();
-				object_shader.SetUniformMat4f("u_MVP", mvp);
+				glm::mat4 vp = camera.GetProjectionMatrix() * camera.GetViewMatrix();
+				object_shader.SetUniformMat4f("u_VP", vp);
+				object_shader.SetUniformMat4f("u_ModelMatrix", model);
 
 				station_left_window.Draw(camera, object_shader, renderer);
 			}
@@ -783,10 +869,11 @@ int main(void)
 				glm::mat4 model = glm::mat4(1.0f);
 				model = glm::translate(model, glm::vec3(-11.52f, 3.0f, -2.0f));
 				model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-				glm::mat4 mvp = camera.GetProjectionMatrix() * camera.GetViewMatrix() * model;
 
 				object_shader.Bind();
-				object_shader.SetUniformMat4f("u_MVP", mvp);
+				glm::mat4 vp = camera.GetProjectionMatrix() * camera.GetViewMatrix();
+				object_shader.SetUniformMat4f("u_VP", vp);
+				object_shader.SetUniformMat4f("u_ModelMatrix", model);
 
 				station_left_window.Draw(camera, object_shader, renderer);
 			}
@@ -796,10 +883,11 @@ int main(void)
 				glm::mat4 model = glm::mat4(1.0f);
 				model = glm::translate(model, glm::vec3(11.52f, 2.6f, -3.5f));
 				model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-				glm::mat4 mvp = camera.GetProjectionMatrix() * camera.GetViewMatrix() * model;
 
 				object_shader.Bind();
-				object_shader.SetUniformMat4f("u_MVP", mvp);
+				glm::mat4 vp = camera.GetProjectionMatrix() * camera.GetViewMatrix();
+				object_shader.SetUniformMat4f("u_VP", vp);
+				object_shader.SetUniformMat4f("u_ModelMatrix", model);
 
 				station_right_window.Draw(camera, object_shader, renderer);
 			}
@@ -808,10 +896,11 @@ int main(void)
 			{
 				glm::mat4 model = glm::mat4(1.0f);
 				model = glm::translate(model, glm::vec3(0.0f, 4.0f, 0.05f));
-				glm::mat4 mvp = camera.GetProjectionMatrix() * camera.GetViewMatrix() * model;
 
 				object_shader.Bind();
-				object_shader.SetUniformMat4f("u_MVP", mvp);
+				glm::mat4 vp = camera.GetProjectionMatrix() * camera.GetViewMatrix();
+				object_shader.SetUniformMat4f("u_VP", vp);
+				object_shader.SetUniformMat4f("u_ModelMatrix", model);
 
 				station_sign.Draw(camera, object_shader, renderer);
 			}
@@ -821,10 +910,11 @@ int main(void)
 				glm::mat4 model = glm::mat4(1.0f);
 				model = glm::translate(model, glm::vec3(0.0f, -0.01f, -2.8f));
 				model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-				glm::mat4 mvp = camera.GetProjectionMatrix() * camera.GetViewMatrix() * model;
 
 				object_shader.Bind();
-				object_shader.SetUniformMat4f("u_MVP", mvp);
+				glm::mat4 vp = camera.GetProjectionMatrix() * camera.GetViewMatrix();
+				object_shader.SetUniformMat4f("u_VP", vp);
+				object_shader.SetUniformMat4f("u_ModelMatrix", model);
 
 				main_platform.Draw(camera, object_shader, renderer);
 			}
@@ -835,10 +925,11 @@ int main(void)
 				glm::mat4 model = glm::mat4(1.0f);
 				model = glm::translate(model, glm::vec3(0.0f, -0.01f, 5.1f));
 				model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-				glm::mat4 mvp = camera.GetProjectionMatrix() * camera.GetViewMatrix() * model;
 
 				object_shader.Bind();
-				object_shader.SetUniformMat4f("u_MVP", mvp);
+				glm::mat4 vp = camera.GetProjectionMatrix() * camera.GetViewMatrix();
+				object_shader.SetUniformMat4f("u_VP", vp);
+				object_shader.SetUniformMat4f("u_ModelMatrix", model);
 
 				railway.Draw(camera, object_shader, renderer);
 			}
@@ -848,13 +939,32 @@ int main(void)
 				glm::mat4 model = glm::mat4(1.0f);
 				model = glm::translate(model, glm::vec3(0.0f, -0.01f, 7.8f));
 				model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-				glm::mat4 mvp = camera.GetProjectionMatrix() * camera.GetViewMatrix() * model;
 
 				object_shader.Bind();
-				object_shader.SetUniformMat4f("u_MVP", mvp);
+				glm::mat4 vp = camera.GetProjectionMatrix() * camera.GetViewMatrix();
+				object_shader.SetUniformMat4f("u_VP", vp);
+				object_shader.SetUniformMat4f("u_ModelMatrix", model);
 
 				second_platform.Draw(camera, object_shader, renderer);
 			}
+
+
+			//Draw skybox as last
+			glm::mat4 model = glm::mat4(1.0f);
+			glDepthFunc(GL_LEQUAL);
+			cubemap_shader.Bind();
+
+			glm::mat4 vp = camera.GetProjectionMatrix() * camera.GetViewMatrix();
+			cubemap_shader.SetUniformMat4f("u_VP", vp);
+			cubemap_shader.SetUniformMat4f("u_ModelMatrix", model);
+			
+			glBindVertexArray(skyboxVAO);
+			glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+			glBindVertexArray(0);
+			glDepthFunc(GL_LESS);
+			glDepthFunc(GL_LEQUAL);
+
 
 			/* Swap front and back buffers */
 			glfwSwapBuffers(window);
