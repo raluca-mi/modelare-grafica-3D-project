@@ -570,6 +570,7 @@ Mesh InitTerrainMesh(const Texture& texture)
 }
 
 
+
 int main(void)
 {
 	/* Initializing the library */
@@ -602,7 +603,7 @@ int main(void)
 	//Set up the projection and view matrix
 	glm::mat4 proj = glm::ortho(0.0f, window_width, 0.0f, window_height, -1.0f, 1.0f);
 	glm::mat4 view = glm::translate(glm::mat4(1.0), glm::vec3(0, 200, 0));
-
+	
 	//Loading shader (used for all objects)
 	Shader object_shader("res/shaders/object.shader");
 	object_shader.Bind();
@@ -631,6 +632,8 @@ int main(void)
 	
 	Texture tree_1("res/textures/tree_1.png");
 	Texture rock_tex("res/textures/rock.png");
+	Texture tree_2("res/textures/tree_2.png");
+	Texture tree_3_tex("res/textures/tree_3.png");
 
 	// Initialize camera
 	Camera camera(window_width, window_height, glm::vec3(0.0f, 5.0f, 10.0f));
@@ -654,7 +657,7 @@ int main(void)
 		std::vector<unsigned int> bench_indices;
 		bool res2 = loadOBJ("res/models/bench_1.obj", bench_vertices, bench_indices);
 
-		
+		//Loading tree_1 model from .obj
 		std::vector<float> tree_vertices;
 		std::vector<unsigned int> tree_indices;
 		bool res3 = loadOBJ("res/models/tree_1.obj", tree_vertices, tree_indices);
@@ -662,6 +665,14 @@ int main(void)
 		std::vector<float> rock_vertices;
 		std::vector<unsigned int> rock_indices;
 		bool res4 = loadOBJ("res/models/rock.obj", rock_vertices, rock_indices);
+
+		std::vector<float> tree2_vertices;
+		std::vector<unsigned int> tree2_indices;
+		bool res5 = loadOBJ("res/models/tree_2.obj", tree2_vertices, tree2_indices);
+
+		std::vector<float> tree3_vertices;
+		std::vector<unsigned int> tree3_indices;
+		bool res6 = loadOBJ("res/models/tree_3.obj", tree3_vertices, tree3_indices);
 
 		//Loading meshes
 		Mesh train_station = InitStationMesh(station_tex);
@@ -680,6 +691,9 @@ int main(void)
 		Mesh tree(tree_vertices, tree_indices, tree_1);
 		Mesh terrainPatch = InitTerrainMesh(grassPlain);
 		Mesh rock(rock_vertices, rock_indices, rock_tex);
+		Mesh tree2(tree2_vertices, tree2_indices, tree_2);
+		Mesh tree3(tree3_vertices, tree3_indices, tree_3_tex);
+
 		float rot_angle = 0.0f;
 
 		float skyboxVertices[] = {
@@ -752,8 +766,10 @@ int main(void)
 		
 		Terrain terrain;
 	
-		terrain.generatePositions(-70.0f, 40.0f, -50.0f, 40.0f);
+		terrain.generatePositions(-90.0f, 60.0f, -70.0f, 60.0f);
+		terrain.generateRailway(-90.0f, 60.0f);
 		std::vector<std::pair<glm::vec3, int>>  terrainPos = terrain.getTerrainPositions();
+		std::vector<glm::vec3> railwayPos = terrain.getRailway();
 
 		while (!glfwWindowShouldClose(window))
 		{
@@ -770,7 +786,7 @@ int main(void)
 			camera.ProcessInput(window, delta_time);
 
 		
-			
+			//Draw terrain with vegetation
 			{
 				for (auto& pos :terrainPos)
 				{
@@ -780,7 +796,7 @@ int main(void)
 						treePos.y = -0.1f;
 						glm::mat4 model = glm::mat4(1.0f);
 						model = glm::translate(model, treePos);
-						// = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+					
 						model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
 						object_shader.Bind();
 						glm::mat4 vp = camera.GetProjectionMatrix() * camera.GetViewMatrix();
@@ -789,15 +805,15 @@ int main(void)
 
 						tree.Draw(camera, object_shader, renderer);
 
-						
+
 					}
 					else if (pos.second == 2)
 					{
-						glm::vec3 treePos = pos.first;
-						treePos.y = -0.1f;
+						glm::vec3 rockPos = pos.first;
+						rockPos.y = -0.1f;
 						glm::mat4 model = glm::mat4(1.0f);
-						model = glm::translate(model, treePos);
-					
+						model = glm::translate(model, rockPos);
+						model = glm::scale(model, glm::vec3(0.80f, 0.8f, 0.8f));
 						object_shader.Bind();
 						glm::mat4 vp = camera.GetProjectionMatrix() * camera.GetViewMatrix();
 						object_shader.SetUniformMat4f("u_VP", vp);
@@ -808,11 +824,11 @@ int main(void)
 					else if (pos.second == -1)
 					{
 						glm::mat4 model = glm::mat4(1.0f);
-						glm::vec3 treePos = pos.first;
-						treePos.y = -0.01f;
-						treePos.z = 5.1f;
-						
-						model = glm::translate(model,treePos);
+						glm::vec3 railwayPos = pos.first;
+						railwayPos.y = -0.01f;
+						railwayPos.z = 5.1f;
+
+						model = glm::translate(model, railwayPos);
 						model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
 						object_shader.Bind();
@@ -821,7 +837,39 @@ int main(void)
 						object_shader.SetUniformMat4f("u_ModelMatrix", model);
 
 						railway.Draw(camera, object_shader, renderer);
+						
 					}
+					else if (pos.second == 3)
+					{
+						glm::vec3 treePos = pos.first;
+						treePos.y = -0.1f;
+						glm::mat4 model = glm::mat4(1.0f);
+						model = glm::translate(model, treePos);
+
+						model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+						object_shader.Bind();
+						glm::mat4 vp = camera.GetProjectionMatrix() * camera.GetViewMatrix();
+						object_shader.SetUniformMat4f("u_VP", vp);
+						object_shader.SetUniformMat4f("u_ModelMatrix", model);
+
+						tree2.Draw(camera, object_shader, renderer);
+					}
+					else if (pos.second == 4)
+					{
+						glm::vec3 treePos = pos.first;
+						treePos.y = -0.1f;
+						glm::mat4 model = glm::mat4(1.0f);
+						model = glm::translate(model, treePos);
+
+						model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+						object_shader.Bind();
+						glm::mat4 vp = camera.GetProjectionMatrix() * camera.GetViewMatrix();
+						object_shader.SetUniformMat4f("u_VP", vp);
+						object_shader.SetUniformMat4f("u_ModelMatrix", model);
+
+						tree3.Draw(camera, object_shader, renderer);
+					}
+					
 					glm::mat4 model = glm::mat4(1.0f);
 					model = glm::translate(model, pos.first);
 					object_shader.Bind();
@@ -1031,16 +1079,19 @@ int main(void)
 
 			//Draw railway
 			{
-				glm::mat4 model = glm::mat4(1.0f);
-				model = glm::translate(model, glm::vec3(0.0f, -0.01f, 5.1f));
-				model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+				for (auto& pos : railwayPos)
+				{
+					glm::mat4 model = glm::mat4(1.0f);
+					model = glm::translate(model, pos);
+					model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
-				object_shader.Bind();
-				glm::mat4 vp = camera.GetProjectionMatrix() * camera.GetViewMatrix();
-				object_shader.SetUniformMat4f("u_VP", vp);
-				object_shader.SetUniformMat4f("u_ModelMatrix", model);
+					object_shader.Bind();
+					glm::mat4 vp = camera.GetProjectionMatrix() * camera.GetViewMatrix();
+					object_shader.SetUniformMat4f("u_VP", vp);
+					object_shader.SetUniformMat4f("u_ModelMatrix", model);
 
-				railway.Draw(camera, object_shader, renderer);
+					railway.Draw(camera, object_shader, renderer);
+				}
 			}
 
 			//Draw second platform
