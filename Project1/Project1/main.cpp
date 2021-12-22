@@ -108,8 +108,8 @@ Mesh InitStationRoofMesh(const Texture& texture)
 
 	   -4.0,  -0.1,   1.0,			 0.0f, 0.0f,			0.0f,  0.0f,  1.0f,		//7
 	   -4.0,   2,    -0.5,			 0.0f, 1.0f,			0.0f,  0.0f,  1.0f,		//8
-	    0.0,  -0.1,   1.0,			 1.0f, 0.0f,			0.0f,  0.0f,  1.0f,		//9
-	    0.0,   2,    -0.5,			 1.0f, 1.0f,			0.0f,  0.0f,  1.0f,		//10
+		0.0,  -0.1,   1.0,			 1.0f, 0.0f,			0.0f,  0.0f,  1.0f,		//9
+		0.0,   2,    -0.5,			 1.0f, 1.0f,			0.0f,  0.0f,  1.0f,		//10
 
 	   0.0,  -0.1,   1.0,			 0.0f, 0.0f,			0.0f,  0.0f,  1.0f,		//11
 	   0.0,   2,    -0.5,			 0.0f, 1.0f,			0.0f,  0.0f,  1.0f,		//12
@@ -125,7 +125,7 @@ Mesh InitStationRoofMesh(const Texture& texture)
 	  8.0,  -0.1,  1.0,				 1.0f, 0.0f,			0.0f,  0.0f,  1.0f,		 //20
 	  8.0,   2,   -0.5,				 1.0f, 1.0f,		    0.0f,  0.0f,  1.0f,		 //21
 	   //back
-	 
+
 		 -12.5,   -0.1,  -7.0,     0.0f,0.0f,        0.0f,  0.0f,  1.0f, //22
 		-8.0,   -0.1,  -7.0,    1.0f, 0.0f,		  0.0f,  0.0f,  1.0f, //23
 		-8.0,  2, -5.5,    1.0f, 1.0f,		  0.0f,  0.0f,  1.0f, //24
@@ -182,13 +182,13 @@ Mesh InitStationRoofMesh(const Texture& texture)
 		8.0,   2.0, -4.0,			1.0f,  1.0f,		1.0f,  0.0f, 0.0f,		//60
 		12.5, -0.1, -2.5,			0.0f, 0.0f,			1.0f,  0.0f, 0.0f,		//61
 		8.0,   2.0, -2.5,			0.0f,  1.0f,		1.0f,  0.0f, 0.0f,		//62
-		
+
 		12.5, -0.1, -2.5,			1.0f, 0.0f,			1.0f,  0.0f, 0.0f,		//63
 		8.0,   2.0, -2.5,			1.0f,  1.0f,		1.0f,  0.0f, 0.0f,		//64
 		12.5, -0.1, -0.5,			0.0f, 0.0f,			1.0f,  0.0f, 0.0f,		//65
 		8.0,   2.0, -0.5,			0.0f,  1.0f,		1.0f,  0.0f, 0.0f,		//66
 
-	    
+
 
 		12.5, -0.1,  1.0,			1.0f, 0.0f,			1.0f,  0.0f, 0.0f,		//67
 		12.5, -0.1, -0.5,			0.0f, 0.0f,			1.0f,  0.0f, 0.0f,		//68
@@ -208,7 +208,7 @@ Mesh InitStationRoofMesh(const Texture& texture)
 		-8.0,   2.0, -4.0,			1.0f,  1.0f,		1.0f,  0.0f, 0.0f,		//78
 		-12.5, -0.1, -2.5,			0.0f, 0.0f,			1.0f,  0.0f, 0.0f,		//79
 		-8.0,   2.0, -2.5,			0.0f,  1.0f,		1.0f,  0.0f, 0.0f,		//80
-		
+
 		-12.5, -0.1, -2.5,			1.0f, 0.0f,			1.0f,  0.0f, 0.0f,		//81
 		-8.0,   2.0, -2.5,			1.0f,  1.0f,		1.0f,  0.0f, 0.0f,		//82
 		-12.5, -0.1, -0.5,			0.0f, 0.0f,			1.0f,  0.0f, 0.0f,		//83
@@ -241,7 +241,7 @@ Mesh InitStationRoofMesh(const Texture& texture)
 
 		//back
 		22,23,24,
-		
+
 		25,27,28,
 		25,26,28,
 
@@ -291,7 +291,7 @@ Mesh InitStationRoofMesh(const Texture& texture)
 		81,82,84,
 
 		85,86,87
-		
+
 	};
 
 	return Mesh(vertices, indices, texture);
@@ -549,7 +549,6 @@ Mesh InitRailwayMesh(const Texture& texture)
 
 	return Mesh(vertices, indices, texture);
 }
-
 Mesh InitTerrainMesh(const Texture& texture)
 {
 	std::vector<float> vertices = {
@@ -557,7 +556,7 @@ Mesh InitTerrainMesh(const Texture& texture)
 		 18.0f,  0.8f,  4.0f,	0.0f, 0.0f,			0.0f,  1.0f, 0.0f,		//3 16
 		 22.0f,  0.8f,  4.0f,	1.0f, 0.0f,			0.0f,  1.0f, 0.0f,		//2 17
 		 22.0f,  0.8f,  0.0f,	1.0f, 1.0f,			0.0f,  1.0f, 0.0f,		//6 18
-	     18.0f,  0.8f,  0.0f,	0.0f, 1.0f,			0.0f,  1.0f, 0.0f,		//5 19
+		 18.0f,  0.8f,  0.0f,	0.0f, 1.0f,			0.0f,  1.0f, 0.0f,		//5 19
 	};
 
 	std::vector<unsigned int> indices = {
@@ -569,7 +568,12 @@ Mesh InitTerrainMesh(const Texture& texture)
 
 }
 
-
+enum Movement
+{
+	Reset,
+	Move,
+	Pause
+};
 
 int main(void)
 {
@@ -583,7 +587,7 @@ int main(void)
 
 	/* Creating a window */
 	float window_height = 850.0f, window_width = 1850.0f;
-	GLFWwindow* window = glfwCreateWindow(window_width, window_height, "Train simulator",NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(window_width, window_height, "Train simulator", NULL, NULL);
 	if (!window)
 	{
 		std::cout << "Failed to create window!\n";
@@ -629,7 +633,7 @@ int main(void)
 	Texture bench_texture("res/textures/bench_1.jpg");
 	Texture train_texture("res/textures/train.png");
 	Texture grassPlain("res/textures/grass.png");
-	
+
 	Texture tree_1("res/textures/tree_1.png");
 	Texture rock_tex("res/textures/rock.png");
 	Texture tree_2("res/textures/tree_2.png");
@@ -698,47 +702,47 @@ int main(void)
 
 		float skyboxVertices[] = {
 			// positions          
-			-200.0f,  200.0f, -200.0f,
-			-200.0f, -200.0f, -200.0f,
-			 200.0f, -200.0f, -200.0f,
-			 200.0f, -200.0f, -200.0f,
-			 200.0f,  200.0f, -200.0f,
-			-200.0f,  200.0f, -200.0f,
-			 		  		  
-			-200.0f, -200.0f,  200.0f,
-			-200.0f, -200.0f, -200.0f,
-			-200.0f,  200.0f, -200.0f,
-			-200.0f,  200.0f, -200.0f,
-			-200.0f,  200.0f,  200.0f,
-			-200.0f, -200.0f,  200.0f,
-			 		  		   
-			 200.0f, -200.0f, -200.0f,
-			 200.0f, -200.0f,  200.0f,
-			 200.0f,  200.0f,  200.0f,
-			 200.0f,  200.0f,  200.0f,
-			 200.0f,  200.0f, -200.0f,
-			 200.0f, -200.0f, -200.0f,
-			 	  		  
-			-200.0f, -200.0f,  200.0f,
-			-200.0f,  200.0f,  200.0f,
-			 200.0f,  200.0f,  200.0f,
-			 200.0f,  200.0f,  200.0f,
-			 200.0f, -200.0f,  200.0f,
-			-200.0f, -200.0f,  200.0f,
-					 		   
-			-200.0f,  200.0f, -200.0f,
-			 200.0f,  200.0f, -200.0f,
-			 200.0f,  200.0f,  200.0f,
-			 200.0f,  200.0f,  200.0f,
-			-200.0f,  200.0f,  200.0f,
-			-200.0f,  200.0f, -200.0f,
-							   
-			-200.0f, -200.0f, -200.0f,
-			-200.0f, -200.0f,  200.0f,
-			 200.0f, -200.0f, -200.0f,
-			 200.0f, -200.0f, -200.0f,
-			-200.0f, -200.0f,  200.0f,
-			 200.0f, -200.0f,  200.0f
+			-500.0f, -500.0f, -500.0f,
+			 500.0f, -500.0f, -500.0f,
+			-500.0f,  500.0f, -500.0f,
+			 500.0f, -500.0f, -500.0f,
+			 500.0f,  500.0f, -500.0f,
+			-500.0f,  500.0f, -500.0f,
+
+			-500.0f, -500.0f,  500.0f,
+			-500.0f, -500.0f, -500.0f,
+			-500.0f,  500.0f, -500.0f,
+			-500.0f,  500.0f, -500.0f,
+			-500.0f,  500.0f,  500.0f,
+			-500.0f, -500.0f,  500.0f,
+
+			 500.0f, -500.0f, -500.0f,
+			 500.0f, -500.0f,  500.0f,
+			 500.0f,  500.0f,  500.0f,
+			 500.0f,  500.0f,  500.0f,
+			 500.0f,  500.0f, -500.0f,
+			 500.0f, -500.0f, -500.0f,
+
+			-500.0f, -500.0f,  500.0f,
+			-500.0f,  500.0f,  500.0f,
+			 500.0f,  500.0f,  500.0f,
+			 500.0f,  500.0f,  500.0f,
+			 500.0f, -500.0f,  500.0f,
+			-500.0f, -500.0f,  500.0f,
+
+			-500.0f,  500.0f, -500.0f,
+			 500.0f,  500.0f, -500.0f,
+			 500.0f,  500.0f,  500.0f,
+			 500.0f,  500.0f,  500.0f,
+			-500.0f,  500.0f,  500.0f,
+			-500.0f,  500.0f, -500.0f,
+
+			-500.0f, -500.0f, -500.0f,
+			-500.0f, -500.0f,  500.0f,
+			 500.0f, -500.0f, -500.0f,
+			 500.0f, -500.0f, -500.0f,
+			-500.0f, -500.0f,  500.0f,
+			 500.0f, -500.0f,  500.0f
 		};
 
 		// Cubemap (Skybox)
@@ -748,7 +752,7 @@ int main(void)
 		faces.push_back("res/skybox_1/top.jpg");
 		faces.push_back("res/skybox_1/bottom.jpg");
 		faces.push_back("res/skybox_1/back.jpg");
-		faces.push_back("res/skybox_1/front.jpg");		
+		faces.push_back("res/skybox_1/front.jpg");
 
 		unsigned int cubemapTexture = TextureSkybox::loadCubemap(faces);
 
@@ -763,13 +767,15 @@ int main(void)
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (GLvoid*)0);
 		glBindVertexArray(0);
 
-		
+
 		Terrain terrain;
 	
 		terrain.generatePositions(-90.0f, 60.0f, -70.0f, 60.0f);
 		terrain.generateRailway(-90.0f, 60.0f);
 		std::vector<std::pair<glm::vec3, int>>  terrainPos = terrain.getTerrainPositions();
 		std::vector<glm::vec3> railwayPos = terrain.getRailway();
+
+		Movement moveTrain = Movement::Reset;
 
 		while (!glfwWindowShouldClose(window))
 		{
@@ -788,7 +794,7 @@ int main(void)
 		
 			//Draw terrain with vegetation
 			{
-				for (auto& pos :terrainPos)
+				for (auto& pos : terrainPos)
 				{
 					if (pos.second == 1)
 					{
@@ -879,9 +885,9 @@ int main(void)
 
 					terrainPatch.Draw(camera, object_shader, renderer);
 				}
-			
+
 			}
-			
+
 
 			//Draw right bench model
 			{
@@ -930,6 +936,40 @@ int main(void)
 			//Draw train model
 			{
 				glm::mat4 model = glm::mat4(0.7f);
+
+				//move train keys
+				double fIncrement = 0.0002;
+				static double fMovementValue = 0.0;
+				float current_x = glm::sin(fMovementValue) * 480.0f;
+
+				if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+					moveTrain = Movement::Pause;
+
+				if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+					moveTrain = Movement::Move;
+
+				if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+					moveTrain = Movement::Reset;
+
+				switch (moveTrain)
+				{
+				case Reset:
+					break;
+				case Move:
+				{
+					fMovementValue += fIncrement;
+					model = glm::translate(model, glm::vec3(current_x, 0.0f, 0.0f));
+					break;
+				}
+				case Pause:
+				{
+					model = glm::translate(model, glm::vec3(current_x, 0.0f, 0.0f));
+					break;
+				}
+				default:
+					break;
+				}
+
 				model = glm::translate(model, glm::vec3(0.0f, -0.09f, 5.1f));
 				model = glm::rotate(model, glm::radians(360.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 				model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -1117,7 +1157,7 @@ int main(void)
 			glm::mat4 vp = camera.GetProjectionMatrix() * camera.GetViewMatrix();
 			cubemap_shader.SetUniformMat4f("u_VP", vp);
 			cubemap_shader.SetUniformMat4f("u_ModelMatrix", model);
-			
+
 			glBindVertexArray(skyboxVAO);
 			glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
 			glDrawArrays(GL_TRIANGLES, 0, 36);
