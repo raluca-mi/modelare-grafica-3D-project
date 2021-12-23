@@ -39,6 +39,11 @@ public:
         return this->m_zoom;
     }
 
+    glm::vec3 getCameraPosition() const
+    {
+        return this->m_position;
+    }
+
     // Setters
     void SetPitch(float new_pitch);
 
