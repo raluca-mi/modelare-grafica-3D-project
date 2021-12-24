@@ -4,59 +4,53 @@
 #include<../STB/stb_image.h>
 #include <iostream>
 
-//Constructor
+Texture::Texture()
+	:m_renderer_id(0), m_file_path(""), m_local_buffer(nullptr),
+	m_width(0), m_height(0), m_BPP(0) {}
+
+Texture::Texture(unsigned int texture_id)
+	: m_renderer_id(texture_id), m_file_path(""), m_local_buffer(nullptr),
+	m_width(0), m_height(0), m_BPP(0) {}
+
 Texture::Texture(const std::string& path)
-	:m_RendererId(0),
-	m_FilePath{ path },
-	m_LocalBuffer(nullptr),
-	m_Width(0),
-	m_Height(0),
-	m_BPP(0)
+	: m_renderer_id(0), m_file_path(path), m_local_buffer(nullptr),
+	m_width(0), m_height(0), m_BPP(0)
 {
 	stbi_set_flip_vertically_on_load(1);
-	m_LocalBuffer = stbi_load(path.c_str(), &m_Width, &m_Height, &m_BPP,4);
+	m_local_buffer = stbi_load(path.c_str(), &m_width, &m_height, &m_BPP, 4);
 
-	GlCall(glGenTextures(1, &m_RendererId));
-	GlCall(glBindTexture(GL_TEXTURE_2D, m_RendererId));
+	glGenTextures(1, &m_renderer_id);
+	glBindTexture(GL_TEXTURE_2D, m_renderer_id);
 
-	
-	GlCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_LINEAR));
-	GlCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
-	GlCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
-	GlCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-	GlCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_Width, m_Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_LocalBuffer));
-	GlCall(glGenerateMipmap(GL_TEXTURE_2D));
-	GlCall(glBindTexture(GL_TEXTURE_2D, 0));
-	
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_width, m_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_local_buffer);
+	glBindTexture(GL_TEXTURE_2D, 0);
 
-	if (m_LocalBuffer)
-		stbi_image_free(m_LocalBuffer);
-	
-
-	if (stbi_failure_reason())
-		std::cout <<"Cannot load file image\nSTB Reason: "<< stbi_failure_reason()<<std::endl;
-
+	if (m_local_buffer)
+		stbi_image_free(m_local_buffer);
 }
 
 Texture::Texture(const Texture& texture)
-	:Texture(texture.m_FilePath) {}
+	:Texture(texture.m_file_path) {}
 
-
-//Destructor
 Texture::~Texture()
 {
-	GlCall(glDeleteTextures(1, &m_RendererId));
+	glDeleteTextures(1, &m_renderer_id);
 }
 
-//Methods
 void Texture::Bind(unsigned int slot) const
 {
-	GlCall(glActiveTexture(GL_TEXTURE0 + slot));
-	GlCall(glBindTexture(GL_TEXTURE_2D, m_RendererId));
+	glActiveTexture(GL_TEXTURE0 + slot);
+	glBindTexture(GL_TEXTURE_2D, m_renderer_id);
 }
 
-void Texture::Unbind()const
+void Texture::Unbind() const
 {
-	GlCall(glBindTexture(GL_TEXTURE_2D, 0));
+	glBindTexture(GL_TEXTURE_2D, 0);
 }

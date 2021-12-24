@@ -27,7 +27,7 @@ class Mesh
 	VertexBuffer m_vertex_buffer;
 	IndexBuffer m_index_buffer;
 public:
-	Mesh(const std::vector<float>& vertices, const std::vector<unsigned int>& indices, const Texture& texture);
+	Mesh(const std::vector<float>& vertices, const std::vector<unsigned int>& indices, const Texture& texture = Texture());
 	Mesh(const Mesh& mesh);
 
 	void SetTexture(const Texture& texture);

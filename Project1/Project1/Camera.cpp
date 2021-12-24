@@ -8,7 +8,7 @@ Camera::Camera(const int width, const int height, const glm::vec3& position)
     :m_width(width), m_height(height), m_position(position)
 {
     m_z_near = 0.1f;
-    m_z_far = 900.0f;
+    m_z_far = 990.0f;
     m_FOV = 45.0f;
     m_yaw = -90.0f;
     m_pitch = 0.0f;

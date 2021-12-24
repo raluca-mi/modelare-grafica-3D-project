@@ -5,41 +5,38 @@
 
 #pragma once
 
-//Constructor
 VertexArray::VertexArray()
 {
-	GlCall(glGenVertexArrays(1, &m_RendererID));
+	glGenVertexArrays(1, &m_renderer_id);
 }
 
-//Destructor
 VertexArray::~VertexArray()
 {
-	GlCall(glDeleteVertexArrays(1, &m_RendererID));
+	glDeleteVertexArrays(1, &m_renderer_id);
 }
 
-//Methods
 void VertexArray::AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout)
 {
 	Bind();
 	vb.Bind();
-	const auto& elements = layout.GetElements();
+	const std::vector<VertexBufferElement>& elements = layout.GetElements();
 	unsigned int offset = 0;
-	for (unsigned int index = 0; index < elements.size(); index++)
+	for (unsigned int i = 0; i < elements.size(); i++)
 	{
-		const auto& element = elements[index];
-		GlCall(glEnableVertexAttribArray(index));
-		GlCall(glVertexAttribPointer(index, element.count, element.type, element.normalized, layout.GetStride(), (const void*)offset));
-		offset += element.count*VertexBufferElement::GetSizeOfType(element.type);
+		const auto& element = elements[i];
+		glEnableVertexAttribArray(i);
+		glVertexAttribPointer(i, element.count, element.type,
+			element.normalized, layout.GetStride(), (const void*)offset);
+		offset += element.count * VertexBufferElement::GetSizeOfType(element.type);
 	}
-	
 }
 
 void VertexArray::Bind() const
 {
-	GlCall(glBindVertexArray(m_RendererID));
+	glBindVertexArray(m_renderer_id);
 }
 
 void VertexArray::Unbind() const
 {
-	GlCall(glBindVertexArray(0));
+	glBindVertexArray(0);
 }

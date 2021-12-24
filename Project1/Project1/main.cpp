@@ -14,7 +14,7 @@
 #include<gtc/type_ptr.hpp>
 
 #include"OBJLoader.h";
-#include "TextureSkybox.h"
+#include"TextureSkybox.h"
 #include"Terrain.h"
 
 
@@ -126,33 +126,33 @@ Mesh InitStationRoofMesh(const Texture& texture)
 	  8.0,   2,   -0.5,				 1.0f, 1.0f,		    0.0f,  0.0f,  1.0f,		 //21
 	   //back
 
-		 -12.5,   -0.1,  -7.0,     0.0f,0.0f,        0.0f,  0.0f,  1.0f, //22
-		-8.0,   -0.1,  -7.0,    1.0f, 0.0f,		  0.0f,  0.0f,  1.0f, //23
-		-8.0,  2, -5.5,    1.0f, 1.0f,		  0.0f,  0.0f,  1.0f, //24
+		 -12.5,   -0.1,  -7.0,     0.0f,0.0f,        0.0f,  0.0f,  -1.0f, //22
+		-8.0,   -0.1,  -7.0,    1.0f, 0.0f,		  0.0f,  0.0f,  -1.0f, //23
+		-8.0,  2, -5.5,    1.0f, 1.0f,		  0.0f,  0.0f,  -1.0f, //24
 
-	   -8.0,    -0.1,   -7.0,    0.0f, 0.0f,		    0.0f,  0.0f,  1.0f,//25
-	   -8.0,   2,  -5.5,    0.0f, 1.0f,			0.0f,  0.0f,  1.0f,//26
-	   -4.0,    -0.1,   -7.0,    1.0f, 0.0f,			0.0f,  0.0f,  1.0f,//27
-	   -4.0,   2,  -5.5,    1.0f, 1.0f,			0.0f,  0.0f,  1.0f,//28
+	   -8.0,    -0.1,   -7.0,    0.0f, 0.0f,		    0.0f,  0.0f,  -1.0f,//25
+	   -8.0,   2,  -5.5,    0.0f, 1.0f,			0.0f,  0.0f,  -1.0f,//26
+	   -4.0,    -0.1,   -7.0,    1.0f, 0.0f,			0.0f,  0.0f,  -1.0f,//27
+	   -4.0,   2,  -5.5,    1.0f, 1.0f,			0.0f,  0.0f,  -1.0f,//28
 
-	   -4.0,    -0.1,   -7.0,    0.0f, 0.0f,			0.0f,  0.0f,  1.0f,//29
-	   -4.0,   2,  -5.5,    0.0f, 1.0f,			0.0f,  0.0f,  1.0f,//30
-	   0.0,     -0.1,   -7.0,    1.0f, 0.0f,			0.0f,  0.0f,  1.0f,//31
-	   0.0,    2,  -5.5,    1.0f, 1.0f,			0.0f,  0.0f,  1.0f,//32
+	   -4.0,    -0.1,   -7.0,    0.0f, 0.0f,			0.0f,  0.0f,  -1.0f,//29
+	   -4.0,   2,  -5.5,    0.0f, 1.0f,			0.0f,  0.0f,  -1.0f,//30
+	   0.0,     -0.1,   -7.0,    1.0f, 0.0f,			0.0f,  0.0f,  -1.0f,//31
+	   0.0,    2,  -5.5,    1.0f, 1.0f,			0.0f,  0.0f,  -1.0f,//32
 
-	   0.0,    -0.1,   -7.0,    0.0f, 0.0f,			0.0f,  0.0f,  1.0f,//33
-	   0.0,   2,  -5.5,    0.0f, 1.0f,			0.0f,  0.0f,  1.0f,//34
-	   4.0,     -0.1,   -7.0,    1.0f, 0.0f,			0.0f,  0.0f,  1.0f,//35
-	   4.0,    2,  -5.5,    1.0f, 1.0f,			0.0f,  0.0f,  1.0f,//36
+	   0.0,    -0.1,   -7.0,    0.0f, 0.0f,			0.0f,  0.0f,  -1.0f,//33
+	   0.0,   2,  -5.5,    0.0f, 1.0f,			0.0f,  0.0f,  -1.0f,//34
+	   4.0,     -0.1,   -7.0,    1.0f, 0.0f,			0.0f,  0.0f,  -1.0f,//35
+	   4.0,    2,  -5.5,    1.0f, 1.0f,			0.0f,  0.0f,  -1.0f,//36
 
-	   4.0,    -0.1,   -7.0,    0.0f, 0.0f,			0.0f,  0.0f,  1.0f,//37
-	   4.0,   2,  -5.5,    0.0f, 1.0f,			0.0f,  0.0f,  1.0f,//38
-	   8.0,     -0.1,   -7.0,    1.0f, 0.0f,			0.0f,  0.0f,  1.0f,//39
-	   8.0,    2,  -5.5,    1.0f, 1.0f,			0.0f,  0.0f,  1.0f,//40
+	   4.0,    -0.1,   -7.0,    0.0f, 0.0f,			0.0f,  0.0f,  -1.0f,//37
+	   4.0,   2,  -5.5,    0.0f, 1.0f,			0.0f,  0.0f,  -1.0f,//38
+	   8.0,     -0.1,   -7.0,    1.0f, 0.0f,			0.0f,  0.0f,  -1.0f,//39
+	   8.0,    2,  -5.5,    1.0f, 1.0f,			0.0f,  0.0f,  -1.0f,//40
 
-	  12.5,   -0.1,  -7.0,     0.0f,0.0f,            0.0f,  0.0f,  1.0f, //41
-	   8.0,    -0.1,  -7.0,     1.0f, 0.0f,			0.0f,  0.0f,  1.0f, //42
-	   8.0,   2,  -5.5,    1.0f, 1.0f,		    0.0f,  0.0f,  1.0f, //43
+	  12.5,   -0.1,  -7.0,     0.0f,0.0f,            0.0f,  0.0f,  -1.0f, //41
+	   8.0,    -0.1,  -7.0,     1.0f, 0.0f,			0.0f,  0.0f,  -1.0f, //42
+	   8.0,   2,  -5.5,    1.0f, 1.0f,		    0.0f,  0.0f,  -1.0f, //43
 
 		//top
 		-8.0,  2.0,  -0.5,		0.0f, 0.0f,			0.0f,  1.0f, 0.0f,				//44
@@ -195,28 +195,28 @@ Mesh InitStationRoofMesh(const Texture& texture)
 		8.0,   2.0, -0.5,			0.0f,  1.0f,		1.0f,  0.0f, 0.0f,		//69
 
 		////left
-		-12.5, -0.1, -7.0,			1.0f, 0.0f,			1.0f,  0.0f, 0.0f,		//70
-		-12.5, -0.1, -5.5,			0.0f, 0.0f,			1.0f,  0.0f, 0.0f,		//71
-		-8.0,   2.0, -5.5,			0.0f,  1.0f,		1.0f,  0.0f, 0.0f,		//72
-
-		-12.5, -0.1, -5.5,			1.0f, 0.0f,			1.0f,  0.0f, 0.0f,		//73
-		-8.0,   2.0, -5.5,			1.0f,  1.0f,		1.0f,  0.0f, 0.0f,		//74
-		-12.5, -0.1, -4.0,			0.0f, 0.0f,			1.0f,  0.0f, 0.0f,		//75
-		-8.0,   2.0, -4.0,			0.0f,  1.0f,		1.0f,  0.0f, 0.0f,		//76
-
-		-12.5, -0.1, -4.0,			1.0f, 0.0f,			1.0f,  0.0f, 0.0f,		//77
-		-8.0,   2.0, -4.0,			1.0f,  1.0f,		1.0f,  0.0f, 0.0f,		//78
-		-12.5, -0.1, -2.5,			0.0f, 0.0f,			1.0f,  0.0f, 0.0f,		//79
-		-8.0,   2.0, -2.5,			0.0f,  1.0f,		1.0f,  0.0f, 0.0f,		//80
-
-		-12.5, -0.1, -2.5,			1.0f, 0.0f,			1.0f,  0.0f, 0.0f,		//81
-		-8.0,   2.0, -2.5,			1.0f,  1.0f,		1.0f,  0.0f, 0.0f,		//82
-		-12.5, -0.1, -0.5,			0.0f, 0.0f,			1.0f,  0.0f, 0.0f,		//83
-		-8.0,   2.0, -0.5,			0.0f,  1.0f,		1.0f,  0.0f, 0.0f,		//84
-
-		-12.5, -0.1,  1.0,			1.0f, 0.0f,			1.0f,  0.0f, 0.0f,		//67
-		-12.5, -0.1, -0.5,			0.0f, 0.0f,			1.0f,  0.0f, 0.0f,		//68
-		-8.0,   2.0, -0.5,			0.0f, 1.0f,		    1.0f,  0.0f, 0.0f,		//69
+		-12.5, -0.1, -7.0,			1.0f, 0.0f,			-1.0f,  0.0f, 0.0f,		//70
+		-12.5, -0.1, -5.5,			0.0f, 0.0f,			-1.0f,  0.0f, 0.0f,		//71
+		-8.0,   2.0, -5.5,			0.0f,  1.0f,		-1.0f,  0.0f, 0.0f,		//72
+														
+		-12.5, -0.1, -5.5,			1.0f, 0.0f,			-1.0f,  0.0f, 0.0f,		//73
+		-8.0,   2.0, -5.5,			1.0f,  1.0f,		-1.0f,  0.0f, 0.0f,		//74
+		-12.5, -0.1, -4.0,			0.0f, 0.0f,			-1.0f,  0.0f, 0.0f,		//75
+		-8.0,   2.0, -4.0,			0.0f,  1.0f,		-1.0f,  0.0f, 0.0f,		//76
+														
+		-12.5, -0.1, -4.0,			1.0f, 0.0f,			-1.0f,  0.0f, 0.0f,		//77
+		-8.0,   2.0, -4.0,			1.0f,  1.0f,		-1.0f,  0.0f, 0.0f,		//78
+		-12.5, -0.1, -2.5,			0.0f, 0.0f,			-1.0f,  0.0f, 0.0f,		//79
+		-8.0,   2.0, -2.5,			0.0f,  1.0f,		-1.0f,  0.0f, 0.0f,		//80
+														
+		-12.5, -0.1, -2.5,			1.0f, 0.0f,			-1.0f,  0.0f, 0.0f,		//81
+		-8.0,   2.0, -2.5,			1.0f,  1.0f,		-1.0f,  0.0f, 0.0f,		//82
+		-12.5, -0.1, -0.5,			0.0f, 0.0f,			-1.0f,  0.0f, 0.0f,		//83
+		-8.0,   2.0, -0.5,			0.0f,  1.0f,		-1.0f,  0.0f, 0.0f,		//84
+														
+		-12.5, -0.1,  1.0,			1.0f, 0.0f,			-1.0f,  0.0f, 0.0f,		//67
+		-12.5, -0.1, -0.5,			0.0f, 0.0f,			-1.0f,  0.0f, 0.0f,		//68
+		-8.0,   2.0, -0.5,			0.0f, 1.0f,		    -1.0f,  0.0f, 0.0f,		//69
 
 	};
 
@@ -303,40 +303,40 @@ Mesh InitMainPlatformMesh(const Texture& texture)
 		/*Vertex coords	       Texture coords            Normals*/
 
 		//front
-		 -18.0, -6.0,  0.0,		0.0f, 0.0f,			0.0f,  0.0f,  1.0f,		//0 0
-		  18.0, -6.0,  0.0,		1.0f, 0.0f,			0.0f,  0.0f,  1.0f,		//1 1
-		  18.0,  6.0,  0.0,		1.0f, 1.0f,			0.0f,  0.0f,  1.0f,		//2 2
-		 -18.0,  6.0,  0.0,		0.0f, 1.0f,			0.0f,  0.0f,  1.0f,		//3 3
+		 -18.0, -0.1,  0.0,		0.0f, 0.0f,			0.0f,  0.0f,  1.0f,		//0 0
+		  18.0, -0.1,  0.0,		1.0f, 0.0f,			0.0f,  0.0f,  1.0f,		//1 1
+		  18.0,  0.1,  0.0,		1.0f, 1.0f,			0.0f,  0.0f,  1.0f,		//2 2
+		 -18.0,  0.1,  0.0,		0.0f, 1.0f,			0.0f,  0.0f,  1.0f,		//3 3
 
 		 //back
-		 -18.0, -6.0, -0.3,		1.0f, 0.0f,			0.0f,  0.0f, -1.0f,		//4 4
-		 -18.0,  6.0, -0.3,		1.0f, 1.0f,			0.0f,  0.0f, -1.0f,		//5 5
-		  18.0,  6.0, -0.3,		0.0f, 1.0f,			0.0f,  0.0f, -1.0f,		//6 6
-		  18.0, -6.0, -0.3,		0.0f, 0.0f,			0.0f,  0.0f, -1.0f,		//7 7
+		 -18.0, -0.1, -14.0,		1.0f, 0.0f,			0.0f,  0.0f, -1.0f,		//4 4
+		 -18.0,  0.1, -14.0,		1.0f, 1.0f,			0.0f,  0.0f, -1.0f,		//5 5
+		  18.0,  0.1, -14.0,		0.0f, 1.0f,			0.0f,  0.0f, -1.0f,		//6 6
+		  18.0, -0.1, -14.0,		0.0f, 0.0f,			0.0f,  0.0f, -1.0f,		//7 7
 
 		  //left	   	  
-		 -18.0, -6.0,  -0.3,	0.0f, 0.0f,			-1.0f,  0.0f, 0.0f,		//4 8
-		 -18.0,  6.0,  -0.3,	0.0f, 1.0f,			-1.0f,  0.0f, 0.0f,		//5 9
-		 -18.0,  6.0,   0.0,	1.0f, 1.0f,			-1.0f,  0.0f, 0.0f,		//3 10
-		 -18.0, -6.0,   0.0,	1.0f, 0.0f,			-1.0f,  0.0f, 0.0f,		//0 11
+		 -18.0, -0.1,  -14.0,	0.0f, 0.0f,			-1.0f,  0.0f, 0.0f,		//4 8
+		 -18.0,  0.1,  -14.0,	0.0f, 1.0f,			-1.0f,  0.0f, 0.0f,		//5 9
+		 -18.0,  0.1,   0.0,	1.0f, 1.0f,			-1.0f,  0.0f, 0.0f,		//3 10
+		 -18.0, -0.1,   0.0,	1.0f, 0.0f,			-1.0f,  0.0f, 0.0f,		//0 11
 
 		 //right
-		  18.0, -6.0,  0.0,		0.0f, 0.0f,			1.0f,  0.0f, 0.0f,		//1 12
-		  18.0, -6.0, -0.3,		1.0f, 0.0f,			1.0f,  0.0f, 0.0f,		//7 13
-		  18.0,  6.0, -0.3,		1.0f, 1.0f,			1.0f,  0.0f, 0.0f,		//6 14
-		  18.0,  6.0,  0.0,		0.0f, 1.0f,			1.0f,  0.0f, 0.0f,		//2 15
+		  18.0, -0.1,  0.0,		0.0f, 0.0f,			1.0f,  0.0f, 0.0f,		//1 12
+		  18.0, -0.1, -14.0,		1.0f, 0.0f,			1.0f,  0.0f, 0.0f,		//7 13
+		  18.0,  0.1,  -14.0,		1.0f, 1.0f,			1.0f,  0.0f, 0.0f,		//6 14
+		  18.0,  0.1,   0.0,		0.0f, 1.0f,			1.0f,  0.0f, 0.0f,		//2 15
 
 		  //top
-		  -18.0,  6.0,  0.0,	0.0f, 0.0f,			0.0f,  1.0f, 0.0f,		//3 16
-		   18.0,  6.0,  0.0,	1.0f, 0.0f,			0.0f,  1.0f, 0.0f,		//2 17
-		   18.0,  6.0, -0.3,	1.0f, 1.0f,			0.0f,  1.0f, 0.0f,		//6 18
-		  -18.0,  6.0, -0.3,	0.0f, 1.0f,			0.0f,  1.0f, 0.0f,		//5 19
+		  -18.0, 0.1,  0.0,	0.0f, 0.0f,			    0.0f,  1.0f, 0.0f,		//3 16
+		   18.0, 0.1,  0.0,	1.0f, 0.0f,			    0.0f,  1.0f, 0.0f,		//2 17
+		   18.0, 0.1, -14.0,	1.0f, 1.0f,			0.0f,  1.0f, 0.0f,		//6 18
+		  -18.0, 0.1, -14.0,	0.0f, 1.0f,			0.0f,  1.0f, 0.0f,		//5 19
 
 		  //bottom
-		  -18.0, -6.0, -0.3,	0.0f, 0.0f,			0.0f,  -1.0f, 0.0f,		//4 20
-		   18.0, -6.0, -0.3,	1.0f, 0.0f,			0.0f,  -1.0f, 0.0f,		//7 21
-		   18.0, -6.0,  0.0,	1.0f, 1.0f,			0.0f,  -1.0f, 0.0f,		//1 22
-		  -18.0, -6.0,  0.0,	0.0f, 1.0f,			0.0f,  -1.0f, 0.0f,		//0 23
+		  -18.0, -0.1, -14.0,	0.0f, 0.0f,			0.0f, -1.0f, 0.0f,		//4 20
+		   18.0, -0.1, -14.0,	1.0f, 0.0f,			0.0f, -1.0f, 0.0f,		//7 21
+		   18.0, -0.1,  0.0,	1.0f, 1.0f,			0.0f, -1.0f, 0.0f,		//1 22
+		  -18.0, -0.1,  0.0,	0.0f, 1.0f,			0.0f, -1.0f, 0.0f,		//0 23
 	};
 
 	std::vector<unsigned int> indices = {
@@ -374,40 +374,40 @@ Mesh InitSecondPlatformMesh(const Texture& texture)
 		/*Vertex coords	       Texture coords            Normals*/
 
 		//front
-		 -18.0, -0.8,  0.0,		0.0f, 0.0f,			0.0f,  0.0f,  1.0f,		//0 0
-		  18.0, -0.8,  0.0,		1.0f, 0.0f,			0.0f,  0.0f,  1.0f,		//1 1
-		  18.0,  0.8,  0.0,		1.0f, 1.0f,			0.0f,  0.0f,  1.0f,		//2 2
-		 -18.0,  0.8,  0.0,		0.0f, 1.0f,			0.0f,  0.0f,  1.0f,		//3 3
-
-		 //back
-		 -18.0, -0.8, -0.3,		1.0f, 0.0f,			0.0f,  0.0f, -1.0f,		//4 4
-		 -18.0,  0.8, -0.3,		1.0f, 1.0f,			0.0f,  0.0f, -1.0f,		//5 5
-		  18.0,  0.8, -0.3,		0.0f, 1.0f,			0.0f,  0.0f, -1.0f,		//6 6
-		  18.0, -0.8, -0.3,		0.0f, 0.0f,			0.0f,  0.0f, -1.0f,		//7 7
-
-		  //left	   	  
-		 -18.0, -0.8,  -0.3,	0.0f, 0.0f,			-1.0f,  0.0f, 0.0f,		//4 8
-		 -18.0,  0.8,  -0.3,	0.0f, 1.0f,			-1.0f,  0.0f, 0.0f,		//5 9
-		 -18.0,  0.8,   0.0,	1.0f, 1.0f,			-1.0f,  0.0f, 0.0f,		//3 10
-		 -18.0, -0.8,   0.0,	1.0f, 0.0f,			-1.0f,  0.0f, 0.0f,		//0 11
-
-		 //right
-		  18.0, -0.8,  0.0,		0.0f, 0.0f,			1.0f,  0.0f, 0.0f,		//1 12
-		  18.0, -0.8, -0.3,		1.0f, 0.0f,			1.0f,  0.0f, 0.0f,		//7 13
-		  18.0,  0.8, -0.3,		1.0f, 1.0f,			1.0f,  0.0f, 0.0f,		//6 14
-		  18.0,  0.8,  0.0,		0.0f, 1.0f,			1.0f,  0.0f, 0.0f,		//2 15
+		 -18.0, -0.1,  0.0,		0.0f, 0.0f,			0.0f,  0.0f,  1.0f,		//0 0
+		  18.0, -0.1,  0.0,		1.0f, 0.0f,			0.0f,  0.0f,  1.0f,		//1 1
+		  18.0,  0.1,  0.0,		1.0f, 1.0f,			0.0f,  0.0f,  1.0f,		//2 2
+		 -18.0,  0.1,  0.0,		0.0f, 1.0f,			0.0f,  0.0f,  1.0f,		//3 3
+				  
+		 //back	  
+		 -18.0, -0.1, -4.0,		1.0f, 0.0f,				0.0f,  0.0f, -1.0f,//4 4
+		 -18.0,  0.1, -4.0,		1.0f, 1.0f,				0.0f,  0.0f, -1.0f,//5 5
+		  18.0,  0.1, -4.0,		0.0f, 1.0f,				0.0f,  0.0f, -1.0f,//6 6
+		  18.0, -0.1, -4.0,		0.0f, 0.0f,				0.0f,  0.0f, -1.0f,//7 7
+				   
+		  //left	  	  
+		 -18.0, -0.1,  -4.0,	0.0f, 0.0f,			-1.0f,  0.0f, 0.0f,		//4 8
+		 -18.0,  0.1,  -4.0,	0.0f, 1.0f,			-1.0f,  0.0f, 0.0f,		//5 9
+		 -18.0,  0.1,   0.0,	1.0f, 1.0f,			-1.0f,  0.0f, 0.0f,		//3 10
+		 -18.0, -0.1,   0.0,	1.0f, 0.0f,			-1.0f,  0.0f, 0.0f,		//0 11
+				   
+		 //right   
+		  18.0, -0.1,  0.0,		0.0f, 0.0f,			1.0f,  0.0f, 0.0f,		//1 12
+		  18.0, -0.1, -4.0,		1.0f, 0.0f,				1.0f,  0.0f, 0.0f,	//7 13
+		  18.0,  0.1, -4.0,		1.0f, 1.0f,				1.0f,  0.0f, 0.0f,	//6 14
+		  18.0,  0.1,  0.0,		0.0f, 1.0f,			1.0f,  0.0f, 0.0f,		//2 15
 
 		  //top
-		  -18.0,  0.8,  0.0,	0.0f, 0.0f,			0.0f,  1.0f, 0.0f,		//3 16
-		   18.0,  0.8,  0.0,	1.0f, 0.0f,			0.0f,  1.0f, 0.0f,		//2 17
-		   18.0,  0.8, -0.3,	1.0f, 1.0f,			0.0f,  1.0f, 0.0f,		//6 18
-		  -18.0,  0.8, -0.3,	0.0f, 1.0f,			0.0f,  1.0f, 0.0f,		//5 19
-
-		  //bottom
-		  -18.0, -0.8, -0.3,	0.0f, 0.0f,			0.0f,  -1.0f, 0.0f,		//4 20
-		   18.0, -0.8, -0.3,	1.0f, 0.0f,			0.0f,  -1.0f, 0.0f,		//7 21
-		   18.0, -0.8,  0.0,	1.0f, 1.0f,			0.0f,  -1.0f, 0.0f,		//1 22
-		  -18.0, -0.8,  0.0,	0.0f, 1.0f,			0.0f,  -1.0f, 0.0f,		//0 23
+		  -18.0,  0.1,  0.0,	0.0f, 0.0f,			0.0f,  1.0f, 0.0f,		//3 16
+		   18.0,  0.1,  0.0,	1.0f, 0.0f,			0.0f,  1.0f, 0.0f,		//2 17
+		   18.0,  0.1, -4.0,	1.0f, 1.0f,			0.0f,  1.0f, 0.0f,		//6 18
+		  -18.0,  0.1, -4.0,	0.0f, 1.0f,			0.0f,  1.0f, 0.0f,		//5 19
+						
+		  //bottom		
+		  -18.0, -0.1, -4.0,	0.0f, 0.0f,			0.0f, -1.0f, 0.0f,		//4 20
+		   18.0, -0.1, -4.0,	1.0f, 0.0f,			0.0f, -1.0f, 0.0f,		//7 21
+		   18.0, -0.1,  0.0,	1.0f, 1.0f,			0.0f, -1.0f, 0.0f,		//1 22
+		  -18.0, -0.1,  0.0,	0.0f, 1.0f,			0.0f, -1.0f, 0.0f,		//0 23
 	};
 
 	std::vector<unsigned int> indices = {
@@ -536,10 +536,10 @@ Mesh InitRailwayMesh(const Texture& texture)
 	std::vector<float> vertices = {
 
 		/*Vertex coords	           Texture coords               Normals*/
-		 -18.0f,  -1.9f, 0.0f,		0.0f, 0.0f, 			0.0f,  -1.0f, 0.0f,//0
-		  18.0f,  -1.9f, 0.0f,		1.0f, 0.0f, 			0.0f,  -1.0f, 0.0f,//1
-		  18.0f,   1.9f, 0.0f,		1.0f, 1.0f, 			0.0f,  -1.0f, 0.0f,//2
-		 -18.0f,   1.9f, 0.0f,		0.0f, 1.0f,  			0.0f,  -1.0f, 0.0f,//3
+		 -18.0f,  -1.9f, 0.0f,		0.0f, 0.0f, 			0.0f,  1.0f, 0.0f,//0
+		  18.0f,  -1.9f, 0.0f,		1.0f, 0.0f, 			0.0f,  1.0f, 0.0f,//1
+		  18.0f,   1.9f, 0.0f,		1.0f, 1.0f, 			0.0f,  1.0f, 0.0f,//2
+		 -18.0f,   1.9f, 0.0f,		0.0f, 1.0f,  			0.0f,  1.0f, 0.0f,//3
 	};
 
 	std::vector<unsigned int> indices = {
@@ -566,6 +566,44 @@ Mesh InitTerrainMesh(const Texture& texture)
 
 	return Mesh(vertices, indices, texture);
 
+}
+Mesh InitLightCubeMesh()
+{
+	std::vector<float> vertices =
+	{
+		/*Vertex coords	       Texture coords        Normals*/
+		 -1.0f,  0.0f,  1.0f,      0.0f, 0.0f,   0.0f,  0.0f,  0.0f,//0
+		  1.0f,  0.0f,  1.0f,      0.0f, 0.0f,   0.0f,  0.0f,  0.0f,//1  
+		  1.0f,  2.0f,  1.0f,      0.0f, 0.0f,   0.0f,  0.0f,  0.0f,//2  
+		 -1.0f,  2.0f,  1.0f,      0.0f, 0.0f,   0.0f,  0.0f,  0.0f,//3
+		 -1.0f,  0.0f, -1.0f,      0.0f, 0.0f,   0.0f,  0.0f,  0.0f,//4
+		 -1.0f,  2.0f, -1.0f,      0.0f, 0.0f,   0.0f,  0.0f,  0.0f,//5  
+		  1.0f,  2.0f, -1.0f,      0.0f, 0.0f,   0.0f,  0.0f,  0.0f,//6  
+		  1.0f,  0.0f, -1.0f,      0.0f, 0.0f,   0.0f,  0.0f,  0.0f,//7
+	};
+
+	std::vector<unsigned int> indices =
+	{
+		0, 1, 2,//front
+		2, 3, 0,
+
+		4, 7, 6,//back
+		6, 5, 4,
+
+		3, 2, 6,//top
+		6, 5, 3,
+
+		0, 1, 7,//bottom
+		7, 4, 0,
+
+		0, 4, 5,//left side
+		5, 3, 0,
+
+		1, 7, 6,//right side
+		6, 2, 1
+	};
+
+	return Mesh(vertices, indices);
 }
 
 enum Movement
@@ -601,24 +639,17 @@ int main(void)
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	//Set background color
-	glClearColor(0.5f, 0.7f, 0.8f, 1.0f);
-
-	//Set up the projection and view matrix
-	glm::mat4 proj = glm::ortho(0.0f, window_width, 0.0f, window_height, -1.0f, 1.0f);
-	glm::mat4 view = glm::translate(glm::mat4(1.0), glm::vec3(0, 200, 0));
-
-	//Loading shader (used for all objects)
-	Shader object_shader("res/shaders/object.shader");
+	//Loading shaders
+	Shader object_shader("res/shaders/object.shader");//shader used for all objects
 	object_shader.Bind();
+	object_shader.SetUniform4f("u_LightColor", 1.0f, 1.0f, 1.0f, 1.0f);
 
-	//Loading shader for cubemap
-	Shader cubemap_shader("res/shaders/cubemap.shader");
+	Shader cubemap_shader("res/shaders/cubemap.shader");//shader used for cubemap
 	cubemap_shader.Bind();
 
-	////Loading shader (used for light sources
-	//object_shader.SetUniform4f("u_LightColor", 1.0f, 1.0f, 1.0f, 1.0f);
-	//Shader light_shader("res\\shaders\\light.shader");
+	Shader light_shader("res\\shaders\\light.shader");//shader used for light source
+	light_shader.Bind();
+	light_shader.SetUniform4f("u_Color", 1.0f, 1.0f, 0.0f, 1.0f);
 
 	//Loading textures
 	Texture station_tex("res/textures/brickss.jpg");
@@ -651,17 +682,15 @@ int main(void)
 
 		glEnable(GL_DEPTH_TEST);
 
-		//Loading train model from .obj
+		//Loading models from .obj
 		std::vector<float> train_vertices;
 		std::vector<unsigned int> train_indices;
 		bool res = loadOBJ("res/models/train.obj", train_vertices, train_indices);
 
-		//Loading bench model from .obj
 		std::vector<float> bench_vertices;
 		std::vector<unsigned int> bench_indices;
 		bool res2 = loadOBJ("res/models/bench_1.obj", bench_vertices, bench_indices);
 
-		//Loading tree_1 model from .obj
 		std::vector<float> tree_vertices;
 		std::vector<unsigned int> tree_indices;
 		bool res3 = loadOBJ("res/models/tree_1.obj", tree_vertices, tree_indices);
@@ -689,18 +718,18 @@ int main(void)
 		Mesh station_right_window = InitRightWindowMesh(station_right_window_tex);
 		Mesh station_sign = InitStationSignMesh(station_sign_tex);
 		Mesh railway = InitRailwayMesh(railway_tex);
+		Mesh terrainPatch = InitTerrainMesh(grassPlain);
+		Mesh light_cube = InitLightCubeMesh();
+
 		Mesh bench(bench_vertices, bench_indices, bench_texture);
 		Mesh train(train_vertices, train_indices, train_texture);
-
 		Mesh tree(tree_vertices, tree_indices, tree_1);
-		Mesh terrainPatch = InitTerrainMesh(grassPlain);
 		Mesh rock(rock_vertices, rock_indices, rock_tex);
 		Mesh tree2(tree2_vertices, tree2_indices, tree_2);
 		Mesh tree3(tree3_vertices, tree3_indices, tree_3_tex);
 
-		float rot_angle = 0.0f;
-
 		float skyboxVertices[] = {
+
 			// positions          
 			-500.0f, -500.0f, -500.0f,
 			 500.0f, -500.0f, -500.0f,
@@ -767,7 +796,6 @@ int main(void)
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (GLvoid*)0);
 		glBindVertexArray(0);
 
-
 		Terrain terrain;
 
 		terrain.generatePositions(-600.0f, 600.0f, -100.0f, 100.0f);
@@ -781,16 +809,19 @@ int main(void)
 		{
 			//Render here
 			renderer.Clear();
-			rot_angle += 0.02f;
 
 			//Getting delta time
 			float current_frame = static_cast<float>(glfwGetTime());
 			delta_time = current_frame - last_frame;
 			last_frame = current_frame;
 
+			//Setting light
+			glm::vec3 light_position = glm::vec3(0.0f, glm::sin(current_frame) * 40.0f, glm::cos(current_frame) * 40.0f);
+			object_shader.Bind();
+			object_shader.SetUniform3f("u_LightPosition", light_position.x, light_position.y, light_position.z);
+
 			//processing user input
 			camera.ProcessInput(window, delta_time);
-
 
 			//Draw terrain with vegetation
 			{
@@ -816,8 +847,6 @@ int main(void)
 							object_shader.SetUniformMat4f("u_ModelMatrix", model);
 
 							tree.Draw(camera, object_shader, renderer);
-
-
 						}
 						else if (pos.second == 2)
 						{
@@ -893,6 +922,14 @@ int main(void)
 				}
 			}
 
+			//Draw light cube
+			{
+				glm::mat4 model = glm::mat4(1.0f);
+				model = glm::translate(model, light_position);
+				light_shader.Bind();
+				light_shader.SetUniformMat4f("u_ModelMatrix", model);
+				light_cube.Draw(camera, light_shader, renderer);
+			}
 
 			//Draw right bench model
 			{
@@ -996,10 +1033,10 @@ int main(void)
 					break;
 				}
 
-				model = glm::translate(model, glm::vec3(0.0f, -0.09f, 5.1f));
-				model = glm::rotate(model, glm::radians(360.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+				model = glm::translate(model, glm::vec3(0.0f, -0.09f, 7.4f));
+				//model = glm::rotate(model, glm::radians(360.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 				model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-				model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+				model = glm::scale(model, glm::vec3(0.6f, 0.6f, 0.6f));
 
 				object_shader.Bind();
 
@@ -1190,8 +1227,7 @@ int main(void)
 				if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
 				{
 					glm::mat4 model = glm::mat4(1.0f);
-					model = glm::translate(model, glm::vec3(0.0f, -0.01f, -2.8f));
-					model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+					model = glm::translate(model, glm::vec3(0.0f, 0.31f, 3.5f));
 
 					object_shader.Bind();
 
@@ -1205,10 +1241,8 @@ int main(void)
 				}
 			}
 
-
 			//Draw railway
 			{
-
 				for (auto& pos : railwayPos)
 				{
 					if (std::abs(camera.GetPosition().x - pos.x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - pos.z - 10.0f) < 80.0f)
@@ -1235,8 +1269,7 @@ int main(void)
 				if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
 				{
 					glm::mat4 model = glm::mat4(1.0f);
-					model = glm::translate(model, glm::vec3(0.0f, -0.01f, 7.8f));
-					model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+					model = glm::translate(model, glm::vec3(0.0f, 0.31f, 10.9f));
 
 					object_shader.Bind();
 
