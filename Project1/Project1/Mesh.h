@@ -28,6 +28,9 @@ class Mesh
 	IndexBuffer m_index_buffer;
 public:
 	Mesh(const std::vector<float>& vertices, const std::vector<unsigned int>& indices, const Texture& texture);
+	Mesh(const Mesh& mesh);
+
+	void SetTexture(const Texture& texture);
 
 	//draws the mesh
 	void Draw(const Camera& camera, Shader& shader, const Renderer& renderer);

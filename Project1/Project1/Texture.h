@@ -13,6 +13,7 @@ public:
 
 	//Constructor
 	Texture(const std::string& path);
+	Texture(const Texture& texture);
 
 	//Destructor
 	~Texture();

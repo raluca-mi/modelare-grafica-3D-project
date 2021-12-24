@@ -39,6 +39,10 @@ Texture::Texture(const std::string& path)
 
 }
 
+Texture::Texture(const Texture& texture)
+	:Texture(texture.m_FilePath) {}
+
+
 //Destructor
 Texture::~Texture()
 {

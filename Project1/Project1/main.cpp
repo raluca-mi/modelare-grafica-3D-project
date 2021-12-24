@@ -607,7 +607,7 @@ int main(void)
 	//Set up the projection and view matrix
 	glm::mat4 proj = glm::ortho(0.0f, window_width, 0.0f, window_height, -1.0f, 1.0f);
 	glm::mat4 view = glm::translate(glm::mat4(1.0), glm::vec3(0, 200, 0));
-	
+
 	//Loading shader (used for all objects)
 	Shader object_shader("res/shaders/object.shader");
 	object_shader.Bind();
@@ -769,7 +769,7 @@ int main(void)
 
 
 		Terrain terrain;
-	
+
 		terrain.generatePositions(-600.0f, 600.0f, -100.0f, 100.0f);
 		terrain.generateRailway(-90.0f, 60.0f);
 		std::vector<std::pair<glm::vec3, int>>  terrainPos = terrain.getTerrainPositions();
@@ -782,7 +782,7 @@ int main(void)
 			//Render here
 			renderer.Clear();
 			rot_angle += 0.02f;
-			
+
 			//Getting delta time
 			float current_frame = static_cast<float>(glfwGetTime());
 			delta_time = current_frame - last_frame;
@@ -791,12 +791,12 @@ int main(void)
 			//processing user input
 			camera.ProcessInput(window, delta_time);
 
-		
+
 			//Draw terrain with vegetation
 			{
 				for (auto& pos : terrainPos)
 				{
-					if (std::abs(camera.getCameraPosition().x - pos.first.x-10.0f) < 130.0f && std::abs(camera.getCameraPosition().z - pos.first.z - 10.0f) < 80.0f)
+					if (std::abs(camera.GetPosition().x - pos.first.x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - pos.first.z - 10.0f) < 80.0f)
 					{
 						if (pos.second == 1)
 						{
@@ -808,8 +808,11 @@ int main(void)
 
 							model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
 							object_shader.Bind();
-							glm::mat4 vp = camera.GetProjectionMatrix() * camera.GetViewMatrix();
-							object_shader.SetUniformMat4f("u_VP", vp);
+
+							glm::mat4 view = camera.GetViewMatrix();
+							glm::mat4 projection = camera.GetProjectionMatrix();
+							object_shader.SetUniformMat4f("u_ViewMatrix", view);
+							object_shader.SetUniformMat4f("u_ProjectionMatrix", projection);
 							object_shader.SetUniformMat4f("u_ModelMatrix", model);
 
 							tree.Draw(camera, object_shader, renderer);
@@ -825,8 +828,11 @@ int main(void)
 							model = glm::translate(model, rockPos);
 							model = glm::scale(model, glm::vec3(0.80f, 0.8f, 0.8f));
 							object_shader.Bind();
-							glm::mat4 vp = camera.GetProjectionMatrix() * camera.GetViewMatrix();
-							object_shader.SetUniformMat4f("u_VP", vp);
+
+							glm::mat4 view = camera.GetViewMatrix();
+							glm::mat4 projection = camera.GetProjectionMatrix();
+							object_shader.SetUniformMat4f("u_ViewMatrix", view);
+							object_shader.SetUniformMat4f("u_ProjectionMatrix", projection);
 							object_shader.SetUniformMat4f("u_ModelMatrix", model);
 
 							rock.Draw(camera, object_shader, renderer);
@@ -842,8 +848,11 @@ int main(void)
 
 							model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
 							object_shader.Bind();
-							glm::mat4 vp = camera.GetProjectionMatrix() * camera.GetViewMatrix();
-							object_shader.SetUniformMat4f("u_VP", vp);
+
+							glm::mat4 view = camera.GetViewMatrix();
+							glm::mat4 projection = camera.GetProjectionMatrix();
+							object_shader.SetUniformMat4f("u_ViewMatrix", view);
+							object_shader.SetUniformMat4f("u_ProjectionMatrix", projection);
 							object_shader.SetUniformMat4f("u_ModelMatrix", model);
 
 							tree2.Draw(camera, object_shader, renderer);
@@ -858,8 +867,11 @@ int main(void)
 
 							model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
 							object_shader.Bind();
-							glm::mat4 vp = camera.GetProjectionMatrix() * camera.GetViewMatrix();
-							object_shader.SetUniformMat4f("u_VP", vp);
+
+							glm::mat4 view = camera.GetViewMatrix();
+							glm::mat4 projection = camera.GetProjectionMatrix();
+							object_shader.SetUniformMat4f("u_ViewMatrix", view);
+							object_shader.SetUniformMat4f("u_ProjectionMatrix", projection);
 							object_shader.SetUniformMat4f("u_ModelMatrix", model);
 
 							tree3.Draw(camera, object_shader, renderer);
@@ -869,21 +881,23 @@ int main(void)
 						glm::mat4 model = glm::mat4(1.0f);
 						model = glm::translate(model, pos.first);
 						object_shader.Bind();
-						glm::mat4 vp = camera.GetProjectionMatrix() * camera.GetViewMatrix();
-						object_shader.SetUniformMat4f("u_VP", vp);
+
+						glm::mat4 view = camera.GetViewMatrix();
+						glm::mat4 projection = camera.GetProjectionMatrix();
+						object_shader.SetUniformMat4f("u_ViewMatrix", view);
+						object_shader.SetUniformMat4f("u_ProjectionMatrix", projection);
 						object_shader.SetUniformMat4f("u_ModelMatrix", model);
 
 						terrainPatch.Draw(camera, object_shader, renderer);
 					}
 				}
-
 			}
 
 
 			//Draw right bench model
 			{
-				if (std::abs(camera.getCameraPosition().x - 10.0f) < 130.0f && std::abs(camera.getCameraPosition().z - 10.0f) < 80.0f)
-				
+				if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+
 				{
 					glm::mat4 model = glm::mat4(1.0f);
 					model = glm::translate(model, glm::vec3(8.5f, 0.5f, 1.3f));
@@ -891,8 +905,11 @@ int main(void)
 					model = glm::scale(model, glm::vec3(0.38f, 0.38f, 0.38f));
 
 					object_shader.Bind();
-					glm::mat4 vp = camera.GetProjectionMatrix() * camera.GetViewMatrix();
-					object_shader.SetUniformMat4f("u_VP", vp);
+
+					glm::mat4 view = camera.GetViewMatrix();
+					glm::mat4 projection = camera.GetProjectionMatrix();
+					object_shader.SetUniformMat4f("u_ViewMatrix", view);
+					object_shader.SetUniformMat4f("u_ProjectionMatrix", projection);
 					object_shader.SetUniformMat4f("u_ModelMatrix", model);
 
 					bench.Draw(camera, object_shader, renderer);
@@ -901,8 +918,8 @@ int main(void)
 
 			//Draw left bench model
 			{
-				if (std::abs(camera.getCameraPosition().x - 10.0f) < 130.0f && std::abs(camera.getCameraPosition().z - 10.0f) < 80.0f)
-				
+				if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+
 				{
 					glm::mat4 model = glm::mat4(1.0f);
 					model = glm::translate(model, glm::vec3(-5.5f, 0.5f, 1.3f));
@@ -910,8 +927,11 @@ int main(void)
 					model = glm::scale(model, glm::vec3(0.38f, 0.38f, 0.38f));
 
 					object_shader.Bind();
-					glm::mat4 vp = camera.GetProjectionMatrix() * camera.GetViewMatrix();
-					object_shader.SetUniformMat4f("u_VP", vp);
+
+					glm::mat4 view = camera.GetViewMatrix();
+					glm::mat4 projection = camera.GetProjectionMatrix();
+					object_shader.SetUniformMat4f("u_ViewMatrix", view);
+					object_shader.SetUniformMat4f("u_ProjectionMatrix", projection);
 					object_shader.SetUniformMat4f("u_ModelMatrix", model);
 
 					bench.Draw(camera, object_shader, renderer);
@@ -920,16 +940,19 @@ int main(void)
 
 			//Draw right side bench model
 			{
-				if (std::abs(camera.getCameraPosition().x - 10.0f) < 130.0f && std::abs(camera.getCameraPosition().z - 10.0f) < 80.0f)
-				
+				if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+
 				{
 					glm::mat4 model = glm::mat4(1.0f);
 					model = glm::translate(model, glm::vec3(12.5f, 0.5f, -1.8f));
 					model = glm::scale(model, glm::vec3(0.38f, 0.38f, 0.38f));
 
 					object_shader.Bind();
-					glm::mat4 vp = camera.GetProjectionMatrix() * camera.GetViewMatrix();
-					object_shader.SetUniformMat4f("u_VP", vp);
+
+					glm::mat4 view = camera.GetViewMatrix();
+					glm::mat4 projection = camera.GetProjectionMatrix();
+					object_shader.SetUniformMat4f("u_ViewMatrix", view);
+					object_shader.SetUniformMat4f("u_ProjectionMatrix", projection);
 					object_shader.SetUniformMat4f("u_ModelMatrix", model);
 
 					bench.Draw(camera, object_shader, renderer);
@@ -977,10 +1000,13 @@ int main(void)
 				model = glm::rotate(model, glm::radians(360.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 				model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 				model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
-				
+
 				object_shader.Bind();
-				glm::mat4 vp = camera.GetProjectionMatrix() * camera.GetViewMatrix();
-				object_shader.SetUniformMat4f("u_VP", vp);
+
+				glm::mat4 view = camera.GetViewMatrix();
+				glm::mat4 projection = camera.GetProjectionMatrix();
+				object_shader.SetUniformMat4f("u_ViewMatrix", view);
+				object_shader.SetUniformMat4f("u_ProjectionMatrix", projection);
 				object_shader.SetUniformMat4f("u_ModelMatrix", model);
 
 				train.Draw(camera, object_shader, renderer);
@@ -988,13 +1014,16 @@ int main(void)
 
 			//Draw train station building
 			{
-				if (std::abs(camera.getCameraPosition().x- 10.0f) < 130.0f && std::abs(camera.getCameraPosition().z - 10.0f) < 80.0f)
+				if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
 				{
 					glm::mat4 model = glm::mat4(1.0f);
 
 					object_shader.Bind();
-					glm::mat4 vp = camera.GetProjectionMatrix() * camera.GetViewMatrix();
-					object_shader.SetUniformMat4f("u_VP", vp);
+
+					glm::mat4 view = camera.GetViewMatrix();
+					glm::mat4 projection = camera.GetProjectionMatrix();
+					object_shader.SetUniformMat4f("u_ViewMatrix", view);
+					object_shader.SetUniformMat4f("u_ProjectionMatrix", projection);
 					object_shader.SetUniformMat4f("u_ModelMatrix", model);
 
 					train_station.Draw(camera, object_shader, renderer);
@@ -1003,14 +1032,17 @@ int main(void)
 
 			//Draw train station building roof 
 			{
-				if (std::abs(camera.getCameraPosition().x - 10.0f) < 130.0f && std::abs(camera.getCameraPosition().z - 10.0f) < 80.0f)
+				if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
 				{
 					glm::mat4 model = glm::mat4(1.0f);
 					model = glm::translate(model, glm::vec3(0.0f, 5.0f, -0.5f));
 
 					object_shader.Bind();
-					glm::mat4 vp = camera.GetProjectionMatrix() * camera.GetViewMatrix();
-					object_shader.SetUniformMat4f("u_VP", vp);
+
+					glm::mat4 view = camera.GetViewMatrix();
+					glm::mat4 projection = camera.GetProjectionMatrix();
+					object_shader.SetUniformMat4f("u_ViewMatrix", view);
+					object_shader.SetUniformMat4f("u_ProjectionMatrix", projection);
 					object_shader.SetUniformMat4f("u_ModelMatrix", model);
 
 					train_station_roof.Draw(camera, object_shader, renderer);
@@ -1019,14 +1051,17 @@ int main(void)
 
 			//Draw train station door
 			{
-				if (std::abs(camera.getCameraPosition().x - 10.0f) < 130.0f && std::abs(camera.getCameraPosition().z - 10.0f) < 80.0f)
+				if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
 				{
 					glm::mat4 model = glm::mat4(1.0f);
 					model = glm::translate(model, glm::vec3(0.0f, 1.5f, 0.05f));
 
 					object_shader.Bind();
-					glm::mat4 vp = camera.GetProjectionMatrix() * camera.GetViewMatrix();
-					object_shader.SetUniformMat4f("u_VP", vp);
+
+					glm::mat4 view = camera.GetViewMatrix();
+					glm::mat4 projection = camera.GetProjectionMatrix();
+					object_shader.SetUniformMat4f("u_ViewMatrix", view);
+					object_shader.SetUniformMat4f("u_ProjectionMatrix", projection);
 					object_shader.SetUniformMat4f("u_ModelMatrix", model);
 
 					train_station_door.Draw(camera, object_shader, renderer);
@@ -1035,14 +1070,17 @@ int main(void)
 
 			//Draw first front window
 			{
-				if (std::abs(camera.getCameraPosition().x - 10.0f) < 130.0f && std::abs(camera.getCameraPosition().z - 10.0f) < 80.0f)
+				if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
 				{
 					glm::mat4 model = glm::mat4(1.0f);
 					model = glm::translate(model, glm::vec3(-7.0f, 2.43f, 0.05f));
 
 					object_shader.Bind();
-					glm::mat4 vp = camera.GetProjectionMatrix() * camera.GetViewMatrix();
-					object_shader.SetUniformMat4f("u_VP", vp);
+
+					glm::mat4 view = camera.GetViewMatrix();
+					glm::mat4 projection = camera.GetProjectionMatrix();
+					object_shader.SetUniformMat4f("u_ViewMatrix", view);
+					object_shader.SetUniformMat4f("u_ProjectionMatrix", projection);
 					object_shader.SetUniformMat4f("u_ModelMatrix", model);
 
 					station_main_windows.Draw(camera, object_shader, renderer);
@@ -1051,14 +1089,17 @@ int main(void)
 
 			//Draw second front window
 			{
-				if (std::abs(camera.getCameraPosition().x - 10.0f) < 130.0f && std::abs(camera.getCameraPosition().z - 10.0f) < 80.0f)
+				if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
 				{
 					glm::mat4 model = glm::mat4(1.0f);
 					model = glm::translate(model, glm::vec3(7.0f, 2.43f, 0.05f));
 
 					object_shader.Bind();
-					glm::mat4 vp = camera.GetProjectionMatrix() * camera.GetViewMatrix();
-					object_shader.SetUniformMat4f("u_VP", vp);
+
+					glm::mat4 view = camera.GetViewMatrix();
+					glm::mat4 projection = camera.GetProjectionMatrix();
+					object_shader.SetUniformMat4f("u_ViewMatrix", view);
+					object_shader.SetUniformMat4f("u_ProjectionMatrix", projection);
 					object_shader.SetUniformMat4f("u_ModelMatrix", model);
 
 					station_main_windows.Draw(camera, object_shader, renderer);
@@ -1067,15 +1108,18 @@ int main(void)
 
 			//Draw first left window
 			{
-				if (std::abs(camera.getCameraPosition().x - 10.0f) < 130.0f && std::abs(camera.getCameraPosition().z - 10.0f) < 80.0f)
+				if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
 				{
 					glm::mat4 model = glm::mat4(1.0f);
 					model = glm::translate(model, glm::vec3(-11.52f, 3.0f, -5.0f));
 					model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
 					object_shader.Bind();
-					glm::mat4 vp = camera.GetProjectionMatrix() * camera.GetViewMatrix();
-					object_shader.SetUniformMat4f("u_VP", vp);
+
+					glm::mat4 view = camera.GetViewMatrix();
+					glm::mat4 projection = camera.GetProjectionMatrix();
+					object_shader.SetUniformMat4f("u_ViewMatrix", view);
+					object_shader.SetUniformMat4f("u_ProjectionMatrix", projection);
 					object_shader.SetUniformMat4f("u_ModelMatrix", model);
 
 					station_left_window.Draw(camera, object_shader, renderer);
@@ -1084,15 +1128,18 @@ int main(void)
 
 			//Draw second left window
 			{
-				if (std::abs(camera.getCameraPosition().x - 10.0f) < 130.0f && std::abs(camera.getCameraPosition().z - 10.0f) < 80.0f)
+				if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
 				{
 					glm::mat4 model = glm::mat4(1.0f);
 					model = glm::translate(model, glm::vec3(-11.52f, 3.0f, -2.0f));
 					model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
 					object_shader.Bind();
-					glm::mat4 vp = camera.GetProjectionMatrix() * camera.GetViewMatrix();
-					object_shader.SetUniformMat4f("u_VP", vp);
+
+					glm::mat4 view = camera.GetViewMatrix();
+					glm::mat4 projection = camera.GetProjectionMatrix();
+					object_shader.SetUniformMat4f("u_ViewMatrix", view);
+					object_shader.SetUniformMat4f("u_ProjectionMatrix", projection);
 					object_shader.SetUniformMat4f("u_ModelMatrix", model);
 
 					station_left_window.Draw(camera, object_shader, renderer);
@@ -1101,15 +1148,18 @@ int main(void)
 
 			//Draw right window
 			{
-				if (std::abs(camera.getCameraPosition().x - 10.0f) < 130.0f && std::abs(camera.getCameraPosition().z - 10.0f) < 80.0f)
+				if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
 				{
 					glm::mat4 model = glm::mat4(1.0f);
 					model = glm::translate(model, glm::vec3(11.52f, 2.6f, -3.5f));
 					model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
 					object_shader.Bind();
-					glm::mat4 vp = camera.GetProjectionMatrix() * camera.GetViewMatrix();
-					object_shader.SetUniformMat4f("u_VP", vp);
+
+					glm::mat4 view = camera.GetViewMatrix();
+					glm::mat4 projection = camera.GetProjectionMatrix();
+					object_shader.SetUniformMat4f("u_ViewMatrix", view);
+					object_shader.SetUniformMat4f("u_ProjectionMatrix", projection);
 					object_shader.SetUniformMat4f("u_ModelMatrix", model);
 
 					station_right_window.Draw(camera, object_shader, renderer);
@@ -1118,14 +1168,17 @@ int main(void)
 
 			//Draw train station sign
 			{
-				if (std::abs(camera.getCameraPosition().x - 10.0f) < 130.0f && std::abs(camera.getCameraPosition().z - 10.0f) < 80.0f)
+				if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
 				{
 					glm::mat4 model = glm::mat4(1.0f);
 					model = glm::translate(model, glm::vec3(0.0f, 4.0f, 0.05f));
 
 					object_shader.Bind();
-					glm::mat4 vp = camera.GetProjectionMatrix() * camera.GetViewMatrix();
-					object_shader.SetUniformMat4f("u_VP", vp);
+
+					glm::mat4 view = camera.GetViewMatrix();
+					glm::mat4 projection = camera.GetProjectionMatrix();
+					object_shader.SetUniformMat4f("u_ViewMatrix", view);
+					object_shader.SetUniformMat4f("u_ProjectionMatrix", projection);
 					object_shader.SetUniformMat4f("u_ModelMatrix", model);
 
 					station_sign.Draw(camera, object_shader, renderer);
@@ -1134,15 +1187,18 @@ int main(void)
 
 			//Draw main platform
 			{
-				if (std::abs(camera.getCameraPosition().x - 10.0f) < 130.0f && std::abs(camera.getCameraPosition().z - 10.0f) < 80.0f)
+				if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
 				{
 					glm::mat4 model = glm::mat4(1.0f);
 					model = glm::translate(model, glm::vec3(0.0f, -0.01f, -2.8f));
 					model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
 					object_shader.Bind();
-					glm::mat4 vp = camera.GetProjectionMatrix() * camera.GetViewMatrix();
-					object_shader.SetUniformMat4f("u_VP", vp);
+
+					glm::mat4 view = camera.GetViewMatrix();
+					glm::mat4 projection = camera.GetProjectionMatrix();
+					object_shader.SetUniformMat4f("u_ViewMatrix", view);
+					object_shader.SetUniformMat4f("u_ProjectionMatrix", projection);
 					object_shader.SetUniformMat4f("u_ModelMatrix", model);
 
 					main_platform.Draw(camera, object_shader, renderer);
@@ -1155,15 +1211,18 @@ int main(void)
 
 				for (auto& pos : railwayPos)
 				{
-					if (std::abs(camera.getCameraPosition().x -pos.x- 10.0f) < 130.0f && std::abs(camera.getCameraPosition().z- pos.z- 10.0f) < 80.0f)
+					if (std::abs(camera.GetPosition().x - pos.x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - pos.z - 10.0f) < 80.0f)
 					{
 						glm::mat4 model = glm::mat4(1.0f);
 						model = glm::translate(model, pos);
 						model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
 						object_shader.Bind();
-						glm::mat4 vp = camera.GetProjectionMatrix() * camera.GetViewMatrix();
-						object_shader.SetUniformMat4f("u_VP", vp);
+
+						glm::mat4 view = camera.GetViewMatrix();
+						glm::mat4 projection = camera.GetProjectionMatrix();
+						object_shader.SetUniformMat4f("u_ViewMatrix", view);
+						object_shader.SetUniformMat4f("u_ProjectionMatrix", projection);
 						object_shader.SetUniformMat4f("u_ModelMatrix", model);
 
 						railway.Draw(camera, object_shader, renderer);
@@ -1173,15 +1232,18 @@ int main(void)
 
 			//Draw second platform
 			{
-				if (std::abs(camera.getCameraPosition().x - 10.0f) < 130.0f && std::abs(camera.getCameraPosition().z - 10.0f) < 80.0f)
+				if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
 				{
 					glm::mat4 model = glm::mat4(1.0f);
 					model = glm::translate(model, glm::vec3(0.0f, -0.01f, 7.8f));
 					model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
 					object_shader.Bind();
-					glm::mat4 vp = camera.GetProjectionMatrix() * camera.GetViewMatrix();
-					object_shader.SetUniformMat4f("u_VP", vp);
+
+					glm::mat4 view = camera.GetViewMatrix();
+					glm::mat4 projection = camera.GetProjectionMatrix();
+					object_shader.SetUniformMat4f("u_ViewMatrix", view);
+					object_shader.SetUniformMat4f("u_ProjectionMatrix", projection);
 					object_shader.SetUniformMat4f("u_ModelMatrix", model);
 
 					second_platform.Draw(camera, object_shader, renderer);
@@ -1194,8 +1256,10 @@ int main(void)
 			glDepthFunc(GL_LEQUAL);
 			cubemap_shader.Bind();
 
-			glm::mat4 vp = camera.GetProjectionMatrix() * camera.GetViewMatrix();
-			cubemap_shader.SetUniformMat4f("u_VP", vp);
+			glm::mat4 view = camera.GetViewMatrix();
+			glm::mat4 projection = camera.GetProjectionMatrix();
+			cubemap_shader.SetUniformMat4f("u_ViewMatrix", view);
+			cubemap_shader.SetUniformMat4f("u_ProjectionMatrix", projection);
 			cubemap_shader.SetUniformMat4f("u_ModelMatrix", model);
 
 			glBindVertexArray(skyboxVAO);

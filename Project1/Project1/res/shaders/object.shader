@@ -9,7 +9,8 @@ out vec2 v_tex_coord;
 out vec3 v_normals;
 out vec3 current_position;
 
-uniform mat4 u_VP;
+uniform mat4 u_ProjectionMatrix;
+uniform mat4 u_ViewMatrix;
 uniform mat4 u_ModelMatrix;
 
 void main()
@@ -18,7 +19,7 @@ void main()
 	current_position = vec3(u_ModelMatrix * vec4(position, 1.0f));
 
 	//projection
-	gl_Position = u_VP * u_ModelMatrix * vec4(position, 1.0);
+	gl_Position = u_ProjectionMatrix* u_ViewMatrix * u_ModelMatrix * vec4(position, 1.0);
 
 	//for texture
 	v_tex_coord = tex_coord;

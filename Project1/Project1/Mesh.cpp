@@ -13,11 +13,22 @@ Mesh::Mesh(const std::vector<float>& vertices, const std::vector<unsigned int>& 
 	m_vertex_array.AddBuffer(m_vertex_buffer, layout);
 }
 
+Mesh::Mesh(const Mesh& mesh)
+	:Mesh(mesh.m_vertices, mesh.m_indices, mesh.m_texture) {}
+
+void Mesh::SetTexture(const Texture& texture)
+{
+	this->m_texture = texture;
+}
+
 void Mesh::Draw(const Camera& camera, Shader& shader, const Renderer& renderer)
 {
 	m_texture.Bind();
 	shader.Bind();
 	shader.SetUniform1i("u_Texture", 0);
+	shader.SetUniformMat4f("u_ProjectionMatrix", camera.GetProjectionMatrix());
+	shader.SetUniformMat4f("u_ViewMatrix", camera.GetViewMatrix());
+	shader.SetUniform3f("u_CamPosition", camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
 
 	renderer.Draw(m_vertex_array, m_index_buffer, shader);
 }
