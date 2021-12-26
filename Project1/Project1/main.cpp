@@ -198,22 +198,22 @@ Mesh InitStationRoofMesh(const Texture& texture)
 		-12.5, -0.1, -7.0,			1.0f, 0.0f,			-1.0f,  0.0f, 0.0f,		//70
 		-12.5, -0.1, -5.5,			0.0f, 0.0f,			-1.0f,  0.0f, 0.0f,		//71
 		-8.0,   2.0, -5.5,			0.0f,  1.0f,		-1.0f,  0.0f, 0.0f,		//72
-														
+
 		-12.5, -0.1, -5.5,			1.0f, 0.0f,			-1.0f,  0.0f, 0.0f,		//73
 		-8.0,   2.0, -5.5,			1.0f,  1.0f,		-1.0f,  0.0f, 0.0f,		//74
 		-12.5, -0.1, -4.0,			0.0f, 0.0f,			-1.0f,  0.0f, 0.0f,		//75
 		-8.0,   2.0, -4.0,			0.0f,  1.0f,		-1.0f,  0.0f, 0.0f,		//76
-														
+
 		-12.5, -0.1, -4.0,			1.0f, 0.0f,			-1.0f,  0.0f, 0.0f,		//77
 		-8.0,   2.0, -4.0,			1.0f,  1.0f,		-1.0f,  0.0f, 0.0f,		//78
 		-12.5, -0.1, -2.5,			0.0f, 0.0f,			-1.0f,  0.0f, 0.0f,		//79
 		-8.0,   2.0, -2.5,			0.0f,  1.0f,		-1.0f,  0.0f, 0.0f,		//80
-														
+
 		-12.5, -0.1, -2.5,			1.0f, 0.0f,			-1.0f,  0.0f, 0.0f,		//81
 		-8.0,   2.0, -2.5,			1.0f,  1.0f,		-1.0f,  0.0f, 0.0f,		//82
 		-12.5, -0.1, -0.5,			0.0f, 0.0f,			-1.0f,  0.0f, 0.0f,		//83
 		-8.0,   2.0, -0.5,			0.0f,  1.0f,		-1.0f,  0.0f, 0.0f,		//84
-														
+
 		-12.5, -0.1,  1.0,			1.0f, 0.0f,			-1.0f,  0.0f, 0.0f,		//67
 		-12.5, -0.1, -0.5,			0.0f, 0.0f,			-1.0f,  0.0f, 0.0f,		//68
 		-8.0,   2.0, -0.5,			0.0f, 1.0f,		    -1.0f,  0.0f, 0.0f,		//69
@@ -378,19 +378,19 @@ Mesh InitSecondPlatformMesh(const Texture& texture)
 		  18.0, -0.1,  0.0,		1.0f, 0.0f,			0.0f,  0.0f,  1.0f,		//1 1
 		  18.0,  0.1,  0.0,		1.0f, 1.0f,			0.0f,  0.0f,  1.0f,		//2 2
 		 -18.0,  0.1,  0.0,		0.0f, 1.0f,			0.0f,  0.0f,  1.0f,		//3 3
-				  
+
 		 //back	  
 		 -18.0, -0.1, -4.0,		1.0f, 0.0f,				0.0f,  0.0f, -1.0f,//4 4
 		 -18.0,  0.1, -4.0,		1.0f, 1.0f,				0.0f,  0.0f, -1.0f,//5 5
 		  18.0,  0.1, -4.0,		0.0f, 1.0f,				0.0f,  0.0f, -1.0f,//6 6
 		  18.0, -0.1, -4.0,		0.0f, 0.0f,				0.0f,  0.0f, -1.0f,//7 7
-				   
+
 		  //left	  	  
 		 -18.0, -0.1,  -4.0,	0.0f, 0.0f,			-1.0f,  0.0f, 0.0f,		//4 8
 		 -18.0,  0.1,  -4.0,	0.0f, 1.0f,			-1.0f,  0.0f, 0.0f,		//5 9
 		 -18.0,  0.1,   0.0,	1.0f, 1.0f,			-1.0f,  0.0f, 0.0f,		//3 10
 		 -18.0, -0.1,   0.0,	1.0f, 0.0f,			-1.0f,  0.0f, 0.0f,		//0 11
-				   
+
 		 //right   
 		  18.0, -0.1,  0.0,		0.0f, 0.0f,			1.0f,  0.0f, 0.0f,		//1 12
 		  18.0, -0.1, -4.0,		1.0f, 0.0f,				1.0f,  0.0f, 0.0f,	//7 13
@@ -402,7 +402,7 @@ Mesh InitSecondPlatformMesh(const Texture& texture)
 		   18.0,  0.1,  0.0,	1.0f, 0.0f,			0.0f,  1.0f, 0.0f,		//2 17
 		   18.0,  0.1, -4.0,	1.0f, 1.0f,			0.0f,  1.0f, 0.0f,		//6 18
 		  -18.0,  0.1, -4.0,	0.0f, 1.0f,			0.0f,  1.0f, 0.0f,		//5 19
-						
+
 		  //bottom		
 		  -18.0, -0.1, -4.0,	0.0f, 0.0f,			0.0f, -1.0f, 0.0f,		//4 20
 		   18.0, -0.1, -4.0,	1.0f, 0.0f,			0.0f, -1.0f, 0.0f,		//7 21
@@ -567,50 +567,56 @@ Mesh InitTerrainMesh(const Texture& texture)
 	return Mesh(vertices, indices, texture);
 
 }
-Mesh InitLightCubeMesh()
-{
-	std::vector<float> vertices =
-	{
-		/*Vertex coords	       Texture coords        Normals*/
-		 -1.0f,  0.0f,  1.0f,      0.0f, 0.0f,   0.0f,  0.0f,  0.0f,//0
-		  1.0f,  0.0f,  1.0f,      0.0f, 0.0f,   0.0f,  0.0f,  0.0f,//1  
-		  1.0f,  2.0f,  1.0f,      0.0f, 0.0f,   0.0f,  0.0f,  0.0f,//2  
-		 -1.0f,  2.0f,  1.0f,      0.0f, 0.0f,   0.0f,  0.0f,  0.0f,//3
-		 -1.0f,  0.0f, -1.0f,      0.0f, 0.0f,   0.0f,  0.0f,  0.0f,//4
-		 -1.0f,  2.0f, -1.0f,      0.0f, 0.0f,   0.0f,  0.0f,  0.0f,//5  
-		  1.0f,  2.0f, -1.0f,      0.0f, 0.0f,   0.0f,  0.0f,  0.0f,//6  
-		  1.0f,  0.0f, -1.0f,      0.0f, 0.0f,   0.0f,  0.0f,  0.0f,//7
-	};
-
-	std::vector<unsigned int> indices =
-	{
-		0, 1, 2,//front
-		2, 3, 0,
-
-		4, 7, 6,//back
-		6, 5, 4,
-
-		3, 2, 6,//top
-		6, 5, 3,
-
-		0, 1, 7,//bottom
-		7, 4, 0,
-
-		0, 4, 5,//left side
-		5, 3, 0,
-
-		1, 7, 6,//right side
-		6, 2, 1
-	};
-
-	return Mesh(vertices, indices);
-}
+//Mesh InitLightCubeMesh()
+//{
+//	std::vector<float> vertices =
+//	{
+//		/*Vertex coords	       Texture coords        Normals*/
+//		 -1.0f,  0.0f,  1.0f,      0.0f, 0.0f,   0.0f,  0.0f,  0.0f,//0
+//		  1.0f,  0.0f,  1.0f,      0.0f, 0.0f,   0.0f,  0.0f,  0.0f,//1  
+//		  1.0f,  2.0f,  1.0f,      0.0f, 0.0f,   0.0f,  0.0f,  0.0f,//2  
+//		 -1.0f,  2.0f,  1.0f,      0.0f, 0.0f,   0.0f,  0.0f,  0.0f,//3
+//		 -1.0f,  0.0f, -1.0f,      0.0f, 0.0f,   0.0f,  0.0f,  0.0f,//4
+//		 -1.0f,  2.0f, -1.0f,      0.0f, 0.0f,   0.0f,  0.0f,  0.0f,//5  
+//		  1.0f,  2.0f, -1.0f,      0.0f, 0.0f,   0.0f,  0.0f,  0.0f,//6  
+//		  1.0f,  0.0f, -1.0f,      0.0f, 0.0f,   0.0f,  0.0f,  0.0f,//7
+//	};
+//
+//	std::vector<unsigned int> indices =
+//	{
+//		0, 1, 2,//front
+//		2, 3, 0,
+//
+//		4, 7, 6,//back
+//		6, 5, 4,
+//
+//		3, 2, 6,//top
+//		6, 5, 3,
+//
+//		0, 1, 7,//bottom
+//		7, 4, 0,
+//
+//		0, 4, 5,//left side
+//		5, 3, 0,
+//
+//		1, 7, 6,//right side
+//		6, 2, 1
+//	};
+//
+//	return Mesh(vertices, indices);
+//}
 
 enum Movement
 {
 	Reset,
 	Move,
 	Pause
+};
+
+enum LightAction
+{
+	Sunrise,
+	Sunset
 };
 
 int main(void)
@@ -719,7 +725,7 @@ int main(void)
 		Mesh station_sign = InitStationSignMesh(station_sign_tex);
 		Mesh railway = InitRailwayMesh(railway_tex);
 		Mesh terrainPatch = InitTerrainMesh(grassPlain);
-		Mesh light_cube = InitLightCubeMesh();
+		//Mesh light_cube = InitLightCubeMesh();
 
 		Mesh bench(bench_vertices, bench_indices, bench_texture);
 		Mesh train(train_vertices, train_indices, train_texture);
@@ -804,6 +810,10 @@ int main(void)
 		std::vector<glm::vec3> railwayPos = terrain.getRailway();
 
 		Movement moveTrain = Movement::Reset;
+		LightAction light_action = LightAction::Sunrise;
+
+		float ambient_intensity = 0.7f;
+		float diffuse = 0.2f;
 
 		while (!glfwWindowShouldClose(window))
 		{
@@ -816,9 +826,42 @@ int main(void)
 			last_frame = current_frame;
 
 			//Setting light
-			glm::vec3 light_position = glm::vec3(0.0f, glm::sin(current_frame) * 40.0f, glm::cos(current_frame) * 40.0f);
 			object_shader.Bind();
-			object_shader.SetUniform3f("u_LightPosition", light_position.x, light_position.y, light_position.z);
+			object_shader.SetUniform1f("u_AmbientIntensity", ambient_intensity);
+			object_shader.SetUniform1f("u_Diffuse", diffuse);
+			object_shader.SetUniform3f("u_LightDirection", 0.0f, -30.0f, -20.0f);
+
+			if (glfwGetKey(window, GLFW_KEY_L))
+			{
+				light_action = LightAction::Sunrise;
+			}
+
+			if (glfwGetKey(window, GLFW_KEY_N))
+			{
+				light_action = LightAction::Sunset;
+			}
+
+			switch (light_action)
+			{
+			case Sunrise:
+			{
+				if (ambient_intensity <= 0.7f)
+				{
+					ambient_intensity += 0.03f;
+				}
+				break;
+			}
+			case Sunset:
+			{
+				if (ambient_intensity > 0.3f)
+				{
+					ambient_intensity -= 0.03f;
+				}
+				break;
+			}
+			default:
+				break;
+			}
 
 			//processing user input
 			camera.ProcessInput(window, delta_time);
@@ -922,15 +965,6 @@ int main(void)
 				}
 			}
 
-			//Draw light cube
-			{
-				glm::mat4 model = glm::mat4(1.0f);
-				model = glm::translate(model, light_position);
-				light_shader.Bind();
-				light_shader.SetUniformMat4f("u_ModelMatrix", model);
-				light_cube.Draw(camera, light_shader, renderer);
-			}
-
 			//Draw right bench model
 			{
 				if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
@@ -995,6 +1029,15 @@ int main(void)
 					bench.Draw(camera, object_shader, renderer);
 				}
 			}
+
+			//Draw light cube
+			/*{
+				glm::mat4 model = glm::mat4(1.0f);
+				model = glm::translate(model, light_position);
+				light_shader.Bind();
+				light_shader.SetUniformMat4f("u_ModelMatrix", model);
+				light_cube.Draw(camera, light_shader, renderer);
+			}*/
 
 			//Draw train model
 			{
