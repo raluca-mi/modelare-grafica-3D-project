@@ -664,6 +664,7 @@ int main(void)
 	Texture bucuresti_sign_tex("res/textures/bucuresti.jpg");
 	Texture ploiesti_station_tex("res/textures/ploiesti_station.jpg");
 	Texture ploiesti_sign_tex("res/textures/ploiesti.jpg");
+	Texture brasov_station_tex("res/textures/brasov_station.png");
 	Texture brasov_sign_tex("res/textures/brasov.jpg");
 	Texture railway_tex("res/textures/railway.jpg");
 	Texture bench_tex("res/textures/bench_1.jpg");
@@ -673,7 +674,7 @@ int main(void)
 	Texture rock_tex("res/textures/rock.png");
 	Texture tree_2_tex("res/textures/tree_2.png");
 	Texture tree_3_tex("res/textures/tree_3.png");
-	
+
 
 	// Initialize camera
 	Camera camera(window_width, window_height, glm::vec3(0.0f, 5.0f, 10.0f));
@@ -722,6 +723,10 @@ int main(void)
 	std::vector<unsigned int> ploiesti_indices;
 	bool res8 = loadOBJ("res/models/ploiesti.obj", ploiesti_vertices, ploiesti_indices);
 
+	std::vector<float> brasov_vertices;
+	std::vector<unsigned int> brasov_indices;
+	bool res9 = loadOBJ("res/models/brasov.obj", brasov_vertices, brasov_indices);
+
 	//Loading meshes
 	Mesh campina_train_station = InitCampinaStationMesh(campina_station_tex);
 	Mesh campina_train_station_roof = InitCampinaStationRoofMesh(campina_station_roof_tex);
@@ -738,10 +743,11 @@ int main(void)
 	Mesh ploiesti_station(ploiesti_vertices, ploiesti_indices, ploiesti_station_tex);
 
 	Mesh brasov_station_sign = InitStationSignMesh(brasov_sign_tex);
+	Mesh brasov_station(brasov_vertices, brasov_indices, brasov_station_tex);
 
 	Mesh bucuresti_station_sign = InitStationSignMesh(bucuresti_sign_tex);
 	Mesh bucuresti_station(bucuresti_vertices, bucuresti_indices, bucuresti_station_tex);
-	
+
 	Mesh railway = InitRailwayMesh(railway_tex);
 	Mesh terrainPatch = InitTerrainMesh(grass_plain);
 	//Mesh light_cube = InitLightCubeMesh();
@@ -777,7 +783,7 @@ int main(void)
 		last_frame = current_frame;
 
 		//Setting light
-		object_shader.Bind();
+		{object_shader.Bind();
 		object_shader.SetUniform1f("u_AmbientIntensity", ambient_intensity);
 		object_shader.SetUniform1f("u_Diffuse", diffuse);
 		object_shader.SetUniform3f("u_LightDirection", 0.0f, -30.0f, -20.0f);
@@ -813,7 +819,7 @@ int main(void)
 		default:
 			break;
 		}
-
+		}
 
 		//Processing user input
 		camera.ProcessInput(window, delta_time);
@@ -910,9 +916,9 @@ int main(void)
 			glm::mat4 model = glm::mat4(0.7f);
 
 			//move train keys
-			double fIncrement = 0.0002;
+			double fIncrement = 0.002;
 			static double fMovementValue = 0.0;
-			float current_x = glm::sin(fMovementValue) * 480.0f;
+			float current_x = glm::sin(fMovementValue) * 660.0f;
 
 			if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
 				moveTrain = Movement::Pause;
@@ -967,6 +973,65 @@ int main(void)
 
 					railway.Draw(camera, object_shader, renderer);
 				}
+			}
+		}
+
+		//Rendering Brasov first platform
+		{
+			if (std::abs(camera.GetPosition().x + 460.5f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+			{
+				glm::mat4 model = glm::mat4(1.0f);
+				model = glm::translate(model, glm::vec3(-460.5f, 0.31f, 3.5f));
+
+				object_shader.Bind();
+				object_shader.SetUniformMat4f("u_ModelMatrix", model);
+
+				main_platform.Draw(camera, object_shader, renderer);
+			}
+		}
+
+		//Rendering Brasov second platform
+		{
+			if (std::abs(camera.GetPosition().x + 460.5f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+			{
+				glm::mat4 model = glm::mat4(1.0f);
+				model = glm::translate(model, glm::vec3(-460.5f, 0.31f, 10.9f));
+
+				object_shader.Bind();
+				object_shader.SetUniformMat4f("u_ModelMatrix", model);
+
+				second_platform.Draw(camera, object_shader, renderer);
+			}
+		}
+
+		//Rendering Brasov train station building 
+		{
+			if (std::abs(camera.GetPosition().x + 460.5f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+			{
+				glm::mat4 model = glm::mat4(1.0f);
+				model = glm::translate(model, glm::vec3(-460.5f, 0.38f, -2.0f));
+				model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+				model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
+
+				object_shader.Bind();
+				object_shader.SetUniformMat4f("u_ModelMatrix", model);
+
+				brasov_station.Draw(camera, object_shader, renderer);
+			}
+		}
+
+		//Rendering Brasov train station sign
+		{
+			if (std::abs(camera.GetPosition().x + 460.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+			{
+				glm::mat4 model = glm::mat4(1.0f);
+				model = glm::translate(model, glm::vec3(-460.0f, 4.0f, 1.3f));
+				model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
+
+				object_shader.Bind();
+				object_shader.SetUniformMat4f("u_ModelMatrix", model);
+
+				brasov_station_sign.Draw(camera, object_shader, renderer);
 			}
 		}
 
