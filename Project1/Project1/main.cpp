@@ -1,6 +1,9 @@
 #include<GL/glew.h>
 #include<glfw3.h>
 #include<GL/glut.h>
+#include<glm.hpp>
+#include<gtc/matrix_transform.hpp>
+#include<gtc/type_ptr.hpp>
 
 #include<iostream>
 #include<fstream>
@@ -8,14 +11,9 @@
 #include<sstream>
 
 #include "Mesh.h"
-
-#include<glm.hpp>
-#include<gtc/matrix_transform.hpp>
-#include<gtc/type_ptr.hpp>
-
-#include"OBJLoader.h";
-#include"TextureSkybox.h"
+#include"OBJLoader.h"
 #include"Terrain.h"
+#include "Skybox.h"
 
 
 Mesh InitStationMesh(const Texture& texture)
@@ -650,9 +648,6 @@ int main(void)
 	object_shader.Bind();
 	object_shader.SetUniform4f("u_LightColor", 1.0f, 1.0f, 1.0f, 1.0f);
 
-	Shader cubemap_shader("res/shaders/cubemap.shader");//shader used for cubemap
-	cubemap_shader.Bind();
-
 	Shader light_shader("res\\shaders\\light.shader");//shader used for light source
 	light_shader.Bind();
 	light_shader.SetUniform4f("u_Color", 1.0f, 1.0f, 0.0f, 1.0f);
@@ -667,13 +662,12 @@ int main(void)
 	Texture station_right_window_tex("res/textures/right_window.jpg");
 	Texture station_sign_tex("res/textures/sign.jpg");
 	Texture railway_tex("res/textures/railway.jpg");
-	Texture bench_texture("res/textures/bench_1.jpg");
-	Texture train_texture("res/textures/train.png");
-	Texture grassPlain("res/textures/grass.png");
-
-	Texture tree_1("res/textures/tree_1.png");
+	Texture bench_tex("res/textures/bench_1.jpg");
+	Texture train_tex("res/textures/train.png");
+	Texture grass_plain("res/textures/grass.png");
+	Texture tree_1_tex("res/textures/tree_1.png");
 	Texture rock_tex("res/textures/rock.png");
-	Texture tree_2("res/textures/tree_2.png");
+	Texture tree_2_tex("res/textures/tree_2.png");
 	Texture tree_3_tex("res/textures/tree_3.png");
 
 	// Initialize camera
@@ -683,675 +677,493 @@ int main(void)
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 	glfwSetCursorPos(window, (window_width / 2), (window_height / 2));
 
+	Renderer renderer;
+
+	glEnable(GL_DEPTH_TEST);
+
+	Skybox skybox_scene;
+
+
+	//Loading models from .obj
+	std::vector<float> train_vertices;
+	std::vector<unsigned int> train_indices;
+	bool res = loadOBJ("res/models/train.obj", train_vertices, train_indices);
+
+	std::vector<float> bench_vertices;
+	std::vector<unsigned int> bench_indices;
+	bool res2 = loadOBJ("res/models/bench_1.obj", bench_vertices, bench_indices);
+
+	std::vector<float> tree_vertices;
+	std::vector<unsigned int> tree_indices;
+	bool res3 = loadOBJ("res/models/tree_1.obj", tree_vertices, tree_indices);
+
+	std::vector<float> rock_vertices;
+	std::vector<unsigned int> rock_indices;
+	bool res4 = loadOBJ("res/models/rock.obj", rock_vertices, rock_indices);
+
+	std::vector<float> tree2_vertices;
+	std::vector<unsigned int> tree2_indices;
+	bool res5 = loadOBJ("res/models/tree_2.obj", tree2_vertices, tree2_indices);
+
+	std::vector<float> tree3_vertices;
+	std::vector<unsigned int> tree3_indices;
+	bool res6 = loadOBJ("res/models/tree_3.obj", tree3_vertices, tree3_indices);
+
+	//Loading meshes
+	Mesh train_station = InitStationMesh(station_tex);
+	Mesh train_station_roof = InitStationRoofMesh(station_roof_tex);
+	Mesh main_platform = InitMainPlatformMesh(station_platform_tex);
+	Mesh second_platform = InitSecondPlatformMesh(station_platform_tex);
+	Mesh train_station_door = InitDoorStationMesh(station_door_tex);
+	Mesh station_main_windows = InitMainWindowsMesh(station_windows_tex);
+	Mesh station_left_window = InitLeftWindowMesh(station_left_window_tex);
+	Mesh station_right_window = InitRightWindowMesh(station_right_window_tex);
+	Mesh station_sign = InitStationSignMesh(station_sign_tex);
+	Mesh railway = InitRailwayMesh(railway_tex);
+	Mesh terrainPatch = InitTerrainMesh(grass_plain);
+	//Mesh light_cube = InitLightCubeMesh();
+
+	Mesh bench(bench_vertices, bench_indices, bench_tex);
+	Mesh train(train_vertices, train_indices, train_tex);
+	Mesh tree(tree_vertices, tree_indices, tree_1_tex);
+	Mesh rock(rock_vertices, rock_indices, rock_tex);
+	Mesh tree2(tree2_vertices, tree2_indices, tree_2_tex);
+	Mesh tree3(tree3_vertices, tree3_indices, tree_3_tex);
+
+	Terrain terrain;
+
+	terrain.generatePositions(-600.0f, 600.0f, -100.0f, 100.0f);
+	terrain.generateRailway(-90.0f, 60.0f);
+	std::vector<std::pair<glm::vec3, int>>  terrainPos = terrain.getTerrainPositions();
+	std::vector<glm::vec3> railwayPos = terrain.getRailway();
+
+	Movement moveTrain = Movement::Reset;
+	LightAction light_action = LightAction::Sunrise;
+
+	float ambient_intensity = 0.7f;
+	float diffuse = 0.2f;
+
+	while (!glfwWindowShouldClose(window))
 	{
-		Renderer renderer;
+		//Render here
+		renderer.Clear();
 
-		glEnable(GL_DEPTH_TEST);
+		//Getting delta time
+		float current_frame = static_cast<float>(glfwGetTime());
+		delta_time = current_frame - last_frame;
+		last_frame = current_frame;
 
-		//Loading models from .obj
-		std::vector<float> train_vertices;
-		std::vector<unsigned int> train_indices;
-		bool res = loadOBJ("res/models/train.obj", train_vertices, train_indices);
+		//Setting light
+		object_shader.Bind();
+		object_shader.SetUniform1f("u_AmbientIntensity", ambient_intensity);
+		object_shader.SetUniform1f("u_Diffuse", diffuse);
+		object_shader.SetUniform3f("u_LightDirection", 0.0f, -30.0f, -20.0f);
 
-		std::vector<float> bench_vertices;
-		std::vector<unsigned int> bench_indices;
-		bool res2 = loadOBJ("res/models/bench_1.obj", bench_vertices, bench_indices);
-
-		std::vector<float> tree_vertices;
-		std::vector<unsigned int> tree_indices;
-		bool res3 = loadOBJ("res/models/tree_1.obj", tree_vertices, tree_indices);
-
-		std::vector<float> rock_vertices;
-		std::vector<unsigned int> rock_indices;
-		bool res4 = loadOBJ("res/models/rock.obj", rock_vertices, rock_indices);
-
-		std::vector<float> tree2_vertices;
-		std::vector<unsigned int> tree2_indices;
-		bool res5 = loadOBJ("res/models/tree_2.obj", tree2_vertices, tree2_indices);
-
-		std::vector<float> tree3_vertices;
-		std::vector<unsigned int> tree3_indices;
-		bool res6 = loadOBJ("res/models/tree_3.obj", tree3_vertices, tree3_indices);
-
-		//Loading meshes
-		Mesh train_station = InitStationMesh(station_tex);
-		Mesh train_station_roof = InitStationRoofMesh(station_roof_tex);
-		Mesh main_platform = InitMainPlatformMesh(station_platform_tex);
-		Mesh second_platform = InitSecondPlatformMesh(station_platform_tex);
-		Mesh train_station_door = InitDoorStationMesh(station_door_tex);
-		Mesh station_main_windows = InitMainWindowsMesh(station_windows_tex);
-		Mesh station_left_window = InitLeftWindowMesh(station_left_window_tex);
-		Mesh station_right_window = InitRightWindowMesh(station_right_window_tex);
-		Mesh station_sign = InitStationSignMesh(station_sign_tex);
-		Mesh railway = InitRailwayMesh(railway_tex);
-		Mesh terrainPatch = InitTerrainMesh(grassPlain);
-		//Mesh light_cube = InitLightCubeMesh();
-
-		Mesh bench(bench_vertices, bench_indices, bench_texture);
-		Mesh train(train_vertices, train_indices, train_texture);
-		Mesh tree(tree_vertices, tree_indices, tree_1);
-		Mesh rock(rock_vertices, rock_indices, rock_tex);
-		Mesh tree2(tree2_vertices, tree2_indices, tree_2);
-		Mesh tree3(tree3_vertices, tree3_indices, tree_3_tex);
-
-		float skyboxVertices[] = {
-
-			// positions          
-			-500.0f, -500.0f, -500.0f,
-			 500.0f, -500.0f, -500.0f,
-			-500.0f,  500.0f, -500.0f,
-			 500.0f, -500.0f, -500.0f,
-			 500.0f,  500.0f, -500.0f,
-			-500.0f,  500.0f, -500.0f,
-
-			-500.0f, -500.0f,  500.0f,
-			-500.0f, -500.0f, -500.0f,
-			-500.0f,  500.0f, -500.0f,
-			-500.0f,  500.0f, -500.0f,
-			-500.0f,  500.0f,  500.0f,
-			-500.0f, -500.0f,  500.0f,
-
-			 500.0f, -500.0f, -500.0f,
-			 500.0f, -500.0f,  500.0f,
-			 500.0f,  500.0f,  500.0f,
-			 500.0f,  500.0f,  500.0f,
-			 500.0f,  500.0f, -500.0f,
-			 500.0f, -500.0f, -500.0f,
-
-			-500.0f, -500.0f,  500.0f,
-			-500.0f,  500.0f,  500.0f,
-			 500.0f,  500.0f,  500.0f,
-			 500.0f,  500.0f,  500.0f,
-			 500.0f, -500.0f,  500.0f,
-			-500.0f, -500.0f,  500.0f,
-
-			-500.0f,  500.0f, -500.0f,
-			 500.0f,  500.0f, -500.0f,
-			 500.0f,  500.0f,  500.0f,
-			 500.0f,  500.0f,  500.0f,
-			-500.0f,  500.0f,  500.0f,
-			-500.0f,  500.0f, -500.0f,
-
-			-500.0f, -500.0f, -500.0f,
-			-500.0f, -500.0f,  500.0f,
-			 500.0f, -500.0f, -500.0f,
-			 500.0f, -500.0f, -500.0f,
-			-500.0f, -500.0f,  500.0f,
-			 500.0f, -500.0f,  500.0f
-		};
-
-		// Cubemap (Skybox)
-		std::vector<std::string>faces;
-		faces.push_back("res/skybox_1/right.jpg");
-		faces.push_back("res/skybox_1/left.jpg");
-		faces.push_back("res/skybox_1/top.jpg");
-		faces.push_back("res/skybox_1/bottom.jpg");
-		faces.push_back("res/skybox_1/back.jpg");
-		faces.push_back("res/skybox_1/front.jpg");
-
-		unsigned int cubemapTexture = TextureSkybox::loadCubemap(faces);
-
-		// Setup skybox VAO
-		unsigned int skyboxVAO, skyboxVBO;
-		glGenVertexArrays(1, &skyboxVAO);
-		glGenBuffers(1, &skyboxVBO);
-		glBindVertexArray(skyboxVAO);
-		glBindBuffer(GL_ARRAY_BUFFER, skyboxVBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (GLvoid*)0);
-		glBindVertexArray(0);
-
-		Terrain terrain;
-
-		terrain.generatePositions(-600.0f, 600.0f, -100.0f, 100.0f);
-		terrain.generateRailway(-90.0f, 60.0f);
-		std::vector<std::pair<glm::vec3, int>>  terrainPos = terrain.getTerrainPositions();
-		std::vector<glm::vec3> railwayPos = terrain.getRailway();
-
-		Movement moveTrain = Movement::Reset;
-		LightAction light_action = LightAction::Sunrise;
-
-		float ambient_intensity = 0.7f;
-		float diffuse = 0.2f;
-
-		while (!glfwWindowShouldClose(window))
+		if (glfwGetKey(window, GLFW_KEY_L))
 		{
-			//Render here
-			renderer.Clear();
+			light_action = LightAction::Sunrise;
+		}
 
-			//Getting delta time
-			float current_frame = static_cast<float>(glfwGetTime());
-			delta_time = current_frame - last_frame;
-			last_frame = current_frame;
+		if (glfwGetKey(window, GLFW_KEY_N))
+		{
+			light_action = LightAction::Sunset;
+		}
 
-			//Setting light
-			object_shader.Bind();
-			object_shader.SetUniform1f("u_AmbientIntensity", ambient_intensity);
-			object_shader.SetUniform1f("u_Diffuse", diffuse);
-			object_shader.SetUniform3f("u_LightDirection", 0.0f, -30.0f, -20.0f);
-
-			if (glfwGetKey(window, GLFW_KEY_L))
+		switch (light_action)
+		{
+		case Sunrise:
+		{
+			if (ambient_intensity <= 0.7f)
 			{
-				light_action = LightAction::Sunrise;
+				ambient_intensity += 0.03f;
 			}
-
-			if (glfwGetKey(window, GLFW_KEY_N))
+			break;
+		}
+		case Sunset:
+		{
+			if (ambient_intensity > 0.3f)
 			{
-				light_action = LightAction::Sunset;
+				ambient_intensity -= 0.03f;
 			}
+			break;
+		}
+		default:
+			break;
+		}
 
-			switch (light_action)
+
+		//Processing user input
+		camera.ProcessInput(window, delta_time);
+
+
+
+		//Rendering terrain with vegetation
+		{
+			for (auto& pos : terrainPos)
 			{
-			case Sunrise:
-			{
-				if (ambient_intensity <= 0.7f)
+				if (std::abs(camera.GetPosition().x - pos.first.x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - pos.first.z - 10.0f) < 80.0f)
 				{
-					ambient_intensity += 0.03f;
+					if (pos.second == 1)
+					{
+						glm::vec3 treePos = pos.first;
+						treePos.y = -0.1f;
+						treePos.x = treePos.x + 20.0f;
+						glm::mat4 model = glm::mat4(1.0f);
+						model = glm::translate(model, treePos);
+						model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+
+						object_shader.Bind();
+						object_shader.SetUniformMat4f("u_ViewMatrix", camera.GetViewMatrix());
+						object_shader.SetUniformMat4f("u_ProjectionMatrix", camera.GetProjectionMatrix());
+						object_shader.SetUniformMat4f("u_ModelMatrix", model);
+
+						tree.Draw(camera, object_shader, renderer);
+					}
+					else if (pos.second == 2)
+					{
+						glm::vec3 rockPos = pos.first;
+						rockPos.y = -0.1f;
+						rockPos.x = rockPos.x + 20.0f;
+						glm::mat4 model = glm::mat4(1.0f);
+						model = glm::translate(model, rockPos);
+						model = glm::scale(model, glm::vec3(0.80f, 0.8f, 0.8f));
+
+						object_shader.Bind();
+						object_shader.SetUniformMat4f("u_ModelMatrix", model);
+
+						rock.Draw(camera, object_shader, renderer);
+					}
+
+					else if (pos.second == 3)
+					{
+						glm::vec3 treePos = pos.first;
+						treePos.y = -0.1f;
+						treePos.x = treePos.x + 20.0f;
+						glm::mat4 model = glm::mat4(1.0f);
+						model = glm::translate(model, treePos);
+						model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+
+						object_shader.Bind();
+						object_shader.SetUniformMat4f("u_ModelMatrix", model);
+
+						tree2.Draw(camera, object_shader, renderer);
+					}
+					else if (pos.second == 4)
+					{
+						glm::vec3 treePos = pos.first;
+						treePos.y = -0.1f;
+						treePos.x = treePos.x + 20.0f;
+						glm::mat4 model = glm::mat4(1.0f);
+						model = glm::translate(model, treePos);
+
+						model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+						object_shader.Bind();
+						object_shader.SetUniformMat4f("u_ModelMatrix", model);
+
+						tree3.Draw(camera, object_shader, renderer);
+					}
+
+
+					glm::mat4 model = glm::mat4(1.0f);
+					model = glm::translate(model, pos.first);
+
+					object_shader.Bind();
+					object_shader.SetUniformMat4f("u_ModelMatrix", model);
+
+					terrainPatch.Draw(camera, object_shader, renderer);
 				}
+			}
+		}
+
+		//Rendering right bench model
+		{
+			if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+
+			{
+				glm::mat4 model = glm::mat4(1.0f);
+				model = glm::translate(model, glm::vec3(8.5f, 0.5f, 1.3f));
+				model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+				model = glm::scale(model, glm::vec3(0.38f, 0.38f, 0.38f));
+
+				object_shader.Bind();
+				object_shader.SetUniformMat4f("u_ModelMatrix", model);
+
+				bench.Draw(camera, object_shader, renderer);
+			}
+		}
+
+		//Rendering left bench model
+		{
+			if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+
+			{
+				glm::mat4 model = glm::mat4(1.0f);
+				model = glm::translate(model, glm::vec3(-5.5f, 0.5f, 1.3f));
+				model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+				model = glm::scale(model, glm::vec3(0.38f, 0.38f, 0.38f));
+
+				object_shader.Bind();
+				object_shader.SetUniformMat4f("u_ModelMatrix", model);
+
+				bench.Draw(camera, object_shader, renderer);
+			}
+		}
+
+		//Rendering right side bench model
+		{
+			if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+
+			{
+				glm::mat4 model = glm::mat4(1.0f);
+				model = glm::translate(model, glm::vec3(12.5f, 0.5f, -1.8f));
+				model = glm::scale(model, glm::vec3(0.38f, 0.38f, 0.38f));
+
+				object_shader.Bind();
+				object_shader.SetUniformMat4f("u_ModelMatrix", model);
+
+				bench.Draw(camera, object_shader, renderer);
+			}
+		}
+
+		//Rendering light cube
+		/*{
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, light_position);
+			light_shader.Bind();
+			light_shader.SetUniformMat4f("u_ModelMatrix", model);
+			light_cube.Draw(camera, light_shader, renderer);
+		}*/
+
+		//Rendering train model
+		{
+			glm::mat4 model = glm::mat4(0.7f);
+
+			//move train keys
+			double fIncrement = 0.0002;
+			static double fMovementValue = 0.0;
+			float current_x = glm::sin(fMovementValue) * 480.0f;
+
+			if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+				moveTrain = Movement::Pause;
+
+			if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+				moveTrain = Movement::Move;
+
+			if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+				moveTrain = Movement::Reset;
+
+			switch (moveTrain)
+			{
+			case Reset:
+				break;
+			case Move:
+			{
+				fMovementValue += fIncrement;
+				model = glm::translate(model, glm::vec3(current_x, 0.0f, 0.0f));
 				break;
 			}
-			case Sunset:
+			case Pause:
 			{
-				if (ambient_intensity > 0.3f)
-				{
-					ambient_intensity -= 0.03f;
-				}
+				model = glm::translate(model, glm::vec3(current_x, 0.0f, 0.0f));
 				break;
 			}
 			default:
 				break;
 			}
 
-			//processing user input
-			camera.ProcessInput(window, delta_time);
+			model = glm::translate(model, glm::vec3(0.0f, -0.09f, 7.4f));
+			model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::scale(model, glm::vec3(0.6f, 0.6f, 0.6f));
 
-			//Draw terrain with vegetation
+			object_shader.Bind();
+			object_shader.SetUniformMat4f("u_ModelMatrix", model);
+
+			train.Draw(camera, object_shader, renderer);
+		}
+
+		//Rendering train station building
+		{
+			if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
 			{
-				for (auto& pos : terrainPos)
-				{
-					if (std::abs(camera.GetPosition().x - pos.first.x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - pos.first.z - 10.0f) < 80.0f)
-					{
-						if (pos.second == 1)
-						{
-							glm::vec3 treePos = pos.first;
-							treePos.y = -0.1f;
-							treePos.x = treePos.x + 20.0f;
-							glm::mat4 model = glm::mat4(1.0f);
-							model = glm::translate(model, treePos);
-
-							model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
-							object_shader.Bind();
-
-							glm::mat4 view = camera.GetViewMatrix();
-							glm::mat4 projection = camera.GetProjectionMatrix();
-							object_shader.SetUniformMat4f("u_ViewMatrix", view);
-							object_shader.SetUniformMat4f("u_ProjectionMatrix", projection);
-							object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-							tree.Draw(camera, object_shader, renderer);
-						}
-						else if (pos.second == 2)
-						{
-							glm::vec3 rockPos = pos.first;
-							rockPos.y = -0.1f;
-							rockPos.x = rockPos.x + 20.0f;
-							glm::mat4 model = glm::mat4(1.0f);
-							model = glm::translate(model, rockPos);
-							model = glm::scale(model, glm::vec3(0.80f, 0.8f, 0.8f));
-							object_shader.Bind();
-
-							glm::mat4 view = camera.GetViewMatrix();
-							glm::mat4 projection = camera.GetProjectionMatrix();
-							object_shader.SetUniformMat4f("u_ViewMatrix", view);
-							object_shader.SetUniformMat4f("u_ProjectionMatrix", projection);
-							object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-							rock.Draw(camera, object_shader, renderer);
-						}
-
-						else if (pos.second == 3)
-						{
-							glm::vec3 treePos = pos.first;
-							treePos.y = -0.1f;
-							treePos.x = treePos.x + 20.0f;
-							glm::mat4 model = glm::mat4(1.0f);
-							model = glm::translate(model, treePos);
-
-							model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
-							object_shader.Bind();
-
-							glm::mat4 view = camera.GetViewMatrix();
-							glm::mat4 projection = camera.GetProjectionMatrix();
-							object_shader.SetUniformMat4f("u_ViewMatrix", view);
-							object_shader.SetUniformMat4f("u_ProjectionMatrix", projection);
-							object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-							tree2.Draw(camera, object_shader, renderer);
-						}
-						else if (pos.second == 4)
-						{
-							glm::vec3 treePos = pos.first;
-							treePos.y = -0.1f;
-							treePos.x = treePos.x + 20.0f;
-							glm::mat4 model = glm::mat4(1.0f);
-							model = glm::translate(model, treePos);
-
-							model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
-							object_shader.Bind();
-
-							glm::mat4 view = camera.GetViewMatrix();
-							glm::mat4 projection = camera.GetProjectionMatrix();
-							object_shader.SetUniformMat4f("u_ViewMatrix", view);
-							object_shader.SetUniformMat4f("u_ProjectionMatrix", projection);
-							object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-							tree3.Draw(camera, object_shader, renderer);
-						}
-
-
-						glm::mat4 model = glm::mat4(1.0f);
-						model = glm::translate(model, pos.first);
-						object_shader.Bind();
-
-						glm::mat4 view = camera.GetViewMatrix();
-						glm::mat4 projection = camera.GetProjectionMatrix();
-						object_shader.SetUniformMat4f("u_ViewMatrix", view);
-						object_shader.SetUniformMat4f("u_ProjectionMatrix", projection);
-						object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-						terrainPatch.Draw(camera, object_shader, renderer);
-					}
-				}
-			}
-
-			//Draw right bench model
-			{
-				if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
-
-				{
-					glm::mat4 model = glm::mat4(1.0f);
-					model = glm::translate(model, glm::vec3(8.5f, 0.5f, 1.3f));
-					model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-					model = glm::scale(model, glm::vec3(0.38f, 0.38f, 0.38f));
-
-					object_shader.Bind();
-
-					glm::mat4 view = camera.GetViewMatrix();
-					glm::mat4 projection = camera.GetProjectionMatrix();
-					object_shader.SetUniformMat4f("u_ViewMatrix", view);
-					object_shader.SetUniformMat4f("u_ProjectionMatrix", projection);
-					object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-					bench.Draw(camera, object_shader, renderer);
-				}
-			}
-
-			//Draw left bench model
-			{
-				if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
-
-				{
-					glm::mat4 model = glm::mat4(1.0f);
-					model = glm::translate(model, glm::vec3(-5.5f, 0.5f, 1.3f));
-					model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-					model = glm::scale(model, glm::vec3(0.38f, 0.38f, 0.38f));
-
-					object_shader.Bind();
-
-					glm::mat4 view = camera.GetViewMatrix();
-					glm::mat4 projection = camera.GetProjectionMatrix();
-					object_shader.SetUniformMat4f("u_ViewMatrix", view);
-					object_shader.SetUniformMat4f("u_ProjectionMatrix", projection);
-					object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-					bench.Draw(camera, object_shader, renderer);
-				}
-			}
-
-			//Draw right side bench model
-			{
-				if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
-
-				{
-					glm::mat4 model = glm::mat4(1.0f);
-					model = glm::translate(model, glm::vec3(12.5f, 0.5f, -1.8f));
-					model = glm::scale(model, glm::vec3(0.38f, 0.38f, 0.38f));
-
-					object_shader.Bind();
-
-					glm::mat4 view = camera.GetViewMatrix();
-					glm::mat4 projection = camera.GetProjectionMatrix();
-					object_shader.SetUniformMat4f("u_ViewMatrix", view);
-					object_shader.SetUniformMat4f("u_ProjectionMatrix", projection);
-					object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-					bench.Draw(camera, object_shader, renderer);
-				}
-			}
-
-			//Draw light cube
-			/*{
 				glm::mat4 model = glm::mat4(1.0f);
-				model = glm::translate(model, light_position);
-				light_shader.Bind();
-				light_shader.SetUniformMat4f("u_ModelMatrix", model);
-				light_cube.Draw(camera, light_shader, renderer);
-			}*/
-
-			//Draw train model
-			{
-				glm::mat4 model = glm::mat4(0.7f);
-
-				//move train keys
-				double fIncrement = 0.0002;
-				static double fMovementValue = 0.0;
-				float current_x = glm::sin(fMovementValue) * 480.0f;
-
-				if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-					moveTrain = Movement::Pause;
-
-				if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-					moveTrain = Movement::Move;
-
-				if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-					moveTrain = Movement::Reset;
-
-				switch (moveTrain)
-				{
-				case Reset:
-					break;
-				case Move:
-				{
-					fMovementValue += fIncrement;
-					model = glm::translate(model, glm::vec3(current_x, 0.0f, 0.0f));
-					break;
-				}
-				case Pause:
-				{
-					model = glm::translate(model, glm::vec3(current_x, 0.0f, 0.0f));
-					break;
-				}
-				default:
-					break;
-				}
-
-				model = glm::translate(model, glm::vec3(0.0f, -0.09f, 7.4f));
-				//model = glm::rotate(model, glm::radians(360.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-				model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-				model = glm::scale(model, glm::vec3(0.6f, 0.6f, 0.6f));
 
 				object_shader.Bind();
-
-				glm::mat4 view = camera.GetViewMatrix();
-				glm::mat4 projection = camera.GetProjectionMatrix();
-				object_shader.SetUniformMat4f("u_ViewMatrix", view);
-				object_shader.SetUniformMat4f("u_ProjectionMatrix", projection);
 				object_shader.SetUniformMat4f("u_ModelMatrix", model);
 
-				train.Draw(camera, object_shader, renderer);
+				train_station.Draw(camera, object_shader, renderer);
 			}
-
-			//Draw train station building
-			{
-				if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
-				{
-					glm::mat4 model = glm::mat4(1.0f);
-
-					object_shader.Bind();
-
-					glm::mat4 view = camera.GetViewMatrix();
-					glm::mat4 projection = camera.GetProjectionMatrix();
-					object_shader.SetUniformMat4f("u_ViewMatrix", view);
-					object_shader.SetUniformMat4f("u_ProjectionMatrix", projection);
-					object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-					train_station.Draw(camera, object_shader, renderer);
-				}
-			}
-
-			//Draw train station building roof 
-			{
-				if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
-				{
-					glm::mat4 model = glm::mat4(1.0f);
-					model = glm::translate(model, glm::vec3(0.0f, 5.0f, -0.5f));
-
-					object_shader.Bind();
-
-					glm::mat4 view = camera.GetViewMatrix();
-					glm::mat4 projection = camera.GetProjectionMatrix();
-					object_shader.SetUniformMat4f("u_ViewMatrix", view);
-					object_shader.SetUniformMat4f("u_ProjectionMatrix", projection);
-					object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-					train_station_roof.Draw(camera, object_shader, renderer);
-				}
-			}
-
-			//Draw train station door
-			{
-				if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
-				{
-					glm::mat4 model = glm::mat4(1.0f);
-					model = glm::translate(model, glm::vec3(0.0f, 1.5f, 0.05f));
-
-					object_shader.Bind();
-
-					glm::mat4 view = camera.GetViewMatrix();
-					glm::mat4 projection = camera.GetProjectionMatrix();
-					object_shader.SetUniformMat4f("u_ViewMatrix", view);
-					object_shader.SetUniformMat4f("u_ProjectionMatrix", projection);
-					object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-					train_station_door.Draw(camera, object_shader, renderer);
-				}
-			}
-
-			//Draw first front window
-			{
-				if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
-				{
-					glm::mat4 model = glm::mat4(1.0f);
-					model = glm::translate(model, glm::vec3(-7.0f, 2.43f, 0.05f));
-
-					object_shader.Bind();
-
-					glm::mat4 view = camera.GetViewMatrix();
-					glm::mat4 projection = camera.GetProjectionMatrix();
-					object_shader.SetUniformMat4f("u_ViewMatrix", view);
-					object_shader.SetUniformMat4f("u_ProjectionMatrix", projection);
-					object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-					station_main_windows.Draw(camera, object_shader, renderer);
-				}
-			}
-
-			//Draw second front window
-			{
-				if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
-				{
-					glm::mat4 model = glm::mat4(1.0f);
-					model = glm::translate(model, glm::vec3(7.0f, 2.43f, 0.05f));
-
-					object_shader.Bind();
-
-					glm::mat4 view = camera.GetViewMatrix();
-					glm::mat4 projection = camera.GetProjectionMatrix();
-					object_shader.SetUniformMat4f("u_ViewMatrix", view);
-					object_shader.SetUniformMat4f("u_ProjectionMatrix", projection);
-					object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-					station_main_windows.Draw(camera, object_shader, renderer);
-				}
-			}
-
-			//Draw first left window
-			{
-				if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
-				{
-					glm::mat4 model = glm::mat4(1.0f);
-					model = glm::translate(model, glm::vec3(-11.52f, 3.0f, -5.0f));
-					model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-
-					object_shader.Bind();
-
-					glm::mat4 view = camera.GetViewMatrix();
-					glm::mat4 projection = camera.GetProjectionMatrix();
-					object_shader.SetUniformMat4f("u_ViewMatrix", view);
-					object_shader.SetUniformMat4f("u_ProjectionMatrix", projection);
-					object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-					station_left_window.Draw(camera, object_shader, renderer);
-				}
-			}
-
-			//Draw second left window
-			{
-				if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
-				{
-					glm::mat4 model = glm::mat4(1.0f);
-					model = glm::translate(model, glm::vec3(-11.52f, 3.0f, -2.0f));
-					model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-
-					object_shader.Bind();
-
-					glm::mat4 view = camera.GetViewMatrix();
-					glm::mat4 projection = camera.GetProjectionMatrix();
-					object_shader.SetUniformMat4f("u_ViewMatrix", view);
-					object_shader.SetUniformMat4f("u_ProjectionMatrix", projection);
-					object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-					station_left_window.Draw(camera, object_shader, renderer);
-				}
-			}
-
-			//Draw right window
-			{
-				if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
-				{
-					glm::mat4 model = glm::mat4(1.0f);
-					model = glm::translate(model, glm::vec3(11.52f, 2.6f, -3.5f));
-					model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-
-					object_shader.Bind();
-
-					glm::mat4 view = camera.GetViewMatrix();
-					glm::mat4 projection = camera.GetProjectionMatrix();
-					object_shader.SetUniformMat4f("u_ViewMatrix", view);
-					object_shader.SetUniformMat4f("u_ProjectionMatrix", projection);
-					object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-					station_right_window.Draw(camera, object_shader, renderer);
-				}
-			}
-
-			//Draw train station sign
-			{
-				if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
-				{
-					glm::mat4 model = glm::mat4(1.0f);
-					model = glm::translate(model, glm::vec3(0.0f, 4.0f, 0.05f));
-
-					object_shader.Bind();
-
-					glm::mat4 view = camera.GetViewMatrix();
-					glm::mat4 projection = camera.GetProjectionMatrix();
-					object_shader.SetUniformMat4f("u_ViewMatrix", view);
-					object_shader.SetUniformMat4f("u_ProjectionMatrix", projection);
-					object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-					station_sign.Draw(camera, object_shader, renderer);
-				}
-			}
-
-			//Draw main platform
-			{
-				if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
-				{
-					glm::mat4 model = glm::mat4(1.0f);
-					model = glm::translate(model, glm::vec3(0.0f, 0.31f, 3.5f));
-
-					object_shader.Bind();
-
-					glm::mat4 view = camera.GetViewMatrix();
-					glm::mat4 projection = camera.GetProjectionMatrix();
-					object_shader.SetUniformMat4f("u_ViewMatrix", view);
-					object_shader.SetUniformMat4f("u_ProjectionMatrix", projection);
-					object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-					main_platform.Draw(camera, object_shader, renderer);
-				}
-			}
-
-			//Draw railway
-			{
-				for (auto& pos : railwayPos)
-				{
-					if (std::abs(camera.GetPosition().x - pos.x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - pos.z - 10.0f) < 80.0f)
-					{
-						glm::mat4 model = glm::mat4(1.0f);
-						model = glm::translate(model, pos);
-						model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-
-						object_shader.Bind();
-
-						glm::mat4 view = camera.GetViewMatrix();
-						glm::mat4 projection = camera.GetProjectionMatrix();
-						object_shader.SetUniformMat4f("u_ViewMatrix", view);
-						object_shader.SetUniformMat4f("u_ProjectionMatrix", projection);
-						object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-						railway.Draw(camera, object_shader, renderer);
-					}
-				}
-			}
-
-			//Draw second platform
-			{
-				if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
-				{
-					glm::mat4 model = glm::mat4(1.0f);
-					model = glm::translate(model, glm::vec3(0.0f, 0.31f, 10.9f));
-
-					object_shader.Bind();
-
-					glm::mat4 view = camera.GetViewMatrix();
-					glm::mat4 projection = camera.GetProjectionMatrix();
-					object_shader.SetUniformMat4f("u_ViewMatrix", view);
-					object_shader.SetUniformMat4f("u_ProjectionMatrix", projection);
-					object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-					second_platform.Draw(camera, object_shader, renderer);
-				}
-			}
-
-
-			//Draw skybox as last
-			glm::mat4 model = glm::mat4(1.0f);
-			glDepthFunc(GL_LEQUAL);
-			cubemap_shader.Bind();
-
-			glm::mat4 view = camera.GetViewMatrix();
-			glm::mat4 projection = camera.GetProjectionMatrix();
-			cubemap_shader.SetUniformMat4f("u_ViewMatrix", view);
-			cubemap_shader.SetUniformMat4f("u_ProjectionMatrix", projection);
-			cubemap_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-			glBindVertexArray(skyboxVAO);
-			glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
-			glDrawArrays(GL_TRIANGLES, 0, 36);
-			glBindVertexArray(0);
-			glDepthFunc(GL_LESS);
-			glDepthFunc(GL_LEQUAL);
-
-
-			/* Swap front and back buffers */
-			glfwSwapBuffers(window);
-
-			/* Poll for and process events */
-			glfwPollEvents();
 		}
+
+		//Rendering train station building roof 
+		{
+			if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+			{
+				glm::mat4 model = glm::mat4(1.0f);
+				model = glm::translate(model, glm::vec3(0.0f, 5.0f, -0.5f));
+
+				object_shader.Bind();
+				object_shader.SetUniformMat4f("u_ModelMatrix", model);
+
+				train_station_roof.Draw(camera, object_shader, renderer);
+			}
+		}
+
+		//Rendering train station door
+		{
+			if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+			{
+				glm::mat4 model = glm::mat4(1.0f);
+				model = glm::translate(model, glm::vec3(0.0f, 1.5f, 0.05f));
+
+				object_shader.Bind();
+				object_shader.SetUniformMat4f("u_ModelMatrix", model);
+
+				train_station_door.Draw(camera, object_shader, renderer);
+			}
+		}
+
+		//Rendering first front window
+		{
+			if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+			{
+				glm::mat4 model = glm::mat4(1.0f);
+				model = glm::translate(model, glm::vec3(-7.0f, 2.43f, 0.05f));
+
+				object_shader.Bind();
+				object_shader.SetUniformMat4f("u_ModelMatrix", model);
+
+				station_main_windows.Draw(camera, object_shader, renderer);
+			}
+		}
+
+		//Rendering second front window
+		{
+			if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+			{
+				glm::mat4 model = glm::mat4(1.0f);
+				model = glm::translate(model, glm::vec3(7.0f, 2.43f, 0.05f));
+
+				object_shader.Bind();
+				object_shader.SetUniformMat4f("u_ModelMatrix", model);
+
+				station_main_windows.Draw(camera, object_shader, renderer);
+			}
+		}
+
+		//Rendering first left window
+		{
+			if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+			{
+				glm::mat4 model = glm::mat4(1.0f);
+				model = glm::translate(model, glm::vec3(-11.52f, 3.0f, -5.0f));
+				model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+				object_shader.Bind();
+				object_shader.SetUniformMat4f("u_ModelMatrix", model);
+
+				station_left_window.Draw(camera, object_shader, renderer);
+			}
+		}
+
+		//Rendering second left window
+		{
+			if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+			{
+				glm::mat4 model = glm::mat4(1.0f);
+				model = glm::translate(model, glm::vec3(-11.52f, 3.0f, -2.0f));
+				model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+				object_shader.Bind();
+				object_shader.SetUniformMat4f("u_ModelMatrix", model);
+
+				station_left_window.Draw(camera, object_shader, renderer);
+			}
+		}
+
+		//Rendering right window
+		{
+			if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+			{
+				glm::mat4 model = glm::mat4(1.0f);
+				model = glm::translate(model, glm::vec3(11.52f, 2.6f, -3.5f));
+				model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+				object_shader.Bind();
+				object_shader.SetUniformMat4f("u_ModelMatrix", model);
+
+				station_right_window.Draw(camera, object_shader, renderer);
+			}
+		}
+
+		//Rendering train station sign
+		{
+			if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+			{
+				glm::mat4 model = glm::mat4(1.0f);
+				model = glm::translate(model, glm::vec3(0.0f, 4.0f, 0.05f));
+
+				object_shader.Bind();
+				object_shader.SetUniformMat4f("u_ModelMatrix", model);
+
+				station_sign.Draw(camera, object_shader, renderer);
+			}
+		}
+
+		//Rendering main platform
+		{
+			if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+			{
+				glm::mat4 model = glm::mat4(1.0f);
+				model = glm::translate(model, glm::vec3(0.0f, 0.31f, 3.5f));
+
+				object_shader.Bind();
+				object_shader.SetUniformMat4f("u_ModelMatrix", model);
+
+				main_platform.Draw(camera, object_shader, renderer);
+			}
+		}
+
+		//Rendering railway
+		{
+			for (auto& pos : railwayPos)
+			{
+				if (std::abs(camera.GetPosition().x - pos.x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - pos.z - 10.0f) < 80.0f)
+				{
+					glm::mat4 model = glm::mat4(1.0f);
+					model = glm::translate(model, pos);
+					model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+					object_shader.Bind();
+					object_shader.SetUniformMat4f("u_ModelMatrix", model);
+
+					railway.Draw(camera, object_shader, renderer);
+				}
+			}
+		}
+
+		//Rendering second platform
+		{
+			if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+			{
+				glm::mat4 model = glm::mat4(1.0f);
+				model = glm::translate(model, glm::vec3(0.0f, 0.31f, 10.9f));
+
+				object_shader.Bind();
+				object_shader.SetUniformMat4f("u_ModelMatrix", model);
+
+				second_platform.Draw(camera, object_shader, renderer);
+			}
+		}
+
+		//Rendering skybox
+		skybox_scene.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix());
+
+
+		/* Swap front and back buffers */
+		glfwSwapBuffers(window);
+
+		/* Poll for and process events */
+		glfwPollEvents();
 	}
 
 	glfwTerminate();
