@@ -14,12 +14,15 @@ public:
 
     void Draw(const glm::mat4& view, const glm::mat4& projection);
 
+    void SetFaces(bool day);
+
 private:
     unsigned int cubemapTexture;
 
     GLuint VAO;
     GLuint VBO;
     GLuint EBO;
+    std::vector<std::string> faces;
 
     Shader skybox_shader;
 

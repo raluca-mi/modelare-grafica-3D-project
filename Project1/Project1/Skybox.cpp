@@ -57,7 +57,7 @@ Skybox::Skybox() : skybox_shader{ "res\\shaders\\skybox.shader" }
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 
-    std::vector<std::string> faces
+    faces=
     {
         "res\\textures\\skybox\\left.jpg",
         "res\\textures\\skybox\\right.jpg",
@@ -91,6 +91,35 @@ void Skybox::Draw(const glm::mat4& view, const glm::mat4& projection)
     glDrawArrays(GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);
     glDepthFunc(GL_LESS);
+}
+
+void Skybox::SetFaces(bool day)
+{
+    if (day)
+    {
+        faces =
+        {
+            "res\\textures\\skybox\\left.jpg",
+            "res\\textures\\skybox\\right.jpg",
+            "res\\textures\\skybox\\top.jpg",
+            "res\\textures\\skybox\\bottom.jpg",
+            "res\\textures\\skybox\\front.jpg",
+            "res\\textures\\skybox\\back.jpg"
+        };
+    }
+    else
+    {
+        faces =
+        {
+            "res\\textures\\skybox\\night_left.jpg",
+            "res\\textures\\skybox\\night_right.jpg",
+            "res\\textures\\skybox\\night_top.jpg",
+            "res\\textures\\skybox\\night_bottom.jpg",
+            "res\\textures\\skybox\\night_front.jpg",
+            "res\\textures\\skybox\\night_back.jpg"
+        };
+    }
+    cubemapTexture = loadCubemap(faces);
 }
 
 GLuint Skybox::loadCubemap(std::vector<std::string> faces)

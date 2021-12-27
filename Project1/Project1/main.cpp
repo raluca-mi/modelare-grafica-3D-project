@@ -771,6 +771,7 @@ int main(void)
 
 	float ambient_intensity = 0.7f;
 	float diffuse = 0.2f;
+	bool day = true;
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -782,6 +783,8 @@ int main(void)
 		delta_time = current_frame - last_frame;
 		last_frame = current_frame;
 
+		bool light_action_changed = false;
+
 		//Setting light
 		{object_shader.Bind();
 		object_shader.SetUniform1f("u_AmbientIntensity", ambient_intensity);
@@ -790,12 +793,16 @@ int main(void)
 
 		if (glfwGetKey(window, GLFW_KEY_L))
 		{
+			light_action_changed = true;
 			light_action = LightAction::Sunrise;
+			day = true;
 		}
 
 		if (glfwGetKey(window, GLFW_KEY_N))
 		{
+			light_action_changed = true;
 			light_action = LightAction::Sunset;
+			day = false;
 		}
 
 		switch (light_action)
@@ -1359,6 +1366,10 @@ int main(void)
 		}
 
 		//Rendering skybox
+		if (light_action_changed)
+		{
+			skybox_scene.SetFaces(day);
+		}
 		skybox_scene.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix());
 
 
