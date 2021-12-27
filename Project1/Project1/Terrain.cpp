@@ -14,10 +14,22 @@ void Terrain::generatePositions(float xStart, float xEnd, float zStart, float zE
 			glm::vec3 pos = { x,-0.9f,z };
 			std::pair<glm::vec3, int> sector = std::make_pair(pos, chooseTypeOfVegetation(dist(rng)));
 
-			 if (z >= -10.0f && z <= 10.0f)
+		    if (z >= -15.0f && z <= 15.0f && x>=-40.f && x<=0.f)
 			{
 				sector.second = 0;
 			}
+			else if (z >= -15.0f && z <= 15.0f && x >= 175.f && x <= 205.f)
+			{
+				sector.second = 0;
+			}
+			else if (z >= -15.0f && z <= 15.0f && x >= 415.f && x <= 455.f)
+			{
+				sector.second = 0;
+			}
+			 else if (z >= -1.f && z <= 8.f)
+			 {
+				 sector.second = 0;
+			 }
 			terrainPos.push_back(sector);
 		}
 	}
