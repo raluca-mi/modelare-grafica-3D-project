@@ -650,10 +650,6 @@ int main(void)
 	object_shader.Bind();
 	object_shader.SetUniform4f("u_LightColor", 1.0f, 1.0f, 1.0f, 1.0f);
 
-	Shader light_shader("res\\shaders\\light.shader");//shader used for light source
-	light_shader.Bind();
-	light_shader.SetUniform4f("u_Color", 1.0f, 1.0f, 0.0f, 1.0f);
-
 	//Loading textures
 	Texture station_platform_tex("res/textures/platform.jpg");
 
@@ -666,6 +662,7 @@ int main(void)
 	Texture campina_sign_tex("res/textures/campina.jpg");
 	Texture bucuresti_station_tex("res/textures/bucuresti_station.png");
 	Texture bucuresti_sign_tex("res/textures/bucuresti.jpg");
+	Texture ploiesti_station_tex("res/textures/ploiesti_station.jpg");
 	Texture ploiesti_sign_tex("res/textures/ploiesti.jpg");
 	Texture brasov_sign_tex("res/textures/brasov.jpg");
 	Texture railway_tex("res/textures/railway.jpg");
@@ -721,6 +718,10 @@ int main(void)
 	std::vector<unsigned int> bucuresti_indices;
 	bool res7 = loadOBJ("res/models/bucuresti.obj", bucuresti_vertices, bucuresti_indices);
 
+	std::vector<float> ploiesti_vertices;
+	std::vector<unsigned int> ploiesti_indices;
+	bool res8 = loadOBJ("res/models/ploiesti.obj", ploiesti_vertices, ploiesti_indices);
+
 	//Loading meshes
 	Mesh campina_train_station = InitCampinaStationMesh(campina_station_tex);
 	Mesh campina_train_station_roof = InitCampinaStationRoofMesh(campina_station_roof_tex);
@@ -734,8 +735,12 @@ int main(void)
 	Mesh second_platform = InitSecondPlatformMesh(station_platform_tex);
 
 	Mesh ploiesti_station_sign = InitStationSignMesh(ploiesti_sign_tex);
+	Mesh ploiesti_station(ploiesti_vertices, ploiesti_indices, ploiesti_station_tex);
+
 	Mesh brasov_station_sign = InitStationSignMesh(brasov_sign_tex);
+
 	Mesh bucuresti_station_sign = InitStationSignMesh(bucuresti_sign_tex);
+	Mesh bucuresti_station(bucuresti_vertices, bucuresti_indices, bucuresti_station_tex);
 	
 	Mesh railway = InitRailwayMesh(railway_tex);
 	Mesh terrainPatch = InitTerrainMesh(grass_plain);
@@ -747,8 +752,6 @@ int main(void)
 	Mesh rock(rock_vertices, rock_indices, rock_tex);
 	Mesh tree2(tree2_vertices, tree2_indices, tree_2_tex);
 	Mesh tree3(tree3_vertices, tree3_indices, tree_3_tex);
-	Mesh bucuresti_station(bucuresti_vertices, bucuresti_indices, bucuresti_station_tex);
-
 
 	Terrain terrain;
 
@@ -1179,6 +1182,7 @@ int main(void)
 			{
 				glm::mat4 model = glm::mat4(1.0f);
 				model = glm::translate(model, glm::vec3(210.0f, 0.31f, 3.5f));
+				model = glm::scale(model, glm::vec3(0.8f, 0.8f, 1.2f));
 
 				object_shader.Bind();
 				object_shader.SetUniformMat4f("u_ModelMatrix", model);
@@ -1193,11 +1197,42 @@ int main(void)
 			{
 				glm::mat4 model = glm::mat4(1.0f);
 				model = glm::translate(model, glm::vec3(210.0f, 0.31f, 10.9f));
+				model = glm::scale(model, glm::vec3(0.8f, 0.8f, 1.0f));
 
 				object_shader.Bind();
 				object_shader.SetUniformMat4f("u_ModelMatrix", model);
 
 				second_platform.Draw(camera, object_shader, renderer);
+			}
+		}
+
+		//Rendering Ploiesti train station building 
+		{
+			if (std::abs(camera.GetPosition().x - 210.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+			{
+				glm::mat4 model = glm::mat4(1.0f);
+				model = glm::translate(model, glm::vec3(210.0f, 1.0f, -2.7f));
+				model = glm::scale(model, glm::vec3(0.17f, 0.17f, 0.17f));
+
+				object_shader.Bind();
+				object_shader.SetUniformMat4f("u_ModelMatrix", model);
+
+				ploiesti_station.Draw(camera, object_shader, renderer);
+			}
+		}
+
+		//Rendering Ploiesti train station sign
+		{
+			if (std::abs(camera.GetPosition().x - 207.5f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+			{
+				glm::mat4 model = glm::mat4(1.0f);
+				model = glm::translate(model, glm::vec3(207.5f, 4.5f, 1.47f));
+				model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
+
+				object_shader.Bind();
+				object_shader.SetUniformMat4f("u_ModelMatrix", model);
+
+				ploiesti_station_sign.Draw(camera, object_shader, renderer);
 			}
 		}
 
