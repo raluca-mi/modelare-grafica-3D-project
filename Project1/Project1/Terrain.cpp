@@ -30,6 +30,10 @@ void Terrain::generatePositions(float xStart, float xEnd, float zStart, float zE
 			{
 				sector.second = 0;
 			}
+			else if (z >= -15.0f && z <= 15.0f && x >= -250.f && x <= -210.f)
+			{
+				sector.second = 0;
+			}
 			 else if (z >= 0.f && z <= 8.f)
 			 {
 				 sector.second = 0;
