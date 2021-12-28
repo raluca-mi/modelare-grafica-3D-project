@@ -641,8 +641,8 @@ int main(void)
 
 
 	// Initialize camera
-	Camera camera(window_width, window_height, glm::vec3(0.0f, 5.0f, 10.0f));
-	camera.SetPitch(-10.0f);
+	Camera camera(window_width, window_height, glm::vec3(9.0f, 10.0f, 33.0f));
+	camera.SetPitch(-18.0f);
 	float last_frame = 0.0f, delta_time;
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 	glfwSetCursorPos(window, (window_width / 2), (window_height / 2));
@@ -735,7 +735,7 @@ int main(void)
 	std::vector<std::pair<glm::vec3, int>>  terrainPos = terrain.getTerrainPositions();
 	std::vector<glm::vec3> railwayPos = terrain.getRailway();
 
-	Movement moveTrain = Movement::Reset;
+	Movement move_train = Movement::Reset;
 	LightAction light_action = LightAction::Sunrise;
 
 	float ambient_intensity = 0.7f;
@@ -882,21 +882,19 @@ int main(void)
 		{
 			glm::mat4 model = glm::mat4(0.7f);
 
-			//move train keys
-			double fIncrement = 0.002;
+			//train movement values
+			double fIncrement = 0.0006;
 			static double fMovementValue = 0.0;
 			float current_x = glm::sin(fMovementValue) * 660.0f;
 
+			//train movement control keys
 			if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-				moveTrain = Movement::Pause;
+				move_train = Movement::Pause;
 
-			if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-				moveTrain = Movement::Move;
+			if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+				move_train = Movement::Move;
 
-			if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-				moveTrain = Movement::Reset;
-
-			switch (moveTrain)
+			switch (move_train)
 			{
 			case Reset:
 				break;
@@ -914,6 +912,9 @@ int main(void)
 			default:
 				break;
 			}
+
+			//move camera with train
+			camera.AutoMove();
 
 			model = glm::translate(model, glm::vec3(0.0f, -0.09f, 7.4f));
 			model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -1029,7 +1030,7 @@ int main(void)
 				second_platform.Draw(camera, object_shader, renderer);
 			}
 		}
-		
+
 		//Rendering Sinaia train station building 
 		{
 			if (std::abs(camera.GetPosition().x + 210.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)

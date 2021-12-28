@@ -4,50 +4,66 @@
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
 
+enum MoveDirection
+{
+	None,
+	Right,
+	Left
+};
+
 class Camera
 {
 private:
-    // Perspective properties
-    float m_z_near, m_z_far, m_FOV;
-    int m_width, m_height;
+	// Perspective properties
+	float m_z_near, m_z_far, m_FOV;
+	int m_width, m_height;
 
-    // Euler angles
-    float m_yaw, m_pitch;
+	// Euler angles
+	float m_yaw, m_pitch;
 
-    // Input factors
-    float m_camera_speed_factor, m_mouse_sensitivity;
+	// Input factors
+	float m_camera_speed_factor, m_mouse_sensitivity;
 
-    // Camera spatial properties
-    glm::vec3 m_position,
-        m_camera_front,
-        m_camera_right,
-        m_camera_up;
+	// Camera spatial properties
+	glm::vec3 m_position,
+		m_camera_front,
+		m_camera_right,
+		m_camera_up;
 
-    // world vector, hard coded to be (0, 1, 0)
-    static const glm::vec3 world_up;
+	// world vector, hard coded to be (0, 1, 0)
+	static const glm::vec3 world_up;
+
+	//automatic movement state
+	MoveDirection move_direction;
 
 public:
-    // Constructor
-    Camera(const int width, const int height, const glm::vec3& position);
+	// Constructor
+	Camera(const int width, const int height, const glm::vec3& position);
 
-    // Getters
-    const glm::mat4 GetViewMatrix() const;
-    const glm::mat4 GetProjectionMatrix() const;
-    const glm::vec3 GetPosition() const;
-    float GetPitch() const;
-    float GetNear() const;
-    float GetFar() const;
+	// Getters
+	const glm::mat4 GetViewMatrix() const;
+	const glm::mat4 GetProjectionMatrix() const;
+	const glm::vec3 GetPosition() const;
+	float GetPitch() const;
+	float GetNear() const;
+	float GetFar() const;
 
-    // Setters
-    void SetPitch(float new_pitch);
-    void SetPosition(const glm::vec3& position);
+	// Setters
+	void SetPitch(float new_pitch);
+	void SetPosition(const glm::vec3& position);
 
-    // Input processing
-    void ProcessInput(GLFWwindow* window, float delta_time);
+	// Input processing
+	void ProcessInput(GLFWwindow* window, float delta_time);
+
+	//Automatic movement
+	void MoveRight();
+	void MoveLeft();
+	void AutoMove();
+
 private:
-    void KeyboardControl(GLFWwindow* window, float delta_time);
-    void MouseControl(GLFWwindow* window);
+	void KeyboardControl(GLFWwindow* window, float delta_time);
+	void MouseControl(GLFWwindow* window);
 
-    // Updates vectors according to user input
-    void UpdateCameraVectors();
+	// Updates vectors according to user input
+	void UpdateCameraVectors();
 };
