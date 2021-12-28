@@ -567,44 +567,6 @@ Mesh InitTerrainMesh(const Texture& texture)
 	return Mesh(vertices, indices, texture);
 
 }
-//Mesh InitLightCubeMesh()
-//{
-//	std::vector<float> vertices =
-//	{
-//		/*Vertex coords	       Texture coords        Normals*/
-//		 -1.0f,  0.0f,  1.0f,      0.0f, 0.0f,   0.0f,  0.0f,  0.0f,//0
-//		  1.0f,  0.0f,  1.0f,      0.0f, 0.0f,   0.0f,  0.0f,  0.0f,//1  
-//		  1.0f,  2.0f,  1.0f,      0.0f, 0.0f,   0.0f,  0.0f,  0.0f,//2  
-//		 -1.0f,  2.0f,  1.0f,      0.0f, 0.0f,   0.0f,  0.0f,  0.0f,//3
-//		 -1.0f,  0.0f, -1.0f,      0.0f, 0.0f,   0.0f,  0.0f,  0.0f,//4
-//		 -1.0f,  2.0f, -1.0f,      0.0f, 0.0f,   0.0f,  0.0f,  0.0f,//5  
-//		  1.0f,  2.0f, -1.0f,      0.0f, 0.0f,   0.0f,  0.0f,  0.0f,//6  
-//		  1.0f,  0.0f, -1.0f,      0.0f, 0.0f,   0.0f,  0.0f,  0.0f,//7
-//	};
-//
-//	std::vector<unsigned int> indices =
-//	{
-//		0, 1, 2,//front
-//		2, 3, 0,
-//
-//		4, 7, 6,//back
-//		6, 5, 4,
-//
-//		3, 2, 6,//top
-//		6, 5, 3,
-//
-//		0, 1, 7,//bottom
-//		7, 4, 0,
-//
-//		0, 4, 5,//left side
-//		5, 3, 0,
-//
-//		1, 7, 6,//right side
-//		6, 2, 1
-//	};
-//
-//	return Mesh(vertices, indices);
-//}
 
 enum Movement
 {
@@ -666,6 +628,8 @@ int main(void)
 	Texture ploiesti_sign_tex("res/textures/ploiesti.jpg");
 	Texture brasov_station_tex("res/textures/brasov_station.png");
 	Texture brasov_sign_tex("res/textures/brasov.jpg");
+	Texture sinaia_station_tex("res/textures/sinaia.jpg");
+	Texture sinaia_sign_tex("res/textures/sinaia_sign.jpg");
 	Texture railway_tex("res/textures/railway.jpg");
 	Texture bench_tex("res/textures/bench_1.jpg");
 	Texture train_tex("res/textures/train.png");
@@ -688,7 +652,6 @@ int main(void)
 	glEnable(GL_DEPTH_TEST);
 
 	Skybox skybox_scene;
-
 
 	//Loading models from .obj
 	std::vector<float> train_vertices;
@@ -727,6 +690,10 @@ int main(void)
 	std::vector<unsigned int> brasov_indices;
 	bool res9 = loadOBJ("res/models/brasov.obj", brasov_vertices, brasov_indices);
 
+	std::vector<float> sinaia_vertices;
+	std::vector<unsigned int>  sinaia_indices;
+	bool res10 = loadOBJ("res/models/sinaia.obj", sinaia_vertices, sinaia_indices);
+
 	//Loading meshes
 	Mesh campina_train_station = InitCampinaStationMesh(campina_station_tex);
 	Mesh campina_train_station_roof = InitCampinaStationRoofMesh(campina_station_roof_tex);
@@ -748,9 +715,11 @@ int main(void)
 	Mesh bucuresti_station_sign = InitStationSignMesh(bucuresti_sign_tex);
 	Mesh bucuresti_station(bucuresti_vertices, bucuresti_indices, bucuresti_station_tex);
 
+	Mesh sinaia_station_sign = InitStationSignMesh(sinaia_sign_tex);
+	Mesh sinaia_station(sinaia_vertices, sinaia_indices, sinaia_station_tex);
+
 	Mesh railway = InitRailwayMesh(railway_tex);
 	Mesh terrainPatch = InitTerrainMesh(grass_plain);
-	//Mesh light_cube = InitLightCubeMesh();
 
 	Mesh bench(bench_vertices, bench_indices, bench_tex);
 	Mesh train(train_vertices, train_indices, train_tex);
@@ -909,15 +878,6 @@ int main(void)
 			}
 		}
 
-		//Rendering light cube
-		/*{
-			glm::mat4 model = glm::mat4(1.0f);
-			model = glm::translate(model, light_position);
-			light_shader.Bind();
-			light_shader.SetUniformMat4f("u_ModelMatrix", model);
-			light_cube.Draw(camera, light_shader, renderer);
-		}*/
-
 		//Rendering train model
 		{
 			glm::mat4 model = glm::mat4(0.7f);
@@ -1039,6 +999,64 @@ int main(void)
 				object_shader.SetUniformMat4f("u_ModelMatrix", model);
 
 				brasov_station_sign.Draw(camera, object_shader, renderer);
+			}
+		}
+
+		//Rendering Sinaia first platform
+		{
+			if (std::abs(camera.GetPosition().x + 210.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+			{
+				glm::mat4 model = glm::mat4(1.0f);
+				model = glm::translate(model, glm::vec3(-210.0f, 0.31f, 3.5f));
+
+				object_shader.Bind();
+				object_shader.SetUniformMat4f("u_ModelMatrix", model);
+
+				main_platform.Draw(camera, object_shader, renderer);
+			}
+		}
+
+		//Rendering Sinaia second platform
+		{
+			if (std::abs(camera.GetPosition().x + 210.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+			{
+				glm::mat4 model = glm::mat4(1.0f);
+				model = glm::translate(model, glm::vec3(-210.0f, 0.31f, 10.9f));
+
+				object_shader.Bind();
+				object_shader.SetUniformMat4f("u_ModelMatrix", model);
+
+				second_platform.Draw(camera, object_shader, renderer);
+			}
+		}
+		
+		//Rendering Sinaia train station building 
+		{
+			if (std::abs(camera.GetPosition().x + 210.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+			{
+				glm::mat4 model = glm::mat4(1.0f);
+				model = glm::translate(model, glm::vec3(-210.0f, 0.38f, -2.9f));
+				model = glm::scale(model, glm::vec3(1.9f, 1.9f, 1.9f));
+
+				object_shader.Bind();
+				object_shader.SetUniformMat4f("u_ModelMatrix", model);
+
+				sinaia_station.Draw(camera, object_shader, renderer);
+			}
+		}
+
+		//Rendering Siania train station sign
+		{
+			if (std::abs(camera.GetPosition().x + 210.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+			{
+				glm::mat4 model = glm::mat4(1.0f);
+				model = glm::translate(model, glm::vec3(-210.0f, 5.8f, 2.9f));
+				model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
+
+				object_shader.Bind();
+				object_shader.SetUniformMat4f("u_ModelMatrix", model);
+
+				sinaia_station_sign.Draw(camera, object_shader, renderer);
 			}
 		}
 
