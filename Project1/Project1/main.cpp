@@ -4,6 +4,7 @@
 #include<glm.hpp>
 #include<gtc/matrix_transform.hpp>
 #include<gtc/type_ptr.hpp>
+#include<irrKlang.h>
 
 #include<iostream>
 #include<fstream>
@@ -15,6 +16,9 @@
 #include"Terrain.h"
 #include "Skybox.h"
 
+using namespace irrklang;
+
+#pragma comment(lib, "irrKlang.lib")
 
 Mesh InitCampinaStationMesh(const Texture& texture)
 {
@@ -581,6 +585,9 @@ enum LightAction
 	Sunset
 };
 
+//Sound
+ISoundEngine* SoundEngine = createIrrKlangDevice();
+
 int main(void)
 {
 	/* Initializing the library */
@@ -652,6 +659,11 @@ int main(void)
 	glEnable(GL_DEPTH_TEST);
 
 	Skybox skybox_scene;
+
+	//Initializing sound
+	if (!SoundEngine)
+		return 0;
+	SoundEngine->play2D("res/audio/train.wav", true);
 
 	//Loading models from .obj
 	std::vector<float> train_vertices;
@@ -1399,6 +1411,7 @@ int main(void)
 		glfwPollEvents();
 	}
 
+	SoundEngine->drop();
 	glfwTerminate();
 	return 0;
 }
