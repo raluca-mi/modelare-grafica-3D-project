@@ -17,7 +17,7 @@ Camera::Camera(const int width, const int height, const glm::vec3& position)
     m_camera_up = glm::vec3(0.0f, 1.0f, 0.0f);
     m_camera_right = glm::vec3(1.0f, 0.0f, 0.0f);
 
-    m_camera_speed_factor = 4.5f;
+    m_camera_speed_factor = 6.5f;
     m_mouse_sensitivity = 0.1f;
 }
 
