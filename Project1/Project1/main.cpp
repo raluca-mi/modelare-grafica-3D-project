@@ -20,6 +20,8 @@ using namespace irrklang;
 
 #pragma comment(lib, "irrKlang.lib")
 
+ISoundEngine* SoundEngine = createIrrKlangDevice();
+
 Mesh InitCampinaStationMesh(const Texture& texture)
 {
 	std::vector<float> vertices = {
@@ -578,15 +580,26 @@ enum Movement
 	Move,
 	Pause
 };
-
 enum LightAction
 {
 	Sunrise,
 	Sunset
 };
 
-//Sound
-ISoundEngine* SoundEngine = createIrrKlangDevice();
+void SetOutsideSound(bool day)
+{
+	SoundEngine->removeAllSoundSources();
+	if (day)
+	{
+		SoundEngine->play2D("res/audio/day.mp3");
+		SoundEngine->setSoundVolume(0.4);
+	}
+	else
+	{
+		SoundEngine->play2D("res/audio/night.mp3");
+		SoundEngine->setSoundVolume(0.2);
+	}
+}
 
 int main(void)
 {
@@ -597,6 +610,17 @@ int main(void)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+	/* Initializing sound engine */
+	if (!SoundEngine)
+		return 0;
+
+	std::string train_sound = "res/audio/train.wav";
+	std::string night_sound = "res/audio/night.mp3";
+	std::string day_sound = "res/audio/day.mp3";
+
+	SoundEngine->play2D(day_sound.c_str());
+	SoundEngine->setSoundVolume(0.4);
 
 	/* Creating a window */
 	float window_height = 850.0f, window_width = 1850.0f;
@@ -659,11 +683,6 @@ int main(void)
 	glEnable(GL_DEPTH_TEST);
 
 	Skybox skybox_scene;
-
-	//Initializing sound
-	if (!SoundEngine)
-		return 0;
-	SoundEngine->play2D("res/audio/train.wav", true);
 
 	//Loading models from .obj
 	std::vector<float> train_vertices;
@@ -777,6 +796,10 @@ int main(void)
 			light_action_changed = true;
 			light_action = LightAction::Sunrise;
 			day = true;
+
+			SoundEngine->removeSoundSource(night_sound.c_str());
+			SoundEngine->play2D(day_sound.c_str());
+			SoundEngine->setSoundVolume(0.4);
 		}
 
 		if (glfwGetKey(window, GLFW_KEY_N))
@@ -784,6 +807,10 @@ int main(void)
 			light_action_changed = true;
 			light_action = LightAction::Sunset;
 			day = false;
+
+			SoundEngine->removeSoundSource(day_sound.c_str());
+			SoundEngine->play2D(night_sound.c_str());
+			SoundEngine->setSoundVolume(0.2);
 		}
 
 		switch (light_action)
@@ -901,10 +928,20 @@ int main(void)
 
 			//train movement control keys
 			if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+			{
 				move_train = Movement::Pause;
 
+				SetOutsideSound(day);
+			}
+
 			if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+			{
 				move_train = Movement::Move;
+
+				SetOutsideSound(day);
+				SoundEngine->play2D(train_sound.c_str(), true);
+				SoundEngine->setSoundVolume(0.3);
+			}
 
 			switch (move_train)
 			{
