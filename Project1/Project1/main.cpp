@@ -601,6 +601,553 @@ void SetOutsideSound(bool day)
 	}
 }
 
+void renderVeg( Shader& object_shader,Camera& camera,Mesh& tree,Renderer& renderer, std::vector<std::pair<glm::vec3, int>>&  terrainPos,Mesh& tree2,Mesh& tree3,Mesh& rock,Mesh& terrainPatch)
+{
+	
+		for (auto& pos : terrainPos)
+		{
+			if (std::abs(camera.GetPosition().x - pos.first.x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - pos.first.z - 10.0f) < 80.0f)
+			{
+				if (pos.second == 1)
+				{
+					glm::vec3 treePos = pos.first;
+					treePos.y = -0.1f;
+					treePos.x = treePos.x + 20.0f;
+					glm::mat4 model = glm::mat4(1.0f);
+					model = glm::translate(model, treePos);
+					model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+
+					object_shader.Bind();
+					object_shader.SetUniformMat4f("model", model);
+
+				
+					tree.Draw(camera, object_shader, renderer);
+				}
+				else if (pos.second == 2)
+				{
+					glm::vec3 rockPos = pos.first;
+					rockPos.y = -0.1f;
+					rockPos.x = rockPos.x + 20.0f;
+					glm::mat4 model = glm::mat4(1.0f);
+					model = glm::translate(model, rockPos);
+					model = glm::scale(model, glm::vec3(0.80f, 0.8f, 0.8f));
+
+					object_shader.Bind();
+					object_shader.SetUniformMat4f("model", model);
+
+					rock.Draw(camera, object_shader, renderer);
+				}
+
+				else if (pos.second == 3)
+				{
+					glm::vec3 treePos = pos.first;
+					treePos.y = -0.1f;
+					treePos.x = treePos.x + 20.0f;
+					glm::mat4 model = glm::mat4(1.0f);
+					model = glm::translate(model, treePos);
+					model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+
+					object_shader.Bind();
+					object_shader.SetUniformMat4f("model", model);
+
+					tree2.Draw(camera, object_shader, renderer);
+				}
+				else if (pos.second == 4)
+				{
+					glm::vec3 treePos = pos.first;
+					treePos.y = -0.1f;
+					treePos.x = treePos.x + 20.0f;
+					glm::mat4 model = glm::mat4(1.0f);
+					model = glm::translate(model, treePos);
+
+					model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+					object_shader.Bind();
+					object_shader.SetUniformMat4f("model", model);
+
+					
+					tree3.Draw(camera, object_shader, renderer);
+				}
+
+
+				glm::mat4 model = glm::mat4(1.0f);
+				model = glm::translate(model, pos.first);
+
+				object_shader.Bind();
+				object_shader.SetUniformMat4f("model", model);
+
+				
+				terrainPatch.Draw(camera, object_shader, renderer);
+			}
+		}
+	
+}
+
+void renderScene(Shader& object_shader,Camera& camera,Renderer& renderer,std::vector<glm::vec3>& railwayPos,Mesh& railway,Mesh& main_platform,Mesh& second_platform,
+	Mesh& brasov_station_sign,Mesh& brasov_station,Mesh& sinaia_station,Mesh& sinaia_station_sign,Mesh& campina_train_station,Mesh& campina_train_station_roof,Mesh& campina_train_station_door
+    , Mesh& campina_station_main_windows,Mesh& campina_station_left_window,Mesh& campina_station_right_window,Mesh& campina_station_sign,Mesh& bench,
+	Mesh& ploiesti_station,Mesh& ploiesti_station_sign,Mesh& bucuresti_station,Mesh& bucuresti_station_sign)
+{
+
+
+	//Rendering railway
+	{
+		for (auto& pos : railwayPos)
+		{
+			if (std::abs(camera.GetPosition().x - pos.x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - pos.z - 10.0f) < 80.0f)
+			{
+				glm::mat4 model = glm::mat4(1.0f);
+				model = glm::translate(model, pos);
+				model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+				object_shader.Bind();
+				object_shader.SetUniformMat4f("model", model);
+
+				railway.Draw(camera, object_shader, renderer);
+			}
+		}
+	}
+
+	//Rendering Brasov first platform
+	{
+		if (std::abs(camera.GetPosition().x + 460.5f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+		{
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, glm::vec3(-460.5f, 0.31f, 3.5f));
+
+			object_shader.Bind();
+			object_shader.SetUniformMat4f("model", model);
+
+			main_platform.Draw(camera, object_shader, renderer);
+		}
+	}
+
+	//Rendering Brasov second platform
+	{
+		if (std::abs(camera.GetPosition().x + 460.5f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+		{
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, glm::vec3(-460.5f, 0.31f, 10.9f));
+
+			object_shader.Bind();
+			object_shader.SetUniformMat4f("model", model);
+
+			second_platform.Draw(camera, object_shader, renderer);
+		}
+	}
+
+	//Rendering Brasov train station building 
+	{
+		if (std::abs(camera.GetPosition().x + 460.5f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+		{
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, glm::vec3(-460.5f, 0.38f, -2.0f));
+			model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
+
+			object_shader.Bind();
+			object_shader.SetUniformMat4f("model", model);
+
+			brasov_station.Draw(camera, object_shader, renderer);
+		}
+	}
+
+	//Rendering Brasov train station sign
+	{
+		if (std::abs(camera.GetPosition().x + 460.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+		{
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, glm::vec3(-460.0f, 4.0f, 1.3f));
+			model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
+
+			object_shader.Bind();
+			object_shader.SetUniformMat4f("model", model);
+
+			brasov_station_sign.Draw(camera, object_shader, renderer);
+		}
+	}
+
+	//Rendering Sinaia first platform
+	{
+		if (std::abs(camera.GetPosition().x + 210.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+		{
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, glm::vec3(-210.0f, 0.31f, 3.5f));
+
+			object_shader.Bind();
+			object_shader.SetUniformMat4f("model", model);
+
+			main_platform.Draw(camera, object_shader, renderer);
+		}
+	}
+
+	//Rendering Sinaia second platform
+	{
+		if (std::abs(camera.GetPosition().x + 210.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+		{
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, glm::vec3(-210.0f, 0.31f, 10.9f));
+
+			object_shader.Bind();
+			object_shader.SetUniformMat4f("model", model);
+
+			second_platform.Draw(camera, object_shader, renderer);
+		}
+	}
+
+	//Rendering Sinaia train station building 
+	{
+		if (std::abs(camera.GetPosition().x + 210.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+		{
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, glm::vec3(-210.0f, 0.38f, -2.9f));
+			model = glm::scale(model, glm::vec3(1.9f, 1.9f, 1.9f));
+
+			object_shader.Bind();
+			object_shader.SetUniformMat4f("model", model);
+
+			sinaia_station.Draw(camera, object_shader, renderer);
+		}
+	}
+
+	//Rendering Siania train station sign
+	{
+		if (std::abs(camera.GetPosition().x + 210.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+		{
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, glm::vec3(-210.0f, 5.8f, 2.9f));
+			model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
+
+			object_shader.Bind();
+			object_shader.SetUniformMat4f("model", model);
+
+			sinaia_station_sign.Draw(camera, object_shader, renderer);
+		}
+	}
+
+	//Rendering Campina train station building 
+	{
+		if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+		{
+			glm::mat4 model = glm::mat4(1.0f);
+
+			object_shader.Bind();
+			object_shader.SetUniformMat4f("model", model);
+
+			campina_train_station.Draw(camera, object_shader, renderer);
+		}
+	}
+
+	//Rendering Campina train station building roof 
+	{
+		if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+		{
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, glm::vec3(0.0f, 5.0f, -0.5f));
+
+			object_shader.Bind();
+			object_shader.SetUniformMat4f("model", model);
+
+			campina_train_station_roof.Draw(camera, object_shader, renderer);
+		}
+	}
+
+	//Rendering Campina train station door
+	{
+		if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+		{
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, glm::vec3(0.0f, 1.5f, 0.05f));
+
+			object_shader.Bind();
+			object_shader.SetUniformMat4f("model", model);
+
+			campina_train_station_door.Draw(camera, object_shader, renderer);
+		}
+	}
+
+	//Rendering Campina first front window
+	{
+		if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+		{
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, glm::vec3(-7.0f, 2.43f, 0.05f));
+
+			object_shader.Bind();
+			object_shader.SetUniformMat4f("model", model);
+
+			campina_station_main_windows.Draw(camera, object_shader, renderer);
+		}
+	}
+
+	//Rendering Campina second front window
+	{
+		if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+		{
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, glm::vec3(7.0f, 2.43f, 0.05f));
+
+			object_shader.Bind();
+			object_shader.SetUniformMat4f("model", model);
+
+			campina_station_main_windows.Draw(camera, object_shader, renderer);
+		}
+	}
+
+	//Rendering Campina first left window
+	{
+		if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+		{
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, glm::vec3(-11.52f, 3.0f, -5.0f));
+			model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+			object_shader.Bind();
+			object_shader.SetUniformMat4f("model", model);
+
+			campina_station_left_window.Draw(camera, object_shader, renderer);
+		}
+	}
+
+	//Rendering Campina second left window
+	{
+		if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+		{
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, glm::vec3(-11.52f, 3.0f, -2.0f));
+			model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+			object_shader.Bind();
+			object_shader.SetUniformMat4f("model", model);
+
+			campina_station_left_window.Draw(camera, object_shader, renderer);
+		}
+	}
+
+	//Rendering Campina right window
+	{
+		if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+		{
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, glm::vec3(11.52f, 2.6f, -3.5f));
+			model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+			object_shader.Bind();
+			object_shader.SetUniformMat4f("model", model);
+
+			campina_station_right_window.Draw(camera, object_shader, renderer);
+		}
+	}
+
+	//Rendering Campina train station sign
+	{
+		if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+		{
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, glm::vec3(0.0f, 4.0f, 0.05f));
+
+			object_shader.Bind();
+			object_shader.SetUniformMat4f("model", model);
+
+			campina_station_sign.Draw(camera, object_shader, renderer);
+		}
+	}
+
+	//Rendering Campina main platform
+	{
+		if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+		{
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, glm::vec3(0.0f, 0.31f, 3.5f));
+
+			object_shader.Bind();
+			object_shader.SetUniformMat4f("model", model);
+
+			main_platform.Draw(camera, object_shader, renderer);
+		}
+	}
+
+	//Rendering Campina right bench model
+	{
+		if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+
+		{
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, glm::vec3(8.5f, 0.5f, 1.3f));
+			model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::scale(model, glm::vec3(0.38f, 0.38f, 0.38f));
+
+			object_shader.Bind();
+			object_shader.SetUniformMat4f("model", model);
+
+			bench.Draw(camera, object_shader, renderer);
+		}
+	}
+
+	//Rendering Campina left bench model
+	{
+		if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+
+		{
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, glm::vec3(-5.5f, 0.5f, 1.3f));
+			model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::scale(model, glm::vec3(0.38f, 0.38f, 0.38f));
+
+			object_shader.Bind();
+			object_shader.SetUniformMat4f("model", model);
+
+			bench.Draw(camera, object_shader, renderer);
+		}
+	}
+
+	//Rendering Campina right side bench model
+	{
+		if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+
+		{
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, glm::vec3(12.5f, 0.5f, -1.8f));
+			model = glm::scale(model, glm::vec3(0.38f, 0.38f, 0.38f));
+
+			object_shader.Bind();
+			object_shader.SetUniformMat4f("model", model);
+
+			bench.Draw(camera, object_shader, renderer);
+		}
+	}
+
+	//Rendering Campina second platform
+	{
+		if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+		{
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, glm::vec3(0.0f, 0.31f, 10.9f));
+
+			object_shader.Bind();
+			object_shader.SetUniformMat4f("model", model);
+
+			second_platform.Draw(camera, object_shader, renderer);
+		}
+	}
+
+	//Rendering Ploiesti first platform
+	{
+		if (std::abs(camera.GetPosition().x - 210.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+		{
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, glm::vec3(210.0f, 0.31f, 3.5f));
+			model = glm::scale(model, glm::vec3(0.8f, 0.8f, 1.2f));
+
+			object_shader.Bind();
+			object_shader.SetUniformMat4f("model", model);
+
+			main_platform.Draw(camera, object_shader, renderer);
+		}
+	}
+
+	//Rendering Ploiesti second platform
+	{
+		if (std::abs(camera.GetPosition().x - 210.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+		{
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, glm::vec3(210.0f, 0.31f, 10.9f));
+			model = glm::scale(model, glm::vec3(0.8f, 0.8f, 1.0f));
+
+			object_shader.Bind();
+			object_shader.SetUniformMat4f("model", model);
+
+			second_platform.Draw(camera, object_shader, renderer);
+		}
+	}
+
+	//Rendering Ploiesti train station building 
+	{
+		if (std::abs(camera.GetPosition().x - 210.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+		{
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, glm::vec3(210.0f, 0.31f, -2.7f));
+			model = glm::scale(model, glm::vec3(0.17f, 0.17f, 0.17f));
+
+			object_shader.Bind();
+			object_shader.SetUniformMat4f("model", model);
+
+			ploiesti_station.Draw(camera, object_shader, renderer);
+		}
+	}
+
+	//Rendering Ploiesti train station sign
+	{
+		if (std::abs(camera.GetPosition().x - 207.5f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+		{
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, glm::vec3(207.5f, 4.19f, 1.47f));
+			model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
+
+			object_shader.Bind();
+			object_shader.SetUniformMat4f("model", model);
+
+			ploiesti_station_sign.Draw(camera, object_shader, renderer);
+		}
+	}
+
+	//Rendering Bucuresti first platform
+	{
+		if (std::abs(camera.GetPosition().x - 459.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+		{
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, glm::vec3(459.0f, 0.31f, 3.5f));
+
+			object_shader.Bind();
+			object_shader.SetUniformMat4f("model", model);
+
+			main_platform.Draw(camera, object_shader, renderer);
+		}
+	}
+
+	//Rendering Bucuresti second platform
+	{
+		if (std::abs(camera.GetPosition().x - 459.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+		{
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, glm::vec3(459.0f, 0.31f, 10.9f));
+
+			object_shader.Bind();
+			object_shader.SetUniformMat4f("model", model);
+
+			second_platform.Draw(camera, object_shader, renderer);
+		}
+	}
+
+	//Rendering Bucuresti train station building 
+	{
+		if (std::abs(camera.GetPosition().x - 460.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+		{
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, glm::vec3(460.0f, -1.31f, -2.9f));
+
+			object_shader.Bind();
+			object_shader.SetUniformMat4f("model", model);
+
+			bucuresti_station.Draw(camera, object_shader, renderer);
+		}
+	}
+
+	//Rendering Bucuresti train station sign
+	{
+		if (std::abs(camera.GetPosition().x - 459.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
+		{
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, glm::vec3(459.0f, 3.9f, -0.05f));
+			model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
+
+			object_shader.Bind();
+			object_shader.SetUniformMat4f("model", model);
+
+			bucuresti_station_sign.Draw(camera, object_shader, renderer);
+		}
+	}
+}
+
 int main(void)
 {
 	/* Initializing the library */
@@ -773,6 +1320,38 @@ int main(void)
 	float diffuse = 0.2f;
 	bool day = true;
 
+	
+	Shader shadowMap("res/shaders/shadowMap.shader");
+	Shader shadowMapDepth("res/shaders/shadowMapDepth.shader");
+	
+	const unsigned int SHADOW_WIDTH = 2048, SHADOW_HEIGHT = 2048;
+	unsigned int depthMapFBO;
+	glGenFramebuffers(1, &depthMapFBO);
+
+	unsigned int depthMap;
+	glGenTextures(1, &depthMap);
+	glBindTexture(GL_TEXTURE_2D, depthMap);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+	float borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
+	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+	// attach depth texture as FBO's depth buffer
+	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
+	glDrawBuffer(GL_NONE);
+	glReadBuffer(GL_NONE);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	shadowMap.Bind();
+	shadowMap.SetUniform1i("diffuseTexture", 0);
+	shadowMap.SetUniform1i("shadowMap", 1);
+
+	glm::vec3 lightPos(-10.f, 25.f, 10.0f);
+
 	while (!glfwWindowShouldClose(window))
 	{
 		//Render here
@@ -786,10 +1365,10 @@ int main(void)
 		bool light_action_changed = false;
 
 		//Setting light
-		{object_shader.Bind();
-		object_shader.SetUniform1f("u_AmbientIntensity", ambient_intensity);
-		object_shader.SetUniform1f("u_Diffuse", diffuse);
-		object_shader.SetUniform3f("u_LightDirection", 0.0f, -30.0f, -20.0f);
+		{shadowMap.Bind();
+		shadowMap.SetUniform1f("u_AmbientIntensity", ambient_intensity);
+		//shadowMap.SetUniform1f("u_Diffuse", diffuse);
+		//shadowMap.SetUniform3f("u_LightDirection", 0.0f, -30.0f, -20.0f);
 
 		if (glfwGetKey(window, GLFW_KEY_L))
 		{
@@ -839,84 +1418,34 @@ int main(void)
 		//Processing user input
 		camera.ProcessInput(window, delta_time);
 
-		//Rendering terrain with vegetation
-		{
-			for (auto& pos : terrainPos)
-			{
-				if (std::abs(camera.GetPosition().x - pos.first.x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - pos.first.z - 10.0f) < 80.0f)
-				{
-					if (pos.second == 1)
-					{
-						glm::vec3 treePos = pos.first;
-						treePos.y = -0.1f;
-						treePos.x = treePos.x + 20.0f;
-						glm::mat4 model = glm::mat4(1.0f);
-						model = glm::translate(model, treePos);
-						model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-						object_shader.Bind();
-						object_shader.SetUniformMat4f("u_ViewMatrix", camera.GetViewMatrix());
-						object_shader.SetUniformMat4f("u_ProjectionMatrix", camera.GetProjectionMatrix());
-						object_shader.SetUniformMat4f("u_ModelMatrix", model);
+		
 
-						tree.Draw(camera, object_shader, renderer);
-					}
-					else if (pos.second == 2)
-					{
-						glm::vec3 rockPos = pos.first;
-						rockPos.y = -0.1f;
-						rockPos.x = rockPos.x + 20.0f;
-						glm::mat4 model = glm::mat4(1.0f);
-						model = glm::translate(model, rockPos);
-						model = glm::scale(model, glm::vec3(0.80f, 0.8f, 0.8f));
+		// 1. render depth of scene to texture (from light's perspective)
+		glm::mat4 lightProjection, lightView;
+		glm::mat4 lightSpaceMatrix;
+		float near_plane = -100.0f, far_plane = 200.5f;
+		lightProjection = glm::ortho(-100.0f, 100.0f, -100.0f,100.0f, near_plane, far_plane);
+		lightView = glm::lookAt(lightPos+20.f, lightPos-20.f, glm::vec3(0.0, 1.0, 0.0));
+		lightSpaceMatrix = lightProjection * lightView;
 
-						object_shader.Bind();
-						object_shader.SetUniformMat4f("u_ModelMatrix", model);
+		shadowMapDepth.Bind();
+		shadowMapDepth.SetUniformMat4f("lightSpaceMatrix", lightSpaceMatrix);
 
-						rock.Draw(camera, object_shader, renderer);
-					}
+		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+		glClear(GL_DEPTH_BUFFER_BIT);
+		
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_FRONT);
+		renderVeg(shadowMapDepth, camera, tree, renderer, terrainPos, tree2, tree3, rock, terrainPatch);
 
-					else if (pos.second == 3)
-					{
-						glm::vec3 treePos = pos.first;
-						treePos.y = -0.1f;
-						treePos.x = treePos.x + 20.0f;
-						glm::mat4 model = glm::mat4(1.0f);
-						model = glm::translate(model, treePos);
-						model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
-
-						object_shader.Bind();
-						object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-						tree2.Draw(camera, object_shader, renderer);
-					}
-					else if (pos.second == 4)
-					{
-						glm::vec3 treePos = pos.first;
-						treePos.y = -0.1f;
-						treePos.x = treePos.x + 20.0f;
-						glm::mat4 model = glm::mat4(1.0f);
-						model = glm::translate(model, treePos);
-
-						model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
-						object_shader.Bind();
-						object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-						tree3.Draw(camera, object_shader, renderer);
-					}
-
-
-					glm::mat4 model = glm::mat4(1.0f);
-					model = glm::translate(model, pos.first);
-
-					object_shader.Bind();
-					object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-					terrainPatch.Draw(camera, object_shader, renderer);
-				}
-			}
-		}
-
+		renderScene(shadowMapDepth, camera, renderer, railwayPos, railway, main_platform, second_platform,
+			brasov_station_sign, brasov_station, sinaia_station, sinaia_station_sign, campina_train_station, campina_train_station_roof, campina_train_station_door
+			, campina_station_main_windows, campina_station_left_window, campina_station_right_window, campina_station_sign, bench,
+			ploiesti_station, ploiesti_station_sign, bucuresti_station, bucuresti_station_sign);
 		//Rendering train model
 		{
 			glm::mat4 model = glm::mat4(0.7f);
@@ -925,6 +1454,8 @@ int main(void)
 			double fIncrement = 0.0006;
 			static double fMovementValue = 0.0;
 			float current_x = glm::sin(fMovementValue) * 660.0f;
+			lightPos.x = current_x;
+
 
 			//train movement control keys
 			if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
@@ -965,473 +1496,103 @@ int main(void)
 			//move camera with train
 			camera.AutoMove();
 
-			model = glm::translate(model, glm::vec3(0.0f, -0.09f, 7.4f));
+			model = glm::translate(model, glm::vec3(0.0f, -0.09f, 5.1f));
 			model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 			model = glm::scale(model, glm::vec3(0.6f, 0.6f, 0.6f));
 
-			object_shader.Bind();
-			object_shader.SetUniformMat4f("u_ModelMatrix", model);
+			shadowMapDepth.Bind();
+			shadowMapDepth.SetUniformMat4f("model", model);
 
-			train.Draw(camera, object_shader, renderer);
+			train.Draw(camera, shadowMapDepth, renderer);
 		}
+		glCullFace(GL_BACK);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-		//Rendering railway
+		// reset viewport
+		glViewport(0, 0, window_width, window_height);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		glViewport(0, 0, window_width, window_height);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		shadowMap.Bind();
+		glm::mat4 projection = camera.GetProjectionMatrix();
+		glm::mat4 view = camera.GetViewMatrix();
+		shadowMap.SetUniformMat4f("projection", projection);
+		shadowMap.SetUniformMat4f("view", view);
+		// set light uniforms
+		shadowMap.SetUniform3f("viewPos", camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
+		shadowMap.SetUniform3f("lightPos", lightPos.x,lightPos.y,lightPos.z);
+		shadowMap.SetUniformMat4f("lightSpaceMatrix", lightSpaceMatrix);
+		
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, depthMap);
+		glDisable(GL_CULL_FACE);
+		renderVeg(shadowMap, camera, tree, renderer, terrainPos, tree2, tree3, rock, terrainPatch);
+		renderScene(shadowMap, camera, renderer, railwayPos, railway, main_platform, second_platform,
+			brasov_station_sign, brasov_station, sinaia_station, sinaia_station_sign, campina_train_station, campina_train_station_roof, campina_train_station_door
+			, campina_station_main_windows, campina_station_left_window, campina_station_right_window, campina_station_sign, bench,
+			ploiesti_station, ploiesti_station_sign, bucuresti_station, bucuresti_station_sign);
+		//Rendering train model
 		{
-			for (auto& pos : railwayPos)
+			glm::mat4 model = glm::mat4(0.7f);
+
+			//train movement values
+			double fIncrement = 0.0006;
+			static double fMovementValue = 0.0;
+			float current_x = glm::sin(fMovementValue) * 660.0f;
+			lightPos.x = current_x;
+			
+
+			//train movement control keys
+			if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
 			{
-				if (std::abs(camera.GetPosition().x - pos.x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - pos.z - 10.0f) < 80.0f)
-				{
-					glm::mat4 model = glm::mat4(1.0f);
-					model = glm::translate(model, pos);
-					model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+				move_train = Movement::Pause;
 
-					object_shader.Bind();
-					object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-					railway.Draw(camera, object_shader, renderer);
-				}
+				SetOutsideSound(day);
 			}
+
+			if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+			{
+				move_train = Movement::Move;
+
+				SetOutsideSound(day);
+				SoundEngine->play2D(train_sound.c_str(), true);
+				SoundEngine->setSoundVolume(0.3);
+			}
+
+			switch (move_train)
+			{
+			case Reset:
+				break;
+			case Move:
+			{
+				fMovementValue += fIncrement;
+				model = glm::translate(model, glm::vec3(current_x, 0.0f, 0.0f));
+				break;
+			}
+			case Pause:
+			{
+				model = glm::translate(model, glm::vec3(current_x, 0.0f, 0.0f));
+				break;
+			}
+			default:
+				break;
+			}
+
+			//move camera with train
+			camera.AutoMove();
+
+			model = glm::translate(model, glm::vec3(0.0f, -0.09f, 5.1f));
+			model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			model = glm::scale(model, glm::vec3(0.6f, 0.6f, 0.6f));
+
+			shadowMap.Bind();
+			shadowMap.SetUniformMat4f("model", model);
+
+			train.Draw(camera, shadowMap, renderer);
 		}
 
-		//Rendering Brasov first platform
-		{
-			if (std::abs(camera.GetPosition().x + 460.5f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
-			{
-				glm::mat4 model = glm::mat4(1.0f);
-				model = glm::translate(model, glm::vec3(-460.5f, 0.31f, 3.5f));
-
-				object_shader.Bind();
-				object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-				main_platform.Draw(camera, object_shader, renderer);
-			}
-		}
-
-		//Rendering Brasov second platform
-		{
-			if (std::abs(camera.GetPosition().x + 460.5f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
-			{
-				glm::mat4 model = glm::mat4(1.0f);
-				model = glm::translate(model, glm::vec3(-460.5f, 0.31f, 10.9f));
-
-				object_shader.Bind();
-				object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-				second_platform.Draw(camera, object_shader, renderer);
-			}
-		}
-
-		//Rendering Brasov train station building 
-		{
-			if (std::abs(camera.GetPosition().x + 460.5f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
-			{
-				glm::mat4 model = glm::mat4(1.0f);
-				model = glm::translate(model, glm::vec3(-460.5f, 0.38f, -2.0f));
-				model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-				model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
-
-				object_shader.Bind();
-				object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-				brasov_station.Draw(camera, object_shader, renderer);
-			}
-		}
-
-		//Rendering Brasov train station sign
-		{
-			if (std::abs(camera.GetPosition().x + 460.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
-			{
-				glm::mat4 model = glm::mat4(1.0f);
-				model = glm::translate(model, glm::vec3(-460.0f, 4.0f, 1.3f));
-				model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
-
-				object_shader.Bind();
-				object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-				brasov_station_sign.Draw(camera, object_shader, renderer);
-			}
-		}
-
-		//Rendering Sinaia first platform
-		{
-			if (std::abs(camera.GetPosition().x + 210.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
-			{
-				glm::mat4 model = glm::mat4(1.0f);
-				model = glm::translate(model, glm::vec3(-210.0f, 0.31f, 3.5f));
-
-				object_shader.Bind();
-				object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-				main_platform.Draw(camera, object_shader, renderer);
-			}
-		}
-
-		//Rendering Sinaia second platform
-		{
-			if (std::abs(camera.GetPosition().x + 210.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
-			{
-				glm::mat4 model = glm::mat4(1.0f);
-				model = glm::translate(model, glm::vec3(-210.0f, 0.31f, 10.9f));
-
-				object_shader.Bind();
-				object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-				second_platform.Draw(camera, object_shader, renderer);
-			}
-		}
-
-		//Rendering Sinaia train station building 
-		{
-			if (std::abs(camera.GetPosition().x + 210.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
-			{
-				glm::mat4 model = glm::mat4(1.0f);
-				model = glm::translate(model, glm::vec3(-210.0f, 0.38f, -2.9f));
-				model = glm::scale(model, glm::vec3(1.9f, 1.9f, 1.9f));
-
-				object_shader.Bind();
-				object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-				sinaia_station.Draw(camera, object_shader, renderer);
-			}
-		}
-
-		//Rendering Siania train station sign
-		{
-			if (std::abs(camera.GetPosition().x + 210.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
-			{
-				glm::mat4 model = glm::mat4(1.0f);
-				model = glm::translate(model, glm::vec3(-210.0f, 5.8f, 2.9f));
-				model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
-
-				object_shader.Bind();
-				object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-				sinaia_station_sign.Draw(camera, object_shader, renderer);
-			}
-		}
-
-		//Rendering Campina train station building 
-		{
-			if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
-			{
-				glm::mat4 model = glm::mat4(1.0f);
-
-				object_shader.Bind();
-				object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-				campina_train_station.Draw(camera, object_shader, renderer);
-			}
-		}
-
-		//Rendering Campina train station building roof 
-		{
-			if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
-			{
-				glm::mat4 model = glm::mat4(1.0f);
-				model = glm::translate(model, glm::vec3(0.0f, 5.0f, -0.5f));
-
-				object_shader.Bind();
-				object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-				campina_train_station_roof.Draw(camera, object_shader, renderer);
-			}
-		}
-
-		//Rendering Campina train station door
-		{
-			if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
-			{
-				glm::mat4 model = glm::mat4(1.0f);
-				model = glm::translate(model, glm::vec3(0.0f, 1.5f, 0.05f));
-
-				object_shader.Bind();
-				object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-				campina_train_station_door.Draw(camera, object_shader, renderer);
-			}
-		}
-
-		//Rendering Campina first front window
-		{
-			if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
-			{
-				glm::mat4 model = glm::mat4(1.0f);
-				model = glm::translate(model, glm::vec3(-7.0f, 2.43f, 0.05f));
-
-				object_shader.Bind();
-				object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-				campina_station_main_windows.Draw(camera, object_shader, renderer);
-			}
-		}
-
-		//Rendering Campina second front window
-		{
-			if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
-			{
-				glm::mat4 model = glm::mat4(1.0f);
-				model = glm::translate(model, glm::vec3(7.0f, 2.43f, 0.05f));
-
-				object_shader.Bind();
-				object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-				campina_station_main_windows.Draw(camera, object_shader, renderer);
-			}
-		}
-
-		//Rendering Campina first left window
-		{
-			if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
-			{
-				glm::mat4 model = glm::mat4(1.0f);
-				model = glm::translate(model, glm::vec3(-11.52f, 3.0f, -5.0f));
-				model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-
-				object_shader.Bind();
-				object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-				campina_station_left_window.Draw(camera, object_shader, renderer);
-			}
-		}
-
-		//Rendering Campina second left window
-		{
-			if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
-			{
-				glm::mat4 model = glm::mat4(1.0f);
-				model = glm::translate(model, glm::vec3(-11.52f, 3.0f, -2.0f));
-				model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-
-				object_shader.Bind();
-				object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-				campina_station_left_window.Draw(camera, object_shader, renderer);
-			}
-		}
-
-		//Rendering Campina right window
-		{
-			if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
-			{
-				glm::mat4 model = glm::mat4(1.0f);
-				model = glm::translate(model, glm::vec3(11.52f, 2.6f, -3.5f));
-				model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-
-				object_shader.Bind();
-				object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-				campina_station_right_window.Draw(camera, object_shader, renderer);
-			}
-		}
-
-		//Rendering Campina train station sign
-		{
-			if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
-			{
-				glm::mat4 model = glm::mat4(1.0f);
-				model = glm::translate(model, glm::vec3(0.0f, 4.0f, 0.05f));
-
-				object_shader.Bind();
-				object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-				campina_station_sign.Draw(camera, object_shader, renderer);
-			}
-		}
-
-		//Rendering Campina main platform
-		{
-			if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
-			{
-				glm::mat4 model = glm::mat4(1.0f);
-				model = glm::translate(model, glm::vec3(0.0f, 0.31f, 3.5f));
-
-				object_shader.Bind();
-				object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-				main_platform.Draw(camera, object_shader, renderer);
-			}
-		}
-
-		//Rendering Campina right bench model
-		{
-			if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
-
-			{
-				glm::mat4 model = glm::mat4(1.0f);
-				model = glm::translate(model, glm::vec3(8.5f, 0.5f, 1.3f));
-				model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-				model = glm::scale(model, glm::vec3(0.38f, 0.38f, 0.38f));
-
-				object_shader.Bind();
-				object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-				bench.Draw(camera, object_shader, renderer);
-			}
-		}
-
-		//Rendering Campina left bench model
-		{
-			if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
-
-			{
-				glm::mat4 model = glm::mat4(1.0f);
-				model = glm::translate(model, glm::vec3(-5.5f, 0.5f, 1.3f));
-				model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-				model = glm::scale(model, glm::vec3(0.38f, 0.38f, 0.38f));
-
-				object_shader.Bind();
-				object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-				bench.Draw(camera, object_shader, renderer);
-			}
-		}
-
-		//Rendering Campina right side bench model
-		{
-			if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
-
-			{
-				glm::mat4 model = glm::mat4(1.0f);
-				model = glm::translate(model, glm::vec3(12.5f, 0.5f, -1.8f));
-				model = glm::scale(model, glm::vec3(0.38f, 0.38f, 0.38f));
-
-				object_shader.Bind();
-				object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-				bench.Draw(camera, object_shader, renderer);
-			}
-		}
-
-		//Rendering Campina second platform
-		{
-			if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
-			{
-				glm::mat4 model = glm::mat4(1.0f);
-				model = glm::translate(model, glm::vec3(0.0f, 0.31f, 10.9f));
-
-				object_shader.Bind();
-				object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-				second_platform.Draw(camera, object_shader, renderer);
-			}
-		}
-
-		//Rendering Ploiesti first platform
-		{
-			if (std::abs(camera.GetPosition().x - 210.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
-			{
-				glm::mat4 model = glm::mat4(1.0f);
-				model = glm::translate(model, glm::vec3(210.0f, 0.31f, 3.5f));
-				model = glm::scale(model, glm::vec3(0.8f, 0.8f, 1.2f));
-
-				object_shader.Bind();
-				object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-				main_platform.Draw(camera, object_shader, renderer);
-			}
-		}
-
-		//Rendering Ploiesti second platform
-		{
-			if (std::abs(camera.GetPosition().x - 210.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
-			{
-				glm::mat4 model = glm::mat4(1.0f);
-				model = glm::translate(model, glm::vec3(210.0f, 0.31f, 10.9f));
-				model = glm::scale(model, glm::vec3(0.8f, 0.8f, 1.0f));
-
-				object_shader.Bind();
-				object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-				second_platform.Draw(camera, object_shader, renderer);
-			}
-		}
-
-		//Rendering Ploiesti train station building 
-		{
-			if (std::abs(camera.GetPosition().x - 210.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
-			{
-				glm::mat4 model = glm::mat4(1.0f);
-				model = glm::translate(model, glm::vec3(210.0f, 1.0f, -2.7f));
-				model = glm::scale(model, glm::vec3(0.17f, 0.17f, 0.17f));
-
-				object_shader.Bind();
-				object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-				ploiesti_station.Draw(camera, object_shader, renderer);
-			}
-		}
-
-		//Rendering Ploiesti train station sign
-		{
-			if (std::abs(camera.GetPosition().x - 207.5f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
-			{
-				glm::mat4 model = glm::mat4(1.0f);
-				model = glm::translate(model, glm::vec3(207.5f, 4.5f, 1.47f));
-				model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
-
-				object_shader.Bind();
-				object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-				ploiesti_station_sign.Draw(camera, object_shader, renderer);
-			}
-		}
-
-		//Rendering Bucuresti first platform
-		{
-			if (std::abs(camera.GetPosition().x - 459.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
-			{
-				glm::mat4 model = glm::mat4(1.0f);
-				model = glm::translate(model, glm::vec3(459.0f, 0.31f, 3.5f));
-
-				object_shader.Bind();
-				object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-				main_platform.Draw(camera, object_shader, renderer);
-			}
-		}
-
-		//Rendering Bucuresti second platform
-		{
-			if (std::abs(camera.GetPosition().x - 459.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
-			{
-				glm::mat4 model = glm::mat4(1.0f);
-				model = glm::translate(model, glm::vec3(459.0f, 0.31f, 10.9f));
-
-				object_shader.Bind();
-				object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-				second_platform.Draw(camera, object_shader, renderer);
-			}
-		}
-
-		//Rendering Bucuresti train station building 
-		{
-			if (std::abs(camera.GetPosition().x - 460.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
-			{
-				glm::mat4 model = glm::mat4(1.0f);
-				model = glm::translate(model, glm::vec3(460.0f, -1.31f, -2.9f));
-
-				object_shader.Bind();
-				object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-				bucuresti_station.Draw(camera, object_shader, renderer);
-			}
-		}
-
-		//Rendering Bucuresti train station sign
-		{
-			if (std::abs(camera.GetPosition().x - 459.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
-			{
-				glm::mat4 model = glm::mat4(1.0f);
-				model = glm::translate(model, glm::vec3(459.0f, 3.9f, -0.05f));
-				model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
-
-				object_shader.Bind();
-				object_shader.SetUniformMat4f("u_ModelMatrix", model);
-
-				bucuresti_station_sign.Draw(camera, object_shader, renderer);
-			}
-		}
+		
 
 		//Rendering skybox
 		if (light_action_changed)

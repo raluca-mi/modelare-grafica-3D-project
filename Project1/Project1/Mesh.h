@@ -26,10 +26,11 @@ class Mesh
 	VertexArray m_vertex_array;
 	VertexBuffer m_vertex_buffer;
 	IndexBuffer m_index_buffer;
+	
 public:
 	Mesh(const std::vector<float>& vertices, const std::vector<unsigned int>& indices, const Texture& texture = Texture());
 	Mesh(const Mesh& mesh);
-
+	
 	void SetTexture(const Texture& texture);
 
 	//draws the mesh

@@ -25,10 +25,9 @@ void Mesh::Draw(const Camera& camera, Shader& shader, const Renderer& renderer)
 {
 	m_texture.Bind();
 	shader.Bind();
-	shader.SetUniform1i("u_Texture", 0);
-	shader.SetUniformMat4f("u_ProjectionMatrix", camera.GetProjectionMatrix());
-	shader.SetUniformMat4f("u_ViewMatrix", camera.GetViewMatrix());
-	shader.SetUniform3f("u_CamPosition", camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
+	shader.SetUniformMat4f("projection", camera.GetProjectionMatrix());
+	shader.SetUniformMat4f("view", camera.GetViewMatrix());
+	
 
 	renderer.Draw(m_vertex_array, m_index_buffer, shader);
 }
