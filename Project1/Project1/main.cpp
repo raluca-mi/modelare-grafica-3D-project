@@ -1451,9 +1451,9 @@ int main(void)
 			glm::mat4 model = glm::mat4(0.7f);
 
 			//train movement values
-			double fIncrement = 0.0006;
+			double fIncrement = 0.0009;
 			static double fMovementValue = 0.0;
-			float current_x = glm::sin(fMovementValue) * 660.0f;
+			float current_x = glm::sin(fMovementValue) * 460.0f;
 			lightPos.x = current_x;
 
 
@@ -1537,9 +1537,9 @@ int main(void)
 			glm::mat4 model = glm::mat4(0.7f);
 
 			//train movement values
-			double fIncrement = 0.0006;
+			double fIncrement = 0.0009;
 			static double fMovementValue = 0.0;
-			float current_x = glm::sin(fMovementValue) * 660.0f;
+			float current_x = glm::sin(fMovementValue) * 460.0f;
 			lightPos.x = current_x;
 			
 
