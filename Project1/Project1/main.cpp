@@ -11,10 +11,10 @@
 #include<string>
 #include<sstream>
 
-#include "Mesh.h"
+#include"Mesh.h"
 #include"OBJLoader.h"
 #include"Terrain.h"
-#include "Skybox.h"
+#include"Skybox.h"
 
 using namespace irrklang;
 
@@ -375,7 +375,6 @@ Mesh InitCampinaRightWindowMesh(const Texture& texture)
 
 	return Mesh(vertices, indices, texture);
 }
-
 Mesh InitMainPlatformMesh(const Texture& texture)
 {
 	std::vector<float> vertices = {
@@ -536,7 +535,6 @@ Mesh InitStationSignMesh(const Texture& texture)
 
 	return Mesh(vertices, indices, texture);
 }
-
 Mesh InitRailwayMesh(const Texture& texture)
 {
 	std::vector<float> vertices = {
@@ -601,112 +599,9 @@ void SetOutsideSound(bool day)
 	}
 }
 
-void renderVeg( Shader& object_shader,Camera& camera,Mesh& tree,Renderer& renderer, std::vector<std::pair<glm::vec3, int>>&  terrainPos,Mesh& tree2,Mesh& tree3,Mesh& rock,Mesh& terrainPatch)
+void RenderBrasovStation(Shader& object_shader, Camera& camera, Renderer& renderer, Mesh& main_platform,
+	Mesh& second_platform, Mesh& brasov_station_sign, Mesh& brasov_station)
 {
-	
-		for (auto& pos : terrainPos)
-		{
-			if (std::abs(camera.GetPosition().x - pos.first.x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - pos.first.z - 10.0f) < 80.0f)
-			{
-				if (pos.second == 1)
-				{
-					glm::vec3 treePos = pos.first;
-					treePos.y = -0.1f;
-					treePos.x = treePos.x + 20.0f;
-					glm::mat4 model = glm::mat4(1.0f);
-					model = glm::translate(model, treePos);
-					model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
-
-					object_shader.Bind();
-					object_shader.SetUniformMat4f("model", model);
-
-				
-					tree.Draw(camera, object_shader, renderer);
-				}
-				else if (pos.second == 2)
-				{
-					glm::vec3 rockPos = pos.first;
-					rockPos.y = -0.1f;
-					rockPos.x = rockPos.x + 20.0f;
-					glm::mat4 model = glm::mat4(1.0f);
-					model = glm::translate(model, rockPos);
-					model = glm::scale(model, glm::vec3(0.80f, 0.8f, 0.8f));
-
-					object_shader.Bind();
-					object_shader.SetUniformMat4f("model", model);
-
-					rock.Draw(camera, object_shader, renderer);
-				}
-
-				else if (pos.second == 3)
-				{
-					glm::vec3 treePos = pos.first;
-					treePos.y = -0.1f;
-					treePos.x = treePos.x + 20.0f;
-					glm::mat4 model = glm::mat4(1.0f);
-					model = glm::translate(model, treePos);
-					model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
-
-					object_shader.Bind();
-					object_shader.SetUniformMat4f("model", model);
-
-					tree2.Draw(camera, object_shader, renderer);
-				}
-				else if (pos.second == 4)
-				{
-					glm::vec3 treePos = pos.first;
-					treePos.y = -0.1f;
-					treePos.x = treePos.x + 20.0f;
-					glm::mat4 model = glm::mat4(1.0f);
-					model = glm::translate(model, treePos);
-
-					model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
-					object_shader.Bind();
-					object_shader.SetUniformMat4f("model", model);
-
-					
-					tree3.Draw(camera, object_shader, renderer);
-				}
-
-
-				glm::mat4 model = glm::mat4(1.0f);
-				model = glm::translate(model, pos.first);
-
-				object_shader.Bind();
-				object_shader.SetUniformMat4f("model", model);
-
-				
-				terrainPatch.Draw(camera, object_shader, renderer);
-			}
-		}
-	
-}
-
-void renderScene(Shader& object_shader,Camera& camera,Renderer& renderer,std::vector<glm::vec3>& railwayPos,Mesh& railway,Mesh& main_platform,Mesh& second_platform,
-	Mesh& brasov_station_sign,Mesh& brasov_station,Mesh& sinaia_station,Mesh& sinaia_station_sign,Mesh& campina_train_station,Mesh& campina_train_station_roof,Mesh& campina_train_station_door
-    , Mesh& campina_station_main_windows,Mesh& campina_station_left_window,Mesh& campina_station_right_window,Mesh& campina_station_sign,Mesh& bench,
-	Mesh& ploiesti_station,Mesh& ploiesti_station_sign,Mesh& bucuresti_station,Mesh& bucuresti_station_sign)
-{
-
-
-	//Rendering railway
-	{
-		for (auto& pos : railwayPos)
-		{
-			if (std::abs(camera.GetPosition().x - pos.x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - pos.z - 10.0f) < 80.0f)
-			{
-				glm::mat4 model = glm::mat4(1.0f);
-				model = glm::translate(model, pos);
-				model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-
-				object_shader.Bind();
-				object_shader.SetUniformMat4f("model", model);
-
-				railway.Draw(camera, object_shader, renderer);
-			}
-		}
-	}
-
 	//Rendering Brasov first platform
 	{
 		if (std::abs(camera.GetPosition().x + 460.5f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
@@ -765,7 +660,10 @@ void renderScene(Shader& object_shader,Camera& camera,Renderer& renderer,std::ve
 			brasov_station_sign.Draw(camera, object_shader, renderer);
 		}
 	}
-
+}
+void RenderSinaiaStation(Shader& object_shader, Camera& camera, Renderer& renderer, Mesh& main_platform,
+	Mesh& second_platform, Mesh& sinaia_station, Mesh& sinaia_station_sign)
+{
 	//Rendering Sinaia first platform
 	{
 		if (std::abs(camera.GetPosition().x + 210.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
@@ -823,7 +721,12 @@ void renderScene(Shader& object_shader,Camera& camera,Renderer& renderer,std::ve
 			sinaia_station_sign.Draw(camera, object_shader, renderer);
 		}
 	}
-
+}
+void RenderCampinaStation(Shader& object_shader, Camera& camera, Renderer& renderer,
+	Mesh& main_platform, Mesh& second_platform, Mesh& campina_train_station, Mesh& campina_train_station_roof,
+	Mesh& campina_train_station_door, Mesh& campina_station_main_windows, Mesh& campina_station_left_window,
+	Mesh& campina_station_right_window, Mesh& campina_station_sign, Mesh& bench)
+{
 	//Rendering Campina train station building 
 	{
 		if (std::abs(camera.GetPosition().x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
@@ -1030,6 +933,11 @@ void renderScene(Shader& object_shader,Camera& camera,Renderer& renderer,std::ve
 		}
 	}
 
+}
+void RenderPloiestiStation(Shader& object_shader, Camera& camera, Renderer& renderer,
+	Mesh& main_platform, Mesh& second_platform, Mesh& ploiesti_station, Mesh& ploiesti_station_sign)
+{
+
 	//Rendering Ploiesti first platform
 	{
 		if (std::abs(camera.GetPosition().x - 210.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
@@ -1080,7 +988,7 @@ void renderScene(Shader& object_shader,Camera& camera,Renderer& renderer,std::ve
 		if (std::abs(camera.GetPosition().x - 207.5f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
 		{
 			glm::mat4 model = glm::mat4(1.0f);
-			model = glm::translate(model, glm::vec3(207.5f, 4.19f, 1.47f));
+			model = glm::translate(model, glm::vec3(207.6f, 3.73f, 1.47f));
 			model = glm::scale(model, glm::vec3(0.7f, 0.7f, 0.7f));
 
 			object_shader.Bind();
@@ -1089,7 +997,10 @@ void renderScene(Shader& object_shader,Camera& camera,Renderer& renderer,std::ve
 			ploiesti_station_sign.Draw(camera, object_shader, renderer);
 		}
 	}
-
+}
+void RenderBucurestiStation(Shader& object_shader, Camera& camera, Renderer& renderer,
+	Mesh& main_platform, Mesh& second_platform, Mesh& bucuresti_station, Mesh& bucuresti_station_sign)
+{
 	//Rendering Bucuresti first platform
 	{
 		if (std::abs(camera.GetPosition().x - 459.0f) < 130.0f && std::abs(camera.GetPosition().z - 10.0f) < 80.0f)
@@ -1147,10 +1058,112 @@ void renderScene(Shader& object_shader,Camera& camera,Renderer& renderer,std::ve
 		}
 	}
 }
+void RenderRailway(Shader& object_shader, Camera& camera, Renderer& renderer,
+	std::vector<glm::vec3>& railwayPos, Mesh& railway)
+{
+	//Rendering railway
+	{
+		for (auto& pos : railwayPos)
+		{
+			if (std::abs(camera.GetPosition().x - pos.x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - pos.z - 10.0f) < 80.0f)
+			{
+				glm::mat4 model = glm::mat4(1.0f);
+				model = glm::translate(model, pos);
+				model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+				object_shader.Bind();
+				object_shader.SetUniformMat4f("model", model);
+
+				railway.Draw(camera, object_shader, renderer);
+			}
+		}
+	}
+}
+void RenderVegetation(Shader& object_shader, Camera& camera, Renderer& renderer,
+	std::vector<std::pair<glm::vec3, int>>& terrainPos, Mesh& tree, Mesh& tree2, Mesh& tree3, Mesh& rock,
+	Mesh& terrainPatch)
+{
+	for (auto& pos : terrainPos)
+	{
+		if (std::abs(camera.GetPosition().x - pos.first.x - 10.0f) < 130.0f && std::abs(camera.GetPosition().z - pos.first.z - 10.0f) < 80.0f)
+		{
+			if (pos.second == 1)
+			{
+				glm::vec3 treePos = pos.first;
+				treePos.y = -0.1f;
+				treePos.x = treePos.x + 20.0f;
+				glm::mat4 model = glm::mat4(1.0f);
+				model = glm::translate(model, treePos);
+				model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+
+				object_shader.Bind();
+				object_shader.SetUniformMat4f("model", model);
+
+
+				tree.Draw(camera, object_shader, renderer);
+			}
+			else if (pos.second == 2)
+			{
+				glm::vec3 rockPos = pos.first;
+				rockPos.y = -0.1f;
+				rockPos.x = rockPos.x + 20.0f;
+				glm::mat4 model = glm::mat4(1.0f);
+				model = glm::translate(model, rockPos);
+				model = glm::scale(model, glm::vec3(0.80f, 0.8f, 0.8f));
+
+				object_shader.Bind();
+				object_shader.SetUniformMat4f("model", model);
+
+				rock.Draw(camera, object_shader, renderer);
+			}
+
+			else if (pos.second == 3)
+			{
+				glm::vec3 treePos = pos.first;
+				treePos.y = -0.1f;
+				treePos.x = treePos.x + 20.0f;
+				glm::mat4 model = glm::mat4(1.0f);
+				model = glm::translate(model, treePos);
+				model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+
+				object_shader.Bind();
+				object_shader.SetUniformMat4f("model", model);
+
+				tree2.Draw(camera, object_shader, renderer);
+			}
+			else if (pos.second == 4)
+			{
+				glm::vec3 treePos = pos.first;
+				treePos.y = -0.1f;
+				treePos.x = treePos.x + 20.0f;
+				glm::mat4 model = glm::mat4(1.0f);
+				model = glm::translate(model, treePos);
+
+				model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+				object_shader.Bind();
+				object_shader.SetUniformMat4f("model", model);
+
+
+				tree3.Draw(camera, object_shader, renderer);
+			}
+
+
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, pos.first);
+
+			object_shader.Bind();
+			object_shader.SetUniformMat4f("model", model);
+
+
+			terrainPatch.Draw(camera, object_shader, renderer);
+		}
+	}
+
+}
 
 int main(void)
 {
-	/* Initializing the library */
+	/* Initializing glfw */
 	if (!glfwInit())
 		return -1;
 
@@ -1161,17 +1174,15 @@ int main(void)
 	/* Initializing sound engine */
 	if (!SoundEngine)
 		return 0;
-
 	std::string train_sound = "res/audio/train.wav";
 	std::string night_sound = "res/audio/night.mp3";
 	std::string day_sound = "res/audio/day.mp3";
-
 	SoundEngine->play2D(day_sound.c_str());
 	SoundEngine->setSoundVolume(0.4);
 
 	/* Creating a window */
-	float window_height = 850.0f, window_width = 1850.0f;
-	GLFWwindow* window = glfwCreateWindow(window_width, window_height, "Train simulator", NULL, NULL);
+	float window_height = 1100.0f, window_width = 2010.0f;
+	GLFWwindow* window = glfwCreateWindow(window_width, window_height, "Train simulator", glfwGetPrimaryMonitor(), NULL);
 	if (!window)
 	{
 		std::cout << "Failed to create window!\n";
@@ -1180,19 +1191,21 @@ int main(void)
 	}
 	glfwMakeContextCurrent(window);
 
-	//Initiaziting glew
+	/* Initializing glew */
 	glewInit();
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	//Loading shaders
+	/* Loading shaders */
 	Shader object_shader("res/shaders/object.shader");//shader used for all objects
 	object_shader.Bind();
 	object_shader.SetUniform4f("u_LightColor", 1.0f, 1.0f, 1.0f, 1.0f);
 
-	//Loading textures
-	Texture station_platform_tex("res/textures/platform.jpg");
+	Shader shadowMap_shader("res/shaders/shadowMap.shader"); //shaders used for shadows
+	Shader shadowMapDepth_shader("res/shaders/shadowMapDepth.shader");
 
+	/* Loading textures */
+	Texture station_platform_tex("res/textures/platform.jpg");
 	Texture campina_station_tex("res/textures/brickss.jpg");
 	Texture campina_station_roof_tex("res/textures/roof.jpg");
 	Texture campina_station_door_tex("res/textures/door.jpg");
@@ -1217,8 +1230,7 @@ int main(void)
 	Texture tree_2_tex("res/textures/tree_2.png");
 	Texture tree_3_tex("res/textures/tree_3.png");
 
-
-	// Initialize camera
+	/* Initialize camera*/
 	Camera camera(window_width, window_height, glm::vec3(9.0f, 10.0f, 33.0f));
 	camera.SetPitch(-18.0f);
 	float last_frame = 0.0f, delta_time;
@@ -1231,7 +1243,7 @@ int main(void)
 
 	Skybox skybox_scene;
 
-	//Loading models from .obj
+	/* Loading models from.obj */
 	std::vector<float> train_vertices;
 	std::vector<unsigned int> train_indices;
 	bool res = loadOBJ("res/models/train.obj", train_vertices, train_indices);
@@ -1272,7 +1284,7 @@ int main(void)
 	std::vector<unsigned int>  sinaia_indices;
 	bool res10 = loadOBJ("res/models/sinaia.obj", sinaia_vertices, sinaia_indices);
 
-	//Loading meshes
+	/* Loading meshes*/
 	Mesh campina_train_station = InitCampinaStationMesh(campina_station_tex);
 	Mesh campina_train_station_roof = InitCampinaStationRoofMesh(campina_station_roof_tex);
 	Mesh campina_train_station_door = InitCampinaDoorStationMesh(campina_station_door_tex);
@@ -1280,25 +1292,18 @@ int main(void)
 	Mesh campina_station_left_window = InitCampinaLeftWindowMesh(campina_station_left_window_tex);
 	Mesh campina_station_right_window = InitCampinaRightWindowMesh(campina_station_right_window_tex);
 	Mesh campina_station_sign = InitStationSignMesh(campina_sign_tex);
-
 	Mesh main_platform = InitMainPlatformMesh(station_platform_tex);
 	Mesh second_platform = InitSecondPlatformMesh(station_platform_tex);
-
 	Mesh ploiesti_station_sign = InitStationSignMesh(ploiesti_sign_tex);
 	Mesh ploiesti_station(ploiesti_vertices, ploiesti_indices, ploiesti_station_tex);
-
 	Mesh brasov_station_sign = InitStationSignMesh(brasov_sign_tex);
 	Mesh brasov_station(brasov_vertices, brasov_indices, brasov_station_tex);
-
 	Mesh bucuresti_station_sign = InitStationSignMesh(bucuresti_sign_tex);
 	Mesh bucuresti_station(bucuresti_vertices, bucuresti_indices, bucuresti_station_tex);
-
 	Mesh sinaia_station_sign = InitStationSignMesh(sinaia_sign_tex);
 	Mesh sinaia_station(sinaia_vertices, sinaia_indices, sinaia_station_tex);
-
 	Mesh railway = InitRailwayMesh(railway_tex);
 	Mesh terrainPatch = InitTerrainMesh(grass_plain);
-
 	Mesh bench(bench_vertices, bench_indices, bench_tex);
 	Mesh train(train_vertices, train_indices, train_tex);
 	Mesh tree(tree_vertices, tree_indices, tree_1_tex);
@@ -1306,8 +1311,8 @@ int main(void)
 	Mesh tree2(tree2_vertices, tree2_indices, tree_2_tex);
 	Mesh tree3(tree3_vertices, tree3_indices, tree_3_tex);
 
+	/* Loading terrain & railway*/
 	Terrain terrain;
-
 	terrain.generatePositions(-600.0f, 600.0f, -100.0f, 100.0f);
 	terrain.generateRailway(-600.0f, 600.0f);
 	std::vector<std::pair<glm::vec3, int>>  terrainPos = terrain.getTerrainPositions();
@@ -1320,10 +1325,7 @@ int main(void)
 	float diffuse = 0.2f;
 	bool day = true;
 
-	
-	Shader shadowMap("res/shaders/shadowMap.shader");
-	Shader shadowMapDepth("res/shaders/shadowMapDepth.shader");
-	
+	/* Setting shadows*/
 	const unsigned int SHADOW_WIDTH = 2048, SHADOW_HEIGHT = 2048;
 	unsigned int depthMapFBO;
 	glGenFramebuffers(1, &depthMapFBO);
@@ -1334,21 +1336,21 @@ int main(void)
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 	float borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
 	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
-	// attach depth texture as FBO's depth buffer
+
+	// Attach depth texture as FBO's depth buffer
 	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
 	glDrawBuffer(GL_NONE);
 	glReadBuffer(GL_NONE);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	shadowMap.Bind();
-	shadowMap.SetUniform1i("diffuseTexture", 0);
-	shadowMap.SetUniform1i("shadowMap", 1);
+	shadowMap_shader.Bind();
+	shadowMap_shader.SetUniform1i("diffuseTexture", 0);
+	shadowMap_shader.SetUniform1i("shadowMap", 1);
 
 	glm::vec3 lightPos(-10.f, 25.f, 10.0f);
 
@@ -1365,54 +1367,53 @@ int main(void)
 		bool light_action_changed = false;
 
 		//Setting light
-		{shadowMap.Bind();
-		shadowMap.SetUniform1f("u_AmbientIntensity", ambient_intensity);
-		//shadowMap.SetUniform1f("u_Diffuse", diffuse);
-		//shadowMap.SetUniform3f("u_LightDirection", 0.0f, -30.0f, -20.0f);
-
-		if (glfwGetKey(window, GLFW_KEY_L))
 		{
-			light_action_changed = true;
-			light_action = LightAction::Sunrise;
-			day = true;
+			shadowMap_shader.Bind();
+			shadowMap_shader.SetUniform1f("u_AmbientIntensity", ambient_intensity);
 
-			SoundEngine->removeSoundSource(night_sound.c_str());
-			SoundEngine->play2D(day_sound.c_str());
-			SoundEngine->setSoundVolume(0.4);
-		}
-
-		if (glfwGetKey(window, GLFW_KEY_N))
-		{
-			light_action_changed = true;
-			light_action = LightAction::Sunset;
-			day = false;
-
-			SoundEngine->removeSoundSource(day_sound.c_str());
-			SoundEngine->play2D(night_sound.c_str());
-			SoundEngine->setSoundVolume(0.2);
-		}
-
-		switch (light_action)
-		{
-		case Sunrise:
-		{
-			if (ambient_intensity <= 0.7f)
+			if (glfwGetKey(window, GLFW_KEY_L))
 			{
-				ambient_intensity += 0.03f;
+				light_action_changed = true;
+				light_action = LightAction::Sunrise;
+				day = true;
+
+				SoundEngine->removeSoundSource(night_sound.c_str());
+				SoundEngine->play2D(day_sound.c_str());
+				SoundEngine->setSoundVolume(0.4);
 			}
-			break;
-		}
-		case Sunset:
-		{
-			if (ambient_intensity > 0.3f)
+
+			if (glfwGetKey(window, GLFW_KEY_N))
 			{
-				ambient_intensity -= 0.03f;
+				light_action_changed = true;
+				light_action = LightAction::Sunset;
+				day = false;
+
+				SoundEngine->removeSoundSource(day_sound.c_str());
+				SoundEngine->play2D(night_sound.c_str());
+				SoundEngine->setSoundVolume(0.2);
 			}
-			break;
-		}
-		default:
-			break;
-		}
+
+			switch (light_action)
+			{
+			case Sunrise:
+			{
+				if (ambient_intensity <= 0.7f)
+				{
+					ambient_intensity += 0.03f;
+				}
+				break;
+			}
+			case Sunset:
+			{
+				if (ambient_intensity > 0.3f)
+				{
+					ambient_intensity -= 0.03f;
+				}
+				break;
+			}
+			default:
+				break;
+			}
 		}
 
 		//Processing user input
@@ -1421,43 +1422,50 @@ int main(void)
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		
-
-		// 1. render depth of scene to texture (from light's perspective)
+		//Render depth of scene to texture (from light's perspective)
 		glm::mat4 lightProjection, lightView;
 		glm::mat4 lightSpaceMatrix;
 		float near_plane = -100.0f, far_plane = 200.5f;
-		lightProjection = glm::ortho(-100.0f, 100.0f, -100.0f,100.0f, near_plane, far_plane);
-		lightView = glm::lookAt(lightPos+20.f, lightPos-20.f, glm::vec3(0.0, 1.0, 0.0));
+		lightProjection = glm::ortho(-100.0f, 100.0f, -100.0f, 100.0f, near_plane, far_plane);
+		lightView = glm::lookAt(lightPos + 20.f, lightPos - 20.f, glm::vec3(0.0, 1.0, 0.0));
 		lightSpaceMatrix = lightProjection * lightView;
 
-		shadowMapDepth.Bind();
-		shadowMapDepth.SetUniformMat4f("lightSpaceMatrix", lightSpaceMatrix);
+		shadowMapDepth_shader.Bind();
+		shadowMapDepth_shader.SetUniformMat4f("lightSpaceMatrix", lightSpaceMatrix);
 
 		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
 		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
 		glClear(GL_DEPTH_BUFFER_BIT);
-		
+
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_FRONT);
-		renderVeg(shadowMapDepth, camera, tree, renderer, terrainPos, tree2, tree3, rock, terrainPatch);
 
-		renderScene(shadowMapDepth, camera, renderer, railwayPos, railway, main_platform, second_platform,
-			brasov_station_sign, brasov_station, sinaia_station, sinaia_station_sign, campina_train_station, campina_train_station_roof, campina_train_station_door
-			, campina_station_main_windows, campina_station_left_window, campina_station_right_window, campina_station_sign, bench,
-			ploiesti_station, ploiesti_station_sign, bucuresti_station, bucuresti_station_sign);
-		//Rendering train model
+		//Rendering scene shadows
+		RenderVegetation(shadowMapDepth_shader, camera, renderer, terrainPos, tree, tree2, tree3, rock, terrainPatch);
+		RenderRailway(shadowMapDepth_shader, camera, renderer, railwayPos, railway);
+		RenderBrasovStation(shadowMapDepth_shader, camera, renderer, main_platform, second_platform, brasov_station_sign,
+			brasov_station);
+		RenderSinaiaStation(shadowMapDepth_shader, camera, renderer, main_platform, second_platform, sinaia_station,
+			sinaia_station_sign);
+		RenderCampinaStation(shadowMapDepth_shader, camera, renderer, main_platform, second_platform,
+			campina_train_station,campina_train_station_roof, campina_train_station_door, campina_station_main_windows,
+			campina_station_left_window,campina_station_right_window, campina_station_sign, bench);
+		RenderPloiestiStation(shadowMapDepth_shader, camera, renderer, main_platform, second_platform, ploiesti_station,
+			ploiesti_station_sign);
+		RenderBucurestiStation(shadowMapDepth_shader, camera, renderer, main_platform, second_platform,
+			bucuresti_station, bucuresti_station_sign);
+
+		//Rendering train shadow
 		{
 			glm::mat4 model = glm::mat4(0.7f);
 
-			//train movement values
+			//train shadow movement values
 			double fIncrement = 0.0009;
 			static double fMovementValue = 0.0;
 			float current_x = glm::sin(fMovementValue) * 460.0f;
 			lightPos.x = current_x;
 
-
-			//train movement control keys
+			//train shadow movement control keys
 			if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
 			{
 				move_train = Movement::Pause;
@@ -1493,46 +1501,54 @@ int main(void)
 				break;
 			}
 
-			//move camera with train
+			//move camera with train shadow
 			camera.AutoMove();
 
 			model = glm::translate(model, glm::vec3(0.0f, -0.09f, 5.1f));
 			model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 			model = glm::scale(model, glm::vec3(0.6f, 0.6f, 0.6f));
 
-			shadowMapDepth.Bind();
-			shadowMapDepth.SetUniformMat4f("model", model);
+			shadowMapDepth_shader.Bind();
+			shadowMapDepth_shader.SetUniformMat4f("model", model);
 
-			train.Draw(camera, shadowMapDepth, renderer);
+			train.Draw(camera, shadowMapDepth_shader, renderer);
 		}
+
 		glCullFace(GL_BACK);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-		// reset viewport
+		//Reset viewport
 		glViewport(0, 0, window_width, window_height);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		shadowMap_shader.Bind();
+		shadowMap_shader.SetUniformMat4f("projection", camera.GetProjectionMatrix());
+		shadowMap_shader.SetUniformMat4f("view", camera.GetViewMatrix());
 
-		glViewport(0, 0, window_width, window_height);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		shadowMap.Bind();
-		glm::mat4 projection = camera.GetProjectionMatrix();
-		glm::mat4 view = camera.GetViewMatrix();
-		shadowMap.SetUniformMat4f("projection", projection);
-		shadowMap.SetUniformMat4f("view", view);
-		// set light uniforms
-		shadowMap.SetUniform3f("viewPos", camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
-		shadowMap.SetUniform3f("lightPos", lightPos.x,lightPos.y,lightPos.z);
-		shadowMap.SetUniformMat4f("lightSpaceMatrix", lightSpaceMatrix);
-		
+		//Set light uniforms
+		shadowMap_shader.SetUniform3f("viewPos", camera.GetPosition().x, camera.GetPosition().y, camera.GetPosition().z);
+		shadowMap_shader.SetUniform3f("lightPos", lightPos.x, lightPos.y, lightPos.z);
+		shadowMap_shader.SetUniformMat4f("lightSpaceMatrix", lightSpaceMatrix);
+
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, depthMap);
 		glDisable(GL_CULL_FACE);
-		renderVeg(shadowMap, camera, tree, renderer, terrainPos, tree2, tree3, rock, terrainPatch);
-		renderScene(shadowMap, camera, renderer, railwayPos, railway, main_platform, second_platform,
-			brasov_station_sign, brasov_station, sinaia_station, sinaia_station_sign, campina_train_station, campina_train_station_roof, campina_train_station_door
-			, campina_station_main_windows, campina_station_left_window, campina_station_right_window, campina_station_sign, bench,
-			ploiesti_station, ploiesti_station_sign, bucuresti_station, bucuresti_station_sign);
-		//Rendering train model
+
+		//Rendering scene
+		RenderVegetation(shadowMap_shader, camera, renderer, terrainPos, tree, tree2, tree3, rock, terrainPatch);
+		RenderRailway(shadowMap_shader, camera, renderer, railwayPos, railway);
+		RenderBrasovStation(shadowMap_shader, camera, renderer, main_platform, second_platform, brasov_station_sign,
+			brasov_station);
+		RenderSinaiaStation(shadowMap_shader, camera, renderer, main_platform, second_platform, sinaia_station,
+			sinaia_station_sign);
+		RenderCampinaStation(shadowMap_shader, camera, renderer, main_platform, second_platform,
+			campina_train_station, campina_train_station_roof, campina_train_station_door, campina_station_main_windows,
+			campina_station_left_window, campina_station_right_window, campina_station_sign, bench);
+		RenderPloiestiStation(shadowMap_shader, camera, renderer, main_platform, second_platform, ploiesti_station,
+			ploiesti_station_sign);
+		RenderBucurestiStation(shadowMap_shader, camera, renderer, main_platform, second_platform,
+			bucuresti_station, bucuresti_station_sign);
+
+		//Rendering train
 		{
 			glm::mat4 model = glm::mat4(0.7f);
 
@@ -1541,7 +1557,6 @@ int main(void)
 			static double fMovementValue = 0.0;
 			float current_x = glm::sin(fMovementValue) * 460.0f;
 			lightPos.x = current_x;
-			
 
 			//train movement control keys
 			if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
@@ -1586,13 +1601,11 @@ int main(void)
 			model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 			model = glm::scale(model, glm::vec3(0.6f, 0.6f, 0.6f));
 
-			shadowMap.Bind();
-			shadowMap.SetUniformMat4f("model", model);
+			shadowMap_shader.Bind();
+			shadowMap_shader.SetUniformMat4f("model", model);
 
-			train.Draw(camera, shadowMap, renderer);
+			train.Draw(camera, shadowMap_shader, renderer);
 		}
-
-		
 
 		//Rendering skybox
 		if (light_action_changed)
@@ -1600,7 +1613,6 @@ int main(void)
 			skybox_scene.SetFaces(day);
 		}
 		skybox_scene.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix());
-
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);

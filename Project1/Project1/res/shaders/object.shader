@@ -85,7 +85,6 @@ void main()
 
 	//diffuse light
 	vec3 normal = normalize(v_normals);
-	/*vec3 light_direction = normalize(u_LightPosition - current_position);*/
 	vec3 light_direction = normalize(-u_LightDirection);
 	float diffuse = u_Diffuse*max(dot(normal, light_direction), 0.0f);
 
