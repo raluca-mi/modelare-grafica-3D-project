@@ -16,11 +16,36 @@
 #include"Terrain.h"
 #include"Skybox.h"
 
+#pragma comment(lib, "irrKlang.lib")
 using namespace irrklang;
 
-#pragma comment(lib, "irrKlang.lib")
-
 ISoundEngine* SoundEngine = createIrrKlangDevice();
+void SetOutsideSound(bool day)
+{
+	SoundEngine->removeAllSoundSources();
+	if (day)
+	{
+		SoundEngine->play2D("res/audio/day.mp3");
+		SoundEngine->setSoundVolume(0.4);
+	}
+	else
+	{
+		SoundEngine->play2D("res/audio/night.mp3");
+		SoundEngine->setSoundVolume(0.2);
+	}
+}
+
+enum Movement
+{
+	Reset,
+	Move,
+	Pause
+};
+enum LightAction
+{
+	Sunrise,
+	Sunset
+};
 
 Mesh InitCampinaStationMesh(const Texture& texture)
 {
@@ -570,33 +595,6 @@ Mesh InitTerrainMesh(const Texture& texture)
 
 	return Mesh(vertices, indices, texture);
 
-}
-
-enum Movement
-{
-	Reset,
-	Move,
-	Pause
-};
-enum LightAction
-{
-	Sunrise,
-	Sunset
-};
-
-void SetOutsideSound(bool day)
-{
-	SoundEngine->removeAllSoundSources();
-	if (day)
-	{
-		SoundEngine->play2D("res/audio/day.mp3");
-		SoundEngine->setSoundVolume(0.4);
-	}
-	else
-	{
-		SoundEngine->play2D("res/audio/night.mp3");
-		SoundEngine->setSoundVolume(0.2);
-	}
 }
 
 void RenderBrasovStation(Shader& object_shader, Camera& camera, Renderer& renderer, Mesh& main_platform,
@@ -1160,6 +1158,65 @@ void RenderVegetation(Shader& object_shader, Camera& camera, Renderer& renderer,
 	}
 
 }
+void RenderTrain(Shader& object_shader, Camera& camera, Renderer& renderer, Mesh& train, GLFWwindow* window,
+	glm::vec3& lightPos, bool& day, std::string& train_sound, Movement& move_train)
+{
+	glm::mat4 model = glm::mat4(0.7f);
+
+	//train movement values
+	double fIncrement = 0.0004;
+	static double fMovementValue = 0.0;
+	float current_x = glm::sin(fMovementValue) * 460.0f;
+	lightPos.x = current_x;
+
+	//train movement control keys
+	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+	{
+		move_train = Movement::Pause;
+
+		SetOutsideSound(day);
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+	{
+		move_train = Movement::Move;
+
+		SetOutsideSound(day);
+		SoundEngine->play2D(train_sound.c_str(), true);
+		SoundEngine->setSoundVolume(0.3);
+	}
+
+	switch (move_train)
+	{
+	case Reset:
+		break;
+	case Move:
+	{
+		fMovementValue += fIncrement;
+		model = glm::translate(model, glm::vec3(current_x, 0.0f, 0.0f));
+		break;
+	}
+	case Pause:
+	{
+		model = glm::translate(model, glm::vec3(current_x, 0.0f, 0.0f));
+		break;
+	}
+	default:
+		break;
+	}
+
+	//move camera with train
+	camera.AutoMove();
+
+	model = glm::translate(model, glm::vec3(0.0f, -0.09f, 5.1f));
+	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(0.6f, 0.6f, 0.6f));
+
+	object_shader.Bind();
+	object_shader.SetUniformMat4f("model", model);
+
+	train.Draw(camera, object_shader, renderer);
+}
 
 int main(void)
 {
@@ -1366,7 +1423,7 @@ int main(void)
 
 		bool light_action_changed = false;
 
-		//Setting light
+		//Setting light & sounds
 		{
 			shadowMap_shader.Bind();
 			shadowMap_shader.SetUniform1f("u_AmbientIntensity", ambient_intensity);
@@ -1448,71 +1505,14 @@ int main(void)
 		RenderSinaiaStation(shadowMapDepth_shader, camera, renderer, main_platform, second_platform, sinaia_station,
 			sinaia_station_sign);
 		RenderCampinaStation(shadowMapDepth_shader, camera, renderer, main_platform, second_platform,
-			campina_train_station,campina_train_station_roof, campina_train_station_door, campina_station_main_windows,
-			campina_station_left_window,campina_station_right_window, campina_station_sign, bench);
+			campina_train_station, campina_train_station_roof, campina_train_station_door, campina_station_main_windows,
+			campina_station_left_window, campina_station_right_window, campina_station_sign, bench);
 		RenderPloiestiStation(shadowMapDepth_shader, camera, renderer, main_platform, second_platform, ploiesti_station,
 			ploiesti_station_sign);
 		RenderBucurestiStation(shadowMapDepth_shader, camera, renderer, main_platform, second_platform,
 			bucuresti_station, bucuresti_station_sign);
+		RenderTrain(shadowMapDepth_shader, camera, renderer, train, window, lightPos, day, train_sound, move_train);
 
-		//Rendering train shadow
-		{
-			glm::mat4 model = glm::mat4(0.7f);
-
-			//train shadow movement values
-			double fIncrement = 0.0009;
-			static double fMovementValue = 0.0;
-			float current_x = glm::sin(fMovementValue) * 460.0f;
-			lightPos.x = current_x;
-
-			//train shadow movement control keys
-			if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-			{
-				move_train = Movement::Pause;
-
-				SetOutsideSound(day);
-			}
-
-			if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-			{
-				move_train = Movement::Move;
-
-				SetOutsideSound(day);
-				SoundEngine->play2D(train_sound.c_str(), true);
-				SoundEngine->setSoundVolume(0.3);
-			}
-
-			switch (move_train)
-			{
-			case Reset:
-				break;
-			case Move:
-			{
-				fMovementValue += fIncrement;
-				model = glm::translate(model, glm::vec3(current_x, 0.0f, 0.0f));
-				break;
-			}
-			case Pause:
-			{
-				model = glm::translate(model, glm::vec3(current_x, 0.0f, 0.0f));
-				break;
-			}
-			default:
-				break;
-			}
-
-			//move camera with train shadow
-			camera.AutoMove();
-
-			model = glm::translate(model, glm::vec3(0.0f, -0.09f, 5.1f));
-			model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-			model = glm::scale(model, glm::vec3(0.6f, 0.6f, 0.6f));
-
-			shadowMapDepth_shader.Bind();
-			shadowMapDepth_shader.SetUniformMat4f("model", model);
-
-			train.Draw(camera, shadowMapDepth_shader, renderer);
-		}
 
 		glCullFace(GL_BACK);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -1547,65 +1547,7 @@ int main(void)
 			ploiesti_station_sign);
 		RenderBucurestiStation(shadowMap_shader, camera, renderer, main_platform, second_platform,
 			bucuresti_station, bucuresti_station_sign);
-
-		//Rendering train
-		{
-			glm::mat4 model = glm::mat4(0.7f);
-
-			//train movement values
-			double fIncrement = 0.0009;
-			static double fMovementValue = 0.0;
-			float current_x = glm::sin(fMovementValue) * 460.0f;
-			lightPos.x = current_x;
-
-			//train movement control keys
-			if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-			{
-				move_train = Movement::Pause;
-
-				SetOutsideSound(day);
-			}
-
-			if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-			{
-				move_train = Movement::Move;
-
-				SetOutsideSound(day);
-				SoundEngine->play2D(train_sound.c_str(), true);
-				SoundEngine->setSoundVolume(0.3);
-			}
-
-			switch (move_train)
-			{
-			case Reset:
-				break;
-			case Move:
-			{
-				fMovementValue += fIncrement;
-				model = glm::translate(model, glm::vec3(current_x, 0.0f, 0.0f));
-				break;
-			}
-			case Pause:
-			{
-				model = glm::translate(model, glm::vec3(current_x, 0.0f, 0.0f));
-				break;
-			}
-			default:
-				break;
-			}
-
-			//move camera with train
-			camera.AutoMove();
-
-			model = glm::translate(model, glm::vec3(0.0f, -0.09f, 5.1f));
-			model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-			model = glm::scale(model, glm::vec3(0.6f, 0.6f, 0.6f));
-
-			shadowMap_shader.Bind();
-			shadowMap_shader.SetUniformMat4f("model", model);
-
-			train.Draw(camera, shadowMap_shader, renderer);
-		}
+		RenderTrain(shadowMap_shader, camera, renderer, train, window, lightPos, day, train_sound, move_train);
 
 		//Rendering skybox
 		if (light_action_changed)

@@ -75,10 +75,10 @@ void Camera::ProcessInput(GLFWwindow* window, float delta_time)
 
 void Camera::MoveRight()
 {
-	float camera_speed = 0.25f;
+	float camera_speed = 0.18f;
 	if (m_position.x > 300 || m_position.x < -300)
 	{
-		camera_speed = 0.15f;
+		camera_speed = 0.13f;
 	}
 
 	m_position = glm::vec3(m_position.x + camera_speed, m_position.y, m_position.z);
@@ -88,7 +88,7 @@ void Camera::MoveLeft()
 	float camera_speed = 0.12f;
 	if (m_position.x < 350 && m_position.x > -300)
 	{
-		camera_speed = 0.25f;
+		camera_speed = 0.17f;
 	}
 	m_position = glm::vec3(m_position.x - camera_speed, m_position.y, m_position.z);
 }
