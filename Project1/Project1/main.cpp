@@ -1164,7 +1164,7 @@ void RenderTrain(Shader& object_shader, Camera& camera, Renderer& renderer, Mesh
 	glm::mat4 model = glm::mat4(0.7f);
 
 	//train movement values
-	double fIncrement = 0.0004;
+	double fIncrement = 0.001;
 	static double fMovementValue = 0.0;
 	float current_x = glm::sin(fMovementValue) * 460.0f;
 	lightPos.x = current_x;
@@ -1238,8 +1238,8 @@ int main(void)
 	SoundEngine->setSoundVolume(0.4);
 
 	/* Creating a window */
-	float window_height = 1100.0f, window_width = 2010.0f;
-	GLFWwindow* window = glfwCreateWindow(window_width, window_height, "Train simulator", glfwGetPrimaryMonitor(), NULL);
+	float window_height = 1200.0f, window_width = 2100.0f;
+	GLFWwindow* window = glfwCreateWindow(window_width, window_height, "Train simulator", NULL, NULL);
 	if (!window)
 	{
 		std::cout << "Failed to create window!\n";
